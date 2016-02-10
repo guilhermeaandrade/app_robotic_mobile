@@ -1,0 +1,32 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+
+    <item
+        android:id="@+id/action_disabled_bluetooth"
+        android:orderInCategory="100"
+        android:title="Desativar Bluetooth"
+        android:icon="@drawable/ic_bluetooth_disabled"
+        app:showAsAction="withText|never" />
+
+    <item
+        android:id="@+id/action_define_coordinate"
+        android:orderInCategory="100"
+        android:title="Definir Coordenadas"
+        app:showAsAction="withText|never" />
+    <item
+        android:id="@+id/action_reset_sys"
+        android:orderInCategory="100"
+        android:title="Resetar Sistema"
+        android:icon="@drawable/refresh"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_out"
+        android:orderInCategory="100"
+        android:title="Sair"
+        android:icon="@drawable/exit"
+        app:showAsAction="never" />
+
+</menu>
