@@ -642,6 +642,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == TELA2){
+            if(data == null) return;
+            showControlDialog();
+            address = data.getExtras().getString("msg");
+
+            device = adaptador.getRemoteDevice(address);
+            teste = new ConnectThread(device);
+
+            teste.start();
+        }
+
         if(requestCode == BluetoothConstants.REQUEST_ENABLE_BT){
             if(resultCode == Activity.RESULT_OK){
                 Toast.makeText(this, "Conecte-se a um dispositivo para iniciar a aplicação", Toast.LENGTH_LONG).show();

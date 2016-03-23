@@ -44,7 +44,9 @@ public class SelectDevice extends AppCompatActivity{
         mToolbar.setTitle("Dispositivos");
         mToolbar.setLogo(R.drawable.ic_launcher);
         setSupportActionBar(mToolbar);
+        mToolbar.dismissPopupMenus();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         adaptador = BluetoothAdapter.getDefaultAdapter();
         btPesquisar = (Button) findViewById(R.id.btPesquisar);
@@ -133,7 +135,7 @@ public class SelectDevice extends AppCompatActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
+        return false;
     }
 
     private final Handler h = new Handler() {
