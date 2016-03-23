@@ -31,7 +31,6 @@ public class MapActivity extends AppCompatActivity{
         if(id == android.R.id.home){
             finish();
         }
-
         return true;
     }
 
