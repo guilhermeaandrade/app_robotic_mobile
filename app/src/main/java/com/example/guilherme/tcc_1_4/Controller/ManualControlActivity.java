@@ -58,7 +58,7 @@ public class ManualControlActivity  extends AppCompatActivity{
 
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle("Controle Manual");
-        //mToolbar.setLogo(R.drawable.ic_launcher);
+        mToolbar.setLogo(R.drawable.ic_launcher);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -69,7 +69,6 @@ public class ManualControlActivity  extends AppCompatActivity{
         if(params != null){
             idRobo = params.getInt("positionList");
         }
-
         //-------------------------------------------------------------------------------------------------------------------
         //INICIO DO CODIGO
         device = null;
@@ -88,7 +87,6 @@ public class ManualControlActivity  extends AppCompatActivity{
 
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getApplicationContext(), "Conectar", Toast.LENGTH_SHORT).show();
                 startActivityForResult(it,TELA2);
             }
         });
@@ -99,7 +97,6 @@ public class ManualControlActivity  extends AppCompatActivity{
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //Toast.makeText(getApplicationContext(), "Forward", Toast.LENGTH_SHORT).show();
                 if(device == null){
                     alerta("Sem dispositivo conectado");
                 }else if(device != null){
@@ -127,7 +124,6 @@ public class ManualControlActivity  extends AppCompatActivity{
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //Toast.makeText(getApplicationContext(),"Backward", Toast.LENGTH_SHORT).show();
                 if(device == null){
                     alerta("Sem dispositivo conectado");
                 }else if(device != null){
@@ -155,7 +151,6 @@ public class ManualControlActivity  extends AppCompatActivity{
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //Toast.makeText(getApplicationContext(),"Left", Toast.LENGTH_SHORT).show();
                 if(device == null){
                     alerta("Sem dispositivo conectado");
                 }else if(device != null){
@@ -183,7 +178,6 @@ public class ManualControlActivity  extends AppCompatActivity{
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                //Toast.makeText(getApplicationContext(),"Right", Toast.LENGTH_SHORT).show();
                 if(device == null){
                     alerta("Sem dispositivo conectado");
                 }else if(device != null){
@@ -252,7 +246,6 @@ public class ManualControlActivity  extends AppCompatActivity{
             adaptador.cancelDiscovery();
             try {
                 socket.connect();
-                //alerta("Erro de conexão");
             }catch (IOException e){
                 e.printStackTrace();
             }
@@ -262,7 +255,6 @@ public class ManualControlActivity  extends AppCompatActivity{
         public void cancel(){
             try {
                 socket.close();
-                //alerta("Conexão Fechada");
             }catch (IOException e){
                 e.printStackTrace();
             }
@@ -286,33 +278,32 @@ public class ManualControlActivity  extends AppCompatActivity{
     }
 
     public class Enviar extends Thread{
-        private char letra;
-        private byte speed;
+            private char letra;
+            private byte speed;
 
-        public Enviar(char letra, byte speed){
-            this.letra = letra;
-            this.speed = speed;
-        }
-
-        public void run(){
-            try {
-                if(socket != null){
-                    alerta("Socket diferente de null");
-                    output = new DataOutputStream(socket.getOutputStream());
-                    input = new DataInputStream(socket.getInputStream());
-                    if(socket.isConnected()){
-                        output.writeChar(letra);
-                        output.writeByte(speed);
-                        output.flush();
-                    }else{
-                        alerta(letra + " - " + speed);
-                        alerta("Conexão Fechada");
-                    }
-                }
-            }catch (IOException erro){
-                alerta("Erro de Transferência");
+            public Enviar(char letra, byte speed){
+                this.letra = letra;
+                this.speed = speed;
             }
-        }
+
+            public void run(){
+                try {
+                    if(socket != null){
+                        output = new DataOutputStream(socket.getOutputStream());
+                        input = new DataInputStream(socket.getInputStream());
+                        if(socket.isConnected()){
+                            output.writeChar(letra);
+                            output.writeByte(speed);
+                            output.flush();
+                        }else{
+                            alerta(letra + " - " + speed);
+                            alerta("Conexão Fechada");
+                        }
+                    }
+                }catch (IOException erro){
+                    alerta("Erro de Transferência");
+                }
+            }
     }
 
     private final Handler h = new Handler(){

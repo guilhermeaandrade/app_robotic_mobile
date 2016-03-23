@@ -1,0 +1,115 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_main"
+        android:elevation="4dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_alignParentLeft="true"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey"
+        android:layout_gravity="right|top">
+
+        <Button
+            android:layout_width="134dp"
+            android:layout_height="wrap_content"
+            android:text="Conectar-se a um dispositivo"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_alignParentTop="true"
+            android:id="@+id/btnConnect"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="F"
+            android:id="@+id/btnForward"
+            android:layout_above="@+id/btnRight"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="76dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="L"
+            android:id="@+id/btnLeft"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/btnForward"
+            android:layout_toStartOf="@+id/btnForward" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R"
+            android:id="@+id/btnRight"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/btnForward"
+            android:layout_toEndOf="@+id/btnForward" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="B"
+            android:id="@+id/btnBackward"
+            android:layout_above="@+id/seekBar"
+            android:layout_toRightOf="@+id/btnLeft"
+            android:layout_toEndOf="@+id/btnLeft"
+            android:layout_marginBottom="50dp" />
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekBar"
+            android:layout_marginBottom="60dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/btnRight"
+            android:layout_alignEnd="@+id/btnRight"
+            android:layout_alignLeft="@+id/btnLeft"
+            android:layout_alignStart="@+id/btnLeft"
+            android:max="100"
+            android:progress="1"
+            android:indeterminate="false" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Escolher controle"
+            android:id="@+id/btnTypeControl"
+            android:layout_below="@+id/btnConnect"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+
+    <com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout
+        android:id="@+id/stl_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    </android.support.v4.view.ViewPager>
+
+</LinearLayout><!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/res/layout/activity_main.xml -->

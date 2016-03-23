@@ -2,6 +2,7 @@ package com.example.guilherme.tcc_1_4.Model;
 
 public class Posicao {
 
+    private long id;
     private float coordX;
     private float coordY;
     private float anguloTeta;
@@ -12,6 +13,16 @@ public class Posicao {
         this.coordY = coordY;
         this.anguloTeta = anguloTeta;
         this.data = data;
+    }
+
+    public Posicao(){}
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public float getCoordX() {

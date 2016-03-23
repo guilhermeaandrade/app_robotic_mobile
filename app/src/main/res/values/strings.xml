@@ -3,7 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="centimetro">(cm)</string>
+    <string name="centimetro">Máximo de 100 cm</string>
     <string name="fieldObrigatorio">Campos assinalados com * são obrigatórios</string>
     <string name="coordenadaX">Coordenada X:  </string>
     <string name="coordenadaY">Coordenada Y:  </string>

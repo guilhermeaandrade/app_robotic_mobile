@@ -21,6 +21,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.example.guilherme.tcc_1_4.Controller.InformationActivity;
 import com.example.guilherme.tcc_1_4.Controller.MapActivity;
+import com.example.guilherme.tcc_1_4.Controller.Settings;
 import com.example.guilherme.tcc_1_4.Extra.ImageHelper;
 import com.example.guilherme.tcc_1_4.Interfaces.RecylerViewOnClickListenerHack;
 import com.example.guilherme.tcc_1_4.Model.ContextMenuItem;
@@ -29,6 +30,7 @@ import com.example.guilherme.tcc_1_4.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class RoboAdapter extends RecyclerView.Adapter<RoboAdapter.MyViewHolder>{
 

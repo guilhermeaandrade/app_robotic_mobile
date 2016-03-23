@@ -16,7 +16,7 @@
         android:layout_alignStart="@+id/coordY"
         android:layout_toStartOf="@+id/tv_asterisco_inf"
         android:layout_alignEnd="@+id/tv_asterisco_inf"
-        android:maxLength="4"
+        android:maxLength="3"
         android:paddingLeft="7dp"/>
 
     <EditText
@@ -28,7 +28,7 @@
         android:hint="@string/centimetro"
         android:layout_below="@+id/coordX"
         android:layout_toEndOf="@+id/textView"
-        android:maxLength="4"
+        android:maxLength="3"
         android:paddingLeft="7dp"/>
 
     <TextView

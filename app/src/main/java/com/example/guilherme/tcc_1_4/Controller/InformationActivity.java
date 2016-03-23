@@ -59,7 +59,7 @@ public class InformationActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(false);
 
         listRobo = new ArrayList<Robo>();
-        listRobo = getSetRoboList(4);
+        listRobo = getSetRoboList(1);
 
         ImageView ivRobo = (ImageView) findViewById(R.id.iv_robo);
         TextView tvNome = (TextView) findViewById(R.id.tv_nome);
@@ -88,7 +88,6 @@ public class InformationActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent intent = new Intent(v.getContext(), ManualControlActivity.class);
-
                 Bundle params = new Bundle();
                 params.putInt("positionList", idRobo);
                 intent.putExtras(params);

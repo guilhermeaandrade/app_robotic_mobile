@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.example.guilherme.tcc_1_4.Adapter.RoboAdapter;
 import com.example.guilherme.tcc_1_4.Interfaces.RecylerViewOnClickListenerHack;
@@ -65,7 +66,7 @@ public class ComponentActivity extends AppCompatActivity implements RecylerViewO
         //linearLayoutManager.setReverseLayout(true); //limita o final -> acrescenta do inicio
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        mList = getSetRoboList(4); //4 elementos
+        mList = getSetRoboList(2); //1 elementos
         RoboAdapter roboAdapter = new RoboAdapter(this, mList);
         mRecyclerView.setAdapter(roboAdapter);
 
@@ -104,7 +105,7 @@ public class ComponentActivity extends AppCompatActivity implements RecylerViewO
 
     }
 
-    private static class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener{
+    private class RecyclerViewTouchListener implements RecyclerView.OnItemTouchListener{
 
         private Context mContext;
         private GestureDetector mGestureDetector;
@@ -146,7 +147,6 @@ public class ComponentActivity extends AppCompatActivity implements RecylerViewO
                             callContextMenuStatus = true;
                         }
                     }
-
 
                     if(cv != null && mRecylerViewOnClickListenerHack != null && !callContextMenuStatus){
                         mRecylerViewOnClickListenerHack.onClickListener(cv,

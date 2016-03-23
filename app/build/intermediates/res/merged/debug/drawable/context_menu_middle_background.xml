@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_focused="true" android:drawable="@drawable/nine_patch_mddle_pressed" /> <!-- focused -->
+    <item android:state_focused="true" android:state_pressed="true" android:drawable="@drawable/nine_patch_mddle_pressed" /> <!-- focused and pressed-->
+    <item android:state_pressed="true" android:drawable="@drawable/nine_patch_mddle_pressed" /> <!-- pressed -->
+    <item android:drawable="@drawable/nine_patch_mddle" /> <!-- default -->
+</selector> <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/res/drawable/context_menu_middle_background.xml -->

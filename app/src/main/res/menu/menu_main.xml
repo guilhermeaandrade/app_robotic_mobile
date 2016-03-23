@@ -11,18 +11,6 @@
         app:showAsAction="withText|never" />
 
     <item
-        android:id="@+id/action_define_coordinate"
-        android:orderInCategory="100"
-        android:title="Definir Coordenadas"
-        app:showAsAction="withText|never" />
-    <item
-        android:id="@+id/action_reset_sys"
-        android:orderInCategory="100"
-        android:title="Resetar Sistema"
-        android:icon="@drawable/refresh"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/action_out"
         android:orderInCategory="100"
         android:title="Sair"
