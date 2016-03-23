@@ -42,7 +42,7 @@
         </activity>
 
         <activity
-            android:name=".Controller.Tela2"
+            android:name=".Controller.SelectDevice"
             android:label="Tela 2 Activity">
         </activity>
 

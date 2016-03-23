@@ -11,9 +11,10 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,8 +27,9 @@ import com.example.guilherme.tcc_1_4.R;
 
 import java.util.Set;
 
-public class Tela2 extends AppCompatActivity{
+public class SelectDevice extends AppCompatActivity{
 
+    private Toolbar mToolbar;
     private BluetoothAdapter adaptador;
     private ListView lista;
     private ArrayAdapter<String> dispositivos;
@@ -37,6 +39,12 @@ public class Tela2 extends AppCompatActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tela02);
+
+        mToolbar = (Toolbar) findViewById(R.id.tb_main);
+        mToolbar.setTitle("Dispositivos");
+        mToolbar.setLogo(R.drawable.ic_launcher);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         adaptador = BluetoothAdapter.getDefaultAdapter();
         btPesquisar = (Button) findViewById(R.id.btPesquisar);
@@ -112,6 +120,16 @@ public class Tela2 extends AppCompatActivity{
     };
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == android.R.id.home){
+            finish();
+        }
+        return true;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -121,7 +139,7 @@ public class Tela2 extends AppCompatActivity{
     private final Handler h = new Handler() {
         public void handleMessage(Message msg) {
             String content = (String) msg.obj;
-            Toast.makeText(Tela2.this, content, Toast.LENGTH_SHORT).show();
+            Toast.makeText(SelectDevice.this, content, Toast.LENGTH_SHORT).show();
         }
     };
 

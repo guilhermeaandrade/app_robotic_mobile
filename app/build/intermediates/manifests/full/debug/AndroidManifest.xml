@@ -43,7 +43,7 @@
             android:label="Manual Control Activity" >
         </activity>
         <activity
-            android:name="com.example.guilherme.tcc_1_4.Controller.Tela2"
+            android:name="com.example.guilherme.tcc_1_4.Controller.SelectDevice"
             android:label="Tela 2 Activity" >
         </activity>
     </application>

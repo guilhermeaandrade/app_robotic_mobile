@@ -81,12 +81,12 @@ ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC
 		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:41:13-52
 	android:name
 		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:40:13-61
-activity#com.example.guilherme.tcc_1_4.Controller.Tela2
+activity#com.example.guilherme.tcc_1_4.Controller.SelectDevice
 ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:44:9-47:20
 	android:label
 		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:46:13-44
 	android:name
-		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:45:13-45
+		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:45:13-52
 uses-sdk
 INJECTED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
 MERGED from [com.android.support:appcompat-v7:23.0.0] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/AndroidManifest.xml:20:5-43

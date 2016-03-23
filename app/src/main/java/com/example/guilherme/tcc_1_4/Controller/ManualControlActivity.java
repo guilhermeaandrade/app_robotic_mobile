@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -73,7 +72,7 @@ public class ManualControlActivity  extends AppCompatActivity{
         //INICIO DO CODIGO
         device = null;
         address = null;
-        it = new Intent(this, Tela2.class);
+        it = new Intent(this, SelectDevice.class);
 
         adaptador = BluetoothAdapter.getDefaultAdapter();
         if(!adaptador.isEnabled()){

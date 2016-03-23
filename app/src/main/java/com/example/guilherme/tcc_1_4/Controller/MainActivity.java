@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
         device = null;
         address = null;
-        it = new Intent(this, Tela2.class);
+        it = new Intent(this, SelectDevice.class);
 
         adaptador = BluetoothAdapter.getDefaultAdapter();
         if(!adaptador.isEnabled()){
@@ -135,7 +135,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                startActivityForResult(it,TELA2);
+                if(adaptador.isEnabled()){
+                    startActivityForResult(it,TELA2);
+                }else{
+                    Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBTIntent, 1);
+                }
             }
         });
 
@@ -266,11 +271,15 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {}
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {}
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
+
+        disableAllButtons();
 
     }
 
@@ -635,11 +644,9 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == BluetoothConstants.REQUEST_ENABLE_BT){
             if(resultCode == Activity.RESULT_OK){
-
-
+                Toast.makeText(this, "Conecte-se a um dispositivo para iniciar a aplicação", Toast.LENGTH_LONG).show();
             }else if(resultCode == Activity.RESULT_CANCELED){
-
-
+                Toast.makeText(this, "Ative o Bluetooth antes de iniciar a aplicação", Toast.LENGTH_LONG).show();
             }
         }
     }
