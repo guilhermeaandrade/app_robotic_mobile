@@ -22,23 +22,8 @@
         </activity>
 
         <activity
-            android:name=".Controller.ComponentActivity"
-            android:label="Component Activity">
-        </activity>
-
-        <activity
             android:name=".Controller.MapActivity"
             android:label="Map Activity">
-        </activity>
-
-        <activity
-            android:name=".Controller.InformationActivity"
-            android:label="Information Activity">
-        </activity>
-
-        <activity
-            android:name=".Controller.ManualControlActivity"
-            android:label="Manual Control Activity">
         </activity>
 
         <activity

@@ -27,20 +27,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.guilherme.tcc_1_4.Controller.ComponentActivity"
-            android:label="Component Activity" >
-        </activity>
-        <activity
             android:name="com.example.guilherme.tcc_1_4.Controller.MapActivity"
             android:label="Map Activity" >
-        </activity>
-        <activity
-            android:name="com.example.guilherme.tcc_1_4.Controller.InformationActivity"
-            android:label="Information Activity" >
-        </activity>
-        <activity
-            android:name="com.example.guilherme.tcc_1_4.Controller.ManualControlActivity"
-            android:label="Manual Control Activity" >
         </activity>
         <activity
             android:name="com.example.guilherme.tcc_1_4.Controller.SelectDevice"
