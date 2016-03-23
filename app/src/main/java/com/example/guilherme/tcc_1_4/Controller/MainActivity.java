@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private DataInputStream input;
     private Intent it;
     private boolean bluetoothIsAtivo = false;
-    private static final int TELA2 = 1;
+    private static final int TELA2 = 2;
     private int option = -1;
 
     private String address;
