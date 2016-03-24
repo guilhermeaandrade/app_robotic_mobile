@@ -40,7 +40,6 @@ import com.mikepenz.materialdrawer.model.interfaces.OnCheckedChangeListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -90,13 +89,11 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onCheckedChanged(IDrawerItem iDrawerItem, CompoundButton compoundButton, boolean b) {
             //referente ao click na Notificação
-            //Toast.makeText(MainActivity.this, "onCheckedChanged: " + (b ? "True" : "False"), Toast.LENGTH_SHORT).show();
         }
     };
 
     //VARIAVEIS TOOLBAR
     private Toolbar mToolbar;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -282,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //##############################################################################################################################
-    public void init(Bundle savedInstanceState){
+    private void init(Bundle savedInstanceState){
         // ------------------------------ TABS e VIEWPAGER ----------------------------------------------
         mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
 
@@ -478,7 +475,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //##############################################################################################################################
-    public void showControlDialog(){
+    private void showControlDialog(){
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setTitle("Escolha o tipo de controle: ")
                 .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
@@ -508,7 +505,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //SE A ESCOLHA FOR CANCEL.. A ESCOLHA PADRÃO SERÁ CONTROLE AUTOMATICO
@@ -522,7 +519,35 @@ public class MainActivity extends AppCompatActivity {
         b.show();
     }
 
-    public void enableAllButtons(){
+    private void showFinishDialog(){
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder
+                .setTitle("Sair ")
+                .setMessage("Deseja sair da aplicação?")
+                .setIcon(R.drawable.ic_logout)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(adaptador.isEnabled()){
+                            adaptador.disable();
+                        }
+                        finish();
+                    }
+                }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+
+        final AlertDialog b = dialogBuilder.create();
+        b.setCancelable(false);
+        b.show();
+    }
+
+    private void enableAllButtons(){
         btBackward.setEnabled(true);
         btForward.setEnabled(true);
         btLeft.setEnabled(true);
@@ -531,7 +556,7 @@ public class MainActivity extends AppCompatActivity {
         if(device != null) btSelectType.setEnabled(true);
     }
 
-    public void disableAllButtons(){
+    private void disableAllButtons(){
         btBackward.setEnabled(false);
         btForward.setEnabled(false);
         btLeft.setEnabled(false);
@@ -574,7 +599,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public class Enviar extends Thread{
+    private class Enviar extends Thread{
         private Character letra;
         private Byte speed;
         private Character controle;
@@ -687,7 +712,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case R.id.action_out:
-                finish();
+                showFinishDialog();
                 break;
         }
         return super.onOptionsItemSelected(item);
