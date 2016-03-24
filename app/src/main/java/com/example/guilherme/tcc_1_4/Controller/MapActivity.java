@@ -3,6 +3,8 @@ package com.example.guilherme.tcc_1_4.Controller;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.guilherme.tcc_1_4.Extra.ImageHelper;
 import com.example.guilherme.tcc_1_4.R;
 
 
@@ -21,6 +24,11 @@ public class MapActivity extends AppCompatActivity{
     private ImageView ivRobo;
     private TextView tvName;
     private TextView tvEndMac;
+
+    private float scale;
+    private int width;
+    private int height;
+    private int roundPixels;
 
 
     @Override
@@ -34,6 +42,13 @@ public class MapActivity extends AppCompatActivity{
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        scale = this.getResources().getDisplayMetrics().density;
+        width = this.getResources().getDisplayMetrics().widthPixels - (int)(14 * scale + 0.5f);
+        height = (width/16)*9;
+
+        roundPixels = (int)(2 * scale + 0.5f);
+
+
         Intent intentExtras = getIntent();
         Bundle extrasBundle = intentExtras.getExtras();
         if(!extrasBundle.isEmpty()){
@@ -42,8 +57,14 @@ public class MapActivity extends AppCompatActivity{
                 launchRingDialog();
             }
             if(device != null){
+
+                Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.robo);
+                bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
+                bitmap = ImageHelper.getRoundedCornerBitmap(this, bitmap, 15, width, height, false, false, true, true);
+
                 ivRobo = (ImageView) findViewById(R.id.robo_photo);
-                ivRobo.setImageResource(R.drawable.robo);
+                ivRobo.setImageBitmap(bitmap);
+                //ivRobo.setImageResource(R.drawable.robo);
 
                 tvName = (TextView) findViewById(R.id.name_robo);
                 tvName.setText(device.getName());

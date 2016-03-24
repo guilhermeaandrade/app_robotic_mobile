@@ -44,7 +44,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="125dp"
                 android:id="@+id/robo_photo"
                 android:src="@drawable/robo"
                 android:padding="2dp"
@@ -56,19 +56,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/name_robo"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="@color/black"
                 android:paddingBottom="5dp"
                 android:layout_alignParentEnd="true"
                 android:layout_below="@+id/robo_photo"
                 android:layout_alignStart="@+id/robo_photo"
-                android:text="teste" />
+                android:text="teste"
+                android:padding="5dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/end_mac_robo"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textColor="@color/black"
                 android:padding="5dp"
                 android:layout_below="@+id/name_robo"

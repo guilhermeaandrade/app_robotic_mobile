@@ -47,6 +47,8 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final int REQUEST_ENABLE_BT = 1;
+
     //VARIAVEIS APLICACAO
     private static final int NUMBER_ROBO = 0;
     private static final int[] idPhoto = new int[]{R.drawable.i1,R.drawable.i2, R.drawable.i3, R.drawable.i4};
@@ -391,8 +393,6 @@ public class MainActivity extends AppCompatActivity {
                                 i.putExtras(bundle);
                                 startActivity(i);
 
-                                //startActivity(new Intent(MainActivity.this, MapActivity.class));
-
                                 break;
                             case 2:
                                 headerNavigationLeft.setBackgroundRes(valor);
@@ -656,7 +656,7 @@ public class MainActivity extends AppCompatActivity {
             teste.start();
         }
 
-        if(requestCode == BluetoothConstants.REQUEST_ENABLE_BT){
+        if(requestCode == REQUEST_ENABLE_BT){
             if(resultCode == Activity.RESULT_OK){
                 Toast.makeText(this, "Conecte-se a um dispositivo para iniciar a aplicação", Toast.LENGTH_LONG).show();
             }else if(resultCode == Activity.RESULT_CANCELED){
