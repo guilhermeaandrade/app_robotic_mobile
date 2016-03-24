@@ -64,7 +64,6 @@ public class MapActivity extends AppCompatActivity{
 
                 ivRobo = (ImageView) findViewById(R.id.robo_photo);
                 ivRobo.setImageBitmap(bitmap);
-                //ivRobo.setImageResource(R.drawable.robo);
 
                 tvName = (TextView) findViewById(R.id.name_robo);
                 tvName.setText(device.getName());
@@ -83,6 +82,7 @@ public class MapActivity extends AppCompatActivity{
             public void run() {
                 try {
                     Thread.sleep(4000);
+                    finish();
                 } catch (Exception e) {}
                 ringProgressDialog.dismiss();
             }

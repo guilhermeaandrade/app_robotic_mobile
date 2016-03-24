@@ -90,7 +90,8 @@ public class MainActivity extends AppCompatActivity {
     private OnCheckedChangeListener mOnCheckedChangeListener = new OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(IDrawerItem iDrawerItem, CompoundButton compoundButton, boolean b) {
-            Toast.makeText(MainActivity.this, "onCheckedChanged: " + (b ? "True" : "False"), Toast.LENGTH_SHORT).show();
+            //referente ao click na Notificação
+            //Toast.makeText(MainActivity.this, "onCheckedChanged: " + (b ? "True" : "False"), Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -677,6 +678,13 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id){
             case R.id.action_disabled_bluetooth:
+                if(adaptador.isEnabled()){
+                    adaptador.disable();
+                }
+                disableAllButtons();
+                if(device != null) btSelectType.setEnabled(false);
+                device = null;
+
                 break;
 
             case R.id.action_out:
