@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
     //VARIAVEIS APLICACAO
     private static final int NUMBER_ROBO = 0;
     private static final int[] idPhoto = new int[]{R.drawable.i1,R.drawable.i2, R.drawable.i3, R.drawable.i4};
-    public List<Robo> listRobos;
     private Button btConectar;
     private Button btSelectType;
     private Button btForward;
@@ -63,12 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
     private BluetoothAdapter adaptador;
     private BluetoothDevice device;
-    private BluetoothDevice mDevice;
     private BluetoothSocket socket;
     private DataOutputStream output;
     private DataInputStream input;
     private Intent it;
-    private boolean bluetoothIsAtivo = false;
     private static final int TELA2 = 2;
     private int option = -1;
 
@@ -221,7 +218,6 @@ public class MainActivity extends AppCompatActivity {
                             if(pressedUp == false){
                                 pressedUp = true;
                                 new Enviar('m', 'a', velocidade).start();
-
                             }
                             break;
                         case MotionEvent.ACTION_UP:
@@ -389,7 +385,13 @@ public class MainActivity extends AppCompatActivity {
                                 headerNavigationLeft.setBackgroundRes(valor);
                                 navigationDrawerLeft.getAdapter().notifyDataSetChanged();
 
-                                startActivity(new Intent(MainActivity.this, MapActivity.class));
+                                Intent i = new Intent(MainActivity.this, MapActivity.class);
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelable("device", device);
+                                i.putExtras(bundle);
+                                startActivity(i);
+
+                                //startActivity(new Intent(MainActivity.this, MapActivity.class));
 
                                 break;
                             case 2:
