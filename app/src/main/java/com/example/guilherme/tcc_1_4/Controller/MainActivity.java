@@ -27,7 +27,6 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
-import com.example.guilherme.tcc_1_4.Model.Robo;
 import com.example.guilherme.tcc_1_4.R;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
