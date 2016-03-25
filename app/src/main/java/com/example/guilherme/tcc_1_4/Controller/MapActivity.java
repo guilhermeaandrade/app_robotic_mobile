@@ -12,7 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.androidplot.util.PixelUtils;
 import com.androidplot.xy.CatmullRomInterpolator;
@@ -25,7 +24,6 @@ import com.example.guilherme.tcc_1_4.Extra.ImageHelper;
 import com.example.guilherme.tcc_1_4.R;
 
 import java.util.Arrays;
-
 
 public class MapActivity extends AppCompatActivity{
 
@@ -81,9 +79,13 @@ public class MapActivity extends AppCompatActivity{
 
                 tvEndMac = (TextView) findViewById(R.id.end_mac_robo);
                 tvEndMac.setText(device.getAddress());
+
+                drawMap();
             }
         }
+    }
 
+    private void drawMap(){
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.plot);
         // create a couple arrays of y-values to plot:
@@ -127,7 +129,7 @@ public class MapActivity extends AppCompatActivity{
                 new CatmullRomInterpolator.Params(10, CatmullRomInterpolator.Type.Centripetal));
 
         // add a new series' to the xyplot:
-        
+
         plot.addSeries(series1, series1Format);
         plot.addSeries(series2, series2Format);
 

@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_ENABLE_BT = 1;
 
     //VARIAVEIS APLICACAO
-    private static final int NUMBER_ROBO = 0;
     private static final int[] idPhoto = new int[]{R.drawable.i1,R.drawable.i2, R.drawable.i3, R.drawable.i4};
     private Button btConectar;
     private Button btSelectType;
@@ -64,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothDevice device;
     private BluetoothSocket socket;
     private DataOutputStream output;
-    private DataInputStream input;
     private Intent it;
     private static final int TELA2 = 2;
     private int option = -1;
@@ -615,7 +613,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null){
                     output = new DataOutputStream(socket.getOutputStream());
-                    input = new DataInputStream(socket.getInputStream());
+                    //input = new DataInputStream(socket.getInputStream());
                     if(socket.isConnected()){
                         if(controle != null) output.writeChar(controle);
                         if(letra != null && speed != null) {

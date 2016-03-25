@@ -79,8 +79,8 @@
 
             <com.androidplot.xy.XYPlot
                 android:id="@+id/plot"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="350dp"
+                android:layout_height="300dp"
                 ap:label="A Simple XY Plot"
                 ap:rangeLabel="range"
                 ap:domainLabel="domain"
@@ -111,7 +111,9 @@
                 ap:legendIconHeight="15dp"
                 ap:legendIconWidth="15dp"
                 ap:legendHeight="25dp"
-                ap:legendAnchorPosition="right_bottom"/>
+                ap:legendAnchorPosition="right_bottom"
+                android:layout_below="@+id/end_mac_robo"
+                android:layout_alignParentStart="true" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 
