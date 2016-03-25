@@ -30,4 +30,5 @@ dependencies {
     compile ('com.mikepenz.materialdrawer:library:2.8.2@aar') {
         transitive = true
     }
+    compile "com.androidplot:androidplot-core:0.9.6"
 }
