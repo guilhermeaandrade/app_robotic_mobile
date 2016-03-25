@@ -139,10 +139,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btSelectType = (Button) findViewById(R.id.btnTypeControl);
-        btSelectType.setOnClickListener(new View.OnClickListener(){
+        btSelectType.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 showControlDialog();
             }
         });
@@ -153,18 +153,18 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(device == null){
+                if (device == null) {
                     Toast.makeText(getApplicationContext(), "Nenhum dispositivo conectado", Toast.LENGTH_LONG).show();
-                }else if(device != null){
-                    switch (event.getAction()){
+                } else if (device != null) {
+                    switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            if(pressedUp == false){
+                            if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar('m','w', velocidade).start();
+                                new Enviar('m', 'w', velocidade).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar('m','q', velocidade).start();
+                            new Enviar('m', 'q', velocidade).start();
                             pressedUp = false;
                             break;
                     }
@@ -203,16 +203,16 @@ public class MainActivity extends AppCompatActivity {
 
         //botao para esquerda
         btLeft = (Button) findViewById(R.id.btnLeft);
-        btLeft.setOnTouchListener(new View.OnTouchListener(){
+        btLeft.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(device == null){
+                if (device == null) {
                     Toast.makeText(getApplicationContext(), "Nenhum dispositivo conectado", Toast.LENGTH_LONG).show();
-                }else if(device != null){
-                    switch (event.getAction()){
+                } else if (device != null) {
+                    switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            if(pressedUp == false){
+                            if (pressedUp == false) {
                                 pressedUp = true;
                                 new Enviar('m', 'a', velocidade).start();
                             }
@@ -229,16 +229,16 @@ public class MainActivity extends AppCompatActivity {
 
         //botao para direita
         btRight = (Button) findViewById(R.id.btnRight);
-        btRight.setOnTouchListener(new View.OnTouchListener(){
+        btRight.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(device == null){
+                if (device == null) {
                     Toast.makeText(getApplicationContext(), "Nenhum dispositivo conectado", Toast.LENGTH_LONG).show();
-                }else if(device != null){
-                    switch (event.getAction()){
+                } else if (device != null) {
+                    switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            if(pressedUp == false){
+                            if (pressedUp == false) {
                                 pressedUp = true;
                                 new Enviar('m', 'd', velocidade).start();
                             }
@@ -382,11 +382,15 @@ public class MainActivity extends AppCompatActivity {
                                 headerNavigationLeft.setBackgroundRes(valor);
                                 navigationDrawerLeft.getAdapter().notifyDataSetChanged();
 
-                                Intent i = new Intent(MainActivity.this, MapActivity.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelable("device", device);
-                                i.putExtras(bundle);
-                                startActivity(i);
+                                if(device != null) {
+                                    Intent i = new Intent(MainActivity.this, MapActivity.class);
+                                    Bundle bundle = new Bundle();
+                                    bundle.putParcelable("device", device);
+                                    i.putExtras(bundle);
+                                    startActivity(i);
+                                }else{
+                                    Toast.makeText(MainActivity.this, "Conecte-se a uma dispositivo para iniciar essa atividade.", Toast.LENGTH_LONG).show();
+                                }
 
                                 break;
                             case 2:
@@ -495,9 +499,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if (option != -1) {
                     if (option == 1) {
-                        new Enviar('u', 'q', Byte.parseByte("0")).start();
+
                         disableAllButtons();
+                        if(device != null) btSelectType.setEnabled(true);
+                        new Enviar('u', 'q', Byte.parseByte("0")).start();
+
                     } else if (option == 2) {
+
                         enableAllButtons();
                         new Enviar('m', 'q', Byte.parseByte("0")).start();
                     }

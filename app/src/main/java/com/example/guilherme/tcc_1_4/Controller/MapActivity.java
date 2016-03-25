@@ -66,7 +66,7 @@ public class MapActivity extends AppCompatActivity{
                 launchRingDialog();
             }
             if(device != null){
-
+                launchRingDialog();
                 Bitmap bitmap = BitmapFactory.decodeResource(this.getResources(), R.drawable.robo);
                 bitmap = Bitmap.createScaledBitmap(bitmap, width, height, false);
                 bitmap = ImageHelper.getRoundedCornerBitmap(this, bitmap, 15, width, height, false, false, true, true);
@@ -147,8 +147,8 @@ public class MapActivity extends AppCompatActivity{
             @Override
             public void run() {
                 try {
-                    Thread.sleep(4000);
-                    finish();
+                    Thread.sleep(5000);
+                    //finish();
                 } catch (Exception e) {}
                 ringProgressDialog.dismiss();
             }
