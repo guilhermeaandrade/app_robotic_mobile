@@ -40,6 +40,7 @@ import com.mikepenz.materialdrawer.model.interfaces.OnCheckedChangeListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Random;
 import java.util.UUID;
 
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothDevice device;
     private BluetoothSocket socket;
     private DataOutputStream output;
+    private DataInputStream input;
     private Intent it;
     private static final int TELA2 = 2;
     private int option = -1;
@@ -504,6 +506,8 @@ public class MainActivity extends AppCompatActivity {
                         if(device != null) btSelectType.setEnabled(true);
                         new Enviar('u', 'q', Byte.parseByte("0")).start();
 
+                        new Receber().start();
+
                     } else if (option == 2) {
 
                         enableAllButtons();
@@ -605,7 +609,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class Enviar extends Thread{
+    private class Receber extends Thread {
+        private InputStream mInputStream;
+
+        public Receber() {
+            InputStream tmpInputStream = null;
+            if(socket != null){
+                try {
+                    tmpInputStream = socket.getInputStream();
+                }catch(IOException e){}
+                mInputStream = tmpInputStream;
+            }
+        }
+
+        public void run(){
+            byte[] buffer = new byte[256];
+            int bytes;
+            while(true){
+                try {
+                    bytes = mInputStream.read(buffer);
+                    String readMessage = new String(buffer, 0, bytes);
+                }catch (IOException e){}
+            }
+        }
+
+        public void cancel() {
+            try {
+                socket.close();
+            } catch (IOException e) { }
+        }
+    }
+
+    private class Enviar extends Thread {
         private Character letra;
         private Byte speed;
         private Character controle;
@@ -621,7 +656,6 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null){
                     output = new DataOutputStream(socket.getOutputStream());
-                    //input = new DataInputStream(socket.getInputStream());
                     if(socket.isConnected()){
                         if(controle != null) output.writeChar(controle);
                         if(letra != null && speed != null) {
@@ -634,6 +668,12 @@ public class MainActivity extends AppCompatActivity {
             }catch (IOException erro){
 
             }
+        }
+
+        public void cancel() {
+            try {
+                socket.close();
+            } catch (IOException e) { }
         }
     }
 
