@@ -610,26 +610,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class Receber extends Thread {
-        private InputStream mInputStream;
 
-        public Receber() {
-            InputStream tmpInputStream = null;
-            if(socket != null){
-                try {
-                    tmpInputStream = socket.getInputStream();
-                }catch(IOException e){}
-                mInputStream = tmpInputStream;
-            }
-        }
+        public Receber() {}
 
         public void run(){
-            byte[] buffer = new byte[256];
-            int bytes;
-            while(true){
-                try {
-                    bytes = mInputStream.read(buffer);
-                    String readMessage = new String(buffer, 0, bytes);
-                }catch (IOException e){}
+            try {
+                if(socket != null) {
+                    input = new DataInputStream(socket.getInputStream());
+                    if (socket.isConnected()) {
+                        byte[] buffer = new byte[256];
+                        int bytes;
+                        while (true) {
+                            bytes = input.read(buffer);
+                            String readMessage = new String(buffer, 0, bytes);
+                        }
+                    }
+                }
+            }catch (IOException e){
+                e.printStackTrace();
             }
         }
 
@@ -665,9 +663,7 @@ public class MainActivity extends AppCompatActivity {
                         output.flush();
                     }
                 }
-            }catch (IOException erro){
-
-            }
+            }catch (IOException erro){}
         }
 
         public void cancel() {
