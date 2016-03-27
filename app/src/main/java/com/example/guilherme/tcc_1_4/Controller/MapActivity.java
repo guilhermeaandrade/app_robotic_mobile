@@ -80,6 +80,21 @@ public class MapActivity extends AppCompatActivity{
                 tvEndMac = (TextView) findViewById(R.id.end_mac_robo);
                 tvEndMac.setText(device.getAddress());
 
+                /*dynamicPlot.getGraphWidget().getDomainGridLinePaint().setColor(Color.TRANSPARENT);
+                //set all domain lines to transperent
+
+                dynamicPlot.getGraphWidget().getRangeSubGridLinePaint().setColor(Color.TRANSPARENT);
+                //set all range lines to transperent
+
+                dynamicPlot.getGraphWidget().getRangeGridLinePaint().setColor(Color.TRANSPARENT);
+                //set all sub range lines to transperent
+
+                dynamicPlot.getGraphWidget().getDomainSubGridLinePaint().setColor(Color.TRANSPARENT);
+                //set all sub domain lines to transperent
+
+
+                dynamicPlot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
+                //set background to white to transperent */
                 drawMap();
             }
         }
