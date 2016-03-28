@@ -8,6 +8,8 @@ import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_ENABLE_BT = 1;
 
     private List<Position> listOfPositions;
+    private final int handlerState = 0;
+    private Handler bluetoothIn;
 
     //VARIAVEIS APLICACAO
     private static final int[] idPhoto = new int[]{R.drawable.i1,R.drawable.i2, R.drawable.i3, R.drawable.i4};
@@ -281,6 +285,19 @@ public class MainActivity extends AppCompatActivity {
 
         disableAllButtons();
 
+        bluetoothIn = new Handler(){
+
+            @Override
+            public void handleMessage(Message msg){
+                byte[] writeBuf = (byte[]) msg.obj;
+                switch (msg.what){
+                    case 1:
+                        String readMessage = new String(writeBuf);
+                        splitMessage(readMessage);
+                        break;
+                }
+            }
+        };
     }
 
     //##############################################################################################################################
@@ -624,12 +641,13 @@ public class MainActivity extends AppCompatActivity {
                 if(socket != null) {
                     input = new DataInputStream(socket.getInputStream());
                     if (socket.isConnected()) {
-                        byte[] buffer = new byte[256];
-                        int bytes;
+                        byte[] buffer = new byte[1024];
+                        int bytes = 0;
                         while (true) {
                             bytes = input.read(buffer);
                             String readMessage = new String(buffer, 0, bytes);
                             splitMessage(readMessage);
+                            bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
                         }
                     }
                 }
