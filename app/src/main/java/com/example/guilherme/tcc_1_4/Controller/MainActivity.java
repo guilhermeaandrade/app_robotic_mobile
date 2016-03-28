@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
+import com.example.guilherme.tcc_1_4.Utils.Constants;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -292,12 +293,10 @@ public class MainActivity extends AppCompatActivity {
             public void handleMessage(Message msg){
                 String write = (String) msg.obj;
                 byte[] writeBuf = write.getBytes();
-                //byte[] writeBuf = (byte[]) msg.obj;
                 switch (msg.what){
                     case 1:
                         String readMessage = new String(writeBuf);
-                        Toast.makeText(MainActivity.this, "String: "+readMessage, Toast.LENGTH_LONG).show();
-                        //splitMessage(readMessage);
+                        splitMessage(readMessage);
                         break;
                 }
             }
@@ -638,30 +637,20 @@ public class MainActivity extends AppCompatActivity {
 
     private class Receber extends Thread {
 
-        public Receber() {
-            Log.i("TAG", "Entrei no construtor receber");
-        }
+        public Receber() {}
 
         public void run(){
-            Log.i("TAG", "Entrei no método run()");
             try {
                 if(socket != null) {
-                    Log.i("TAG", "try -> socket != null");
                     input = new DataInputStream(socket.getInputStream());
-                    Log.i("TAG", "input: "+input.toString());
                     if (socket.isConnected()) {
-                        Log.i("TAG", "socket conectado");
                         byte[] buffer = new byte[1024];
                         int bytes = 0;
                         while (true) {
-                            Log.i("TAG", "while");
                             bytes = input.read(buffer);
-                            Log.i("TAG", "bytes: "+bytes);
-
                             String readMessage = new String(buffer, 0, bytes);
-                            Log.i("TAG", "readMessage: "+readMessage);
-                            //splitMessage(readMessage);
-                            //Toast.makeText(MainActivity.this, "String: "+readMessage, Toast.LENGTH_LONG).show();
+                            if(readMessage.equalsIgnoreCase(Constants.FIM)) break;
+                            splitMessage(readMessage);
                             bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
                         }
                     }
