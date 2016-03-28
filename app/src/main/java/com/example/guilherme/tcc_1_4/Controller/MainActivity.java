@@ -27,6 +27,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
+import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
@@ -41,12 +42,16 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int REQUEST_ENABLE_BT = 1;
+
+    private List<Position> listOfPositions;
 
     //VARIAVEIS APLICACAO
     private static final int[] idPhoto = new int[]{R.drawable.i1,R.drawable.i2, R.drawable.i3, R.drawable.i4};
@@ -281,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
     //##############################################################################################################################
     private void init(Bundle savedInstanceState){
         // ------------------------------ TABS e VIEWPAGER ----------------------------------------------
+        listOfPositions = new ArrayList<Position>();
         mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
 
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
@@ -623,6 +629,7 @@ public class MainActivity extends AppCompatActivity {
                         while (true) {
                             bytes = input.read(buffer);
                             String readMessage = new String(buffer, 0, bytes);
+                            splitMessage(readMessage);
                         }
                     }
                 }
@@ -671,6 +678,12 @@ public class MainActivity extends AppCompatActivity {
                 socket.close();
             } catch (IOException e) { }
         }
+    }
+
+    private void splitMessage(String readMessage){
+        String[] splits = readMessage.split(",");
+        Position position = new Position(Double.parseDouble(splits[0]), Double.parseDouble(splits[1]));
+        listOfPositions.add(position);
     }
 
     //###############################################################################################################################
