@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.transition.Fade;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,7 +45,6 @@ import com.mikepenz.materialdrawer.model.interfaces.OnCheckedChangeListener;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     private String address;
     private ConnectThread teste;
 
-    private final CharSequence[] items = {"Controle Automático", "Controle Manual"};
+    private final CharSequence[] items = {Constants.CONT_AUTO, Constants.CONT_MANUAL};
 
     //VARIAVEIS TABS
     private SlidingTabLayout mSlidingTabLayout;
@@ -329,8 +329,8 @@ public class MainActivity extends AppCompatActivity {
 
         // ----------------------------- TOOLBAR -------------------------------------------------------
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
-        mToolbar.setTitle("CONTIC");
-        mToolbar.setSubtitle("Robótica");
+        mToolbar.setTitle(Constants.APP_NAME);
+        mToolbar.setSubtitle(Constants.APP_SUBTITLE);
         mToolbar.setLogo(R.drawable.ic_launcher);
         setSupportActionBar(mToolbar);
 
@@ -441,12 +441,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).build();
 
-        navigationDrawerLeft.addItem(new PrimaryDrawerItem().withName("Mapa Ilustrativo do Processo")
+        navigationDrawerLeft.addItem(new PrimaryDrawerItem().withName(Constants.PROCESS)
                 .withIcon(getResources().getDrawable(R.drawable.map)));
         navigationDrawerLeft.addItem(new DividerDrawerItem());
-        navigationDrawerLeft.addItem(new PrimaryDrawerItem().withName("Configurações")
+        navigationDrawerLeft.addItem(new PrimaryDrawerItem().withName(Constants.CONFIGURATION)
                 .withIcon(getResources().getDrawable(R.drawable.settings)));
-        navigationDrawerLeft.addItem(new SwitchDrawerItem().withName("Notificação")
+        navigationDrawerLeft.addItem(new SwitchDrawerItem().withName(Constants.NOTIFICATION)
                 .withChecked(notificationClicked).withOnCheckedChangeListener(mOnCheckedChangeListener)
                 .withIcon(getResources().getDrawable(R.drawable.note))
                 .withSelectedColor(getResources().getColor(R.color.colorPrimary)));
@@ -474,12 +474,12 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }).build();
 
-        navigationDrawerRight.addItem(new PrimaryDrawerItem().withName("Mapa Ilustrativo do Processo")
+        navigationDrawerRight.addItem(new PrimaryDrawerItem().withName(Constants.PROCESS)
                 .withIcon(getResources().getDrawable(R.drawable.map)));
         navigationDrawerRight.addItem(new DividerDrawerItem());
-        navigationDrawerRight.addItem(new PrimaryDrawerItem().withName("Configurações")
+        navigationDrawerRight.addItem(new PrimaryDrawerItem().withName(Constants.CONFIGURATION)
                 .withIcon(getResources().getDrawable(R.drawable.settings)));
-        navigationDrawerRight.addItem(new SwitchDrawerItem().withName("Notificação")
+        navigationDrawerRight.addItem(new SwitchDrawerItem().withName(Constants.NOTIFICATION)
                 .withChecked(notificationClicked).withOnCheckedChangeListener(mOnCheckedChangeListener)
                 .withIcon(getResources().getDrawable(R.drawable.note))
                 .withSelectedColor(getResources().getColor(R.color.colorPrimary)));
@@ -647,8 +647,10 @@ public class MainActivity extends AppCompatActivity {
                         int bytes = 0;
                         while (true) {
                             bytes = input.read(buffer);
+                            Log.i("TAG", "-----> bytes: "+bytes);
                             String readMessage = new String(buffer, 0, bytes);
-                            if(readMessage.equalsIgnoreCase(Constants.FIM)) break;
+                            if(readMessage.equalsIgnoreCase(Constants.FIM_TRANSFER)) break;
+                            Log.i("TAG", "-----> readMessage: "+readMessage);
                             splitMessage(readMessage);
                             bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
                         }
@@ -703,6 +705,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void splitMessage(String readMessage){
         String[] splits = readMessage.split(",");
+        Log.i("TAG", "splitMessage: "+splits.length);
         Position position = new Position(
                 Double.parseDouble(splits[0]),
                 Double.parseDouble(splits[1]),

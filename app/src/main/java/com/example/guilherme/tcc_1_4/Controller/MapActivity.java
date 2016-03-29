@@ -25,6 +25,7 @@ import com.example.guilherme.tcc_1_4.Adapter.TabsAdapter;
 import com.example.guilherme.tcc_1_4.Extra.ImageHelper;
 import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
 import com.example.guilherme.tcc_1_4.R;
+import com.example.guilherme.tcc_1_4.Utils.Constants;
 
 import java.util.Arrays;
 
@@ -79,7 +80,7 @@ public class MapActivity extends AppCompatActivity{
         });
 
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
-        mToolbar.setTitle("Mapa Ilustrativo");
+        mToolbar.setTitle(Constants.PROCESS);
         mToolbar.setLogo(R.drawable.ic_launcher);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
