@@ -3,21 +3,28 @@ package com.example.guilherme.tcc_1_4.Adapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.guilherme.tcc_1_4.Fragments.GraphFragment;
 import com.example.guilherme.tcc_1_4.Fragments.InformationFragment;
+import com.example.guilherme.tcc_1_4.Model.Position;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TabsAdapter extends FragmentPagerAdapter {
 
     private String[] titles = new String[]{"INFORMAÇÕES", "GRÁFICOS"};
     private Context mContext;
     private BluetoothDevice mDevice;
+    private List<Position> moviments;
 
-    public TabsAdapter(FragmentManager fragmentManager, Context context, BluetoothDevice device){
+    public TabsAdapter(FragmentManager fragmentManager, Context context, BluetoothDevice device, List<Position> pos){
         super(fragmentManager);
+        moviments = pos;
         mContext = context;
         mDevice = device;
     }
@@ -34,6 +41,8 @@ public class TabsAdapter extends FragmentPagerAdapter {
         //Passar dados para o fragment
         Bundle bundle = new Bundle();
         bundle.putParcelable("device", mDevice);
+        bundle.putParcelableArrayList("moviments", (ArrayList<? extends Parcelable>) moviments);
+
         frag.setArguments(bundle);
         return frag;
     }

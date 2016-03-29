@@ -54,11 +54,11 @@ public class MapActivity extends AppCompatActivity{
         if(!extrasBundle.isEmpty()){
             device = extrasBundle.getParcelable("device");
             moviments = extrasBundle.getParcelableArrayList("moviments");
-            Log.i("TAG", "MapActivity -> ");
+            Log.i("TAG", "MapActivity -> "+moviments.size());
         }
 
         mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
-        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), MapActivity.this, device));
+        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), MapActivity.this, device, moviments));
 
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
