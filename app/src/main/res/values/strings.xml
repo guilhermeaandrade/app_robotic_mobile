@@ -7,4 +7,21 @@
     <string name="fieldObrigatorio">Campos assinalados com * são obrigatórios</string>
     <string name="coordenadaX">Coordenada X:  </string>
     <string name="coordenadaY">Coordenada Y:  </string>
+
+    <string name="position"> Posicionamento</string>
+    <string name="avgCoordX">Média Coordenada X: </string>
+    <string name="avgCoordY">Média Coordenada Y: </string>
+    <string name="avgAngTheta">Média Ângulo Theta: </string>
+    <string name="avgVelV">Média Velocidade Linear: </string>
+    <string name="avgVelW">Média Velocidade Angular: </string>
+    <string name="avgWr">Média Wr: </string>
+    <string name="avgWl">Média Wl: </string>
+
+    <string name="lastCoordX">Última Coordenada X: </string>
+    <string name="lastCoordY">Última Coordenada Y: </string>
+    <string name="lastAngTheta">Último Ângulo Theta: </string>
+    <string name="lastVelV">Última Velocidade Linear: </string>
+    <string name="lastVelW">Última Velocidade Angular: </string>
+    <string name="lastWr">Última Wr: </string>
+    <string name="lastWl">Última Wl: </string>
 </resources>
