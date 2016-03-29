@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,38 +25,40 @@ import com.androidplot.xy.XYSeries;
 import com.example.guilherme.tcc_1_4.Adapter.TabsAdapter;
 import com.example.guilherme.tcc_1_4.Extra.ImageHelper;
 import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
+import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MapActivity extends AppCompatActivity{
 
     private BluetoothDevice device;
     private Toolbar mToolbar;
-    private ImageView ivRobo;
-    private TextView tvName;
-    private TextView tvEndMac;
-
-    private float scale;
-    private int width;
-    private int height;
-    private int roundPixels;
-
-    private XYPlot plot;
-
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
+    private List<Position> moviments;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.process_activity_layout);
-        //setContentView(R.layout.map_activity_layout);
+
+        moviments =  new ArrayList<Position>();
+
+        Intent intentExtras = getIntent();
+        Bundle extrasBundle = intentExtras.getExtras();
+        if(!extrasBundle.isEmpty()){
+            device = extrasBundle.getParcelable("device");
+            moviments = extrasBundle.getParcelableArrayList("moviments");
+            Log.i("TAG", "MapActivity -> ");
+        }
 
         mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
-        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), MapActivity.this));
+        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), MapActivity.this, device));
 
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
@@ -65,18 +68,13 @@ public class MapActivity extends AppCompatActivity{
         mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
             @Override
-            public void onPageSelected(int position) {
-                //Caso tab e navigation tem os mesmos componentes
-                //navigationDrawerLeft.setSelection(position);
-            }
+            public void onPageSelected(int position) {}
 
             @Override
-            public void onPageScrollStateChanged(int state) {
-            }
+            public void onPageScrollStateChanged(int state) {}
         });
 
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
@@ -187,7 +185,7 @@ public class MapActivity extends AppCompatActivity{
         // rotate domain labels 45 degrees to make them more compact horizontally:
         plot.getGraphWidget().setDomainLabelOrientation(-45);
     }
-    */
+
     public void launchRingDialog() {
         final ProgressDialog ringProgressDialog = ProgressDialog.show(MapActivity.this, "Please wait ...", "Searching for connections and settings ...", true);
         ringProgressDialog.setCancelable(true);
@@ -201,7 +199,7 @@ public class MapActivity extends AppCompatActivity{
                 ringProgressDialog.dismiss();
             }
         }).start();
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

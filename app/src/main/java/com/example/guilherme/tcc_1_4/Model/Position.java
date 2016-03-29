@@ -1,6 +1,9 @@
 package com.example.guilherme.tcc_1_4.Model;
 
-public class Position {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Position implements Parcelable{
 
     private Double x;
     private Double y;
@@ -64,5 +67,43 @@ public class Position {
 
     public void setE(Double e) {
         this.e = e;
+    }
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(x);
+        dest.writeDouble(y);
+        dest.writeDouble(theta);
+        dest.writeDouble(v);
+        dest.writeDouble(w);
+        dest.writeDouble(e);
+    }
+
+    public static final Parcelable.Creator<Position> CREATOR
+            = new Parcelable.Creator<Position>() {
+        public Position createFromParcel(Parcel in) {
+            return new Position(in);
+        }
+
+        public Position[] newArray(int size) {
+            return new Position[size];
+        }
+    };
+
+    private Position(Parcel in) {
+        x = in.readDouble();
+        y = in.readDouble();
+        theta = in.readDouble();
+        v = in.readDouble();
+        w = in.readDouble();
+        e = in.readDouble();
+
+
+
     }
 }

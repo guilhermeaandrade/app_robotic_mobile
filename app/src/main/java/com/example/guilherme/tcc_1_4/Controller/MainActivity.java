@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -413,10 +414,12 @@ public class MainActivity extends AppCompatActivity {
                                     Intent i = new Intent(MainActivity.this, MapActivity.class);
                                     Bundle bundle = new Bundle();
                                     bundle.putParcelable("device", device);
+                                    bundle.putParcelableArrayList("moviments", (ArrayList<? extends Parcelable>) listOfPositions);
+
                                     i.putExtras(bundle);
                                     startActivity(i);
                                 }else{
-                                    Toast.makeText(MainActivity.this, "Conecte-se a uma dispositivo para iniciar essa atividade.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(MainActivity.this, "Conecte-se a um dispositivo para iniciar essa atividade.", Toast.LENGTH_LONG).show();
                                 }
 
                                 break;
