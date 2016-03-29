@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.transition.Explode;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -704,7 +703,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void splitMessage(String readMessage){
         String[] splits = readMessage.split(",");
-        Position position = new Position(Double.parseDouble(splits[0]), Double.parseDouble(splits[1]));
+        Position position = new Position(
+                Double.parseDouble(splits[0]),
+                Double.parseDouble(splits[1]),
+                Double.parseDouble(splits[2]),
+                Double.parseDouble(splits[3]),
+                Double.parseDouble(splits[4]),
+                Double.parseDouble(splits[5]));
         listOfPositions.add(position);
     }
 

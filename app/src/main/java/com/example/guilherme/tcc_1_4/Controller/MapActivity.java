@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -20,7 +21,9 @@ import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.SimpleXYSeries;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
+import com.example.guilherme.tcc_1_4.Adapter.TabsAdapter;
 import com.example.guilherme.tcc_1_4.Extra.ImageHelper;
+import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
 import com.example.guilherme.tcc_1_4.R;
 
 import java.util.Arrays;
@@ -40,11 +43,40 @@ public class MapActivity extends AppCompatActivity{
 
     private XYPlot plot;
 
+    private SlidingTabLayout mSlidingTabLayout;
+    private ViewPager mViewPager;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.map_activity_layout);
+        setContentView(R.layout.process_activity_layout);
+        //setContentView(R.layout.map_activity_layout);
+
+        mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
+        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), MapActivity.this));
+
+        mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
+        mSlidingTabLayout.setViewPager(mViewPager);
+        mSlidingTabLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        mSlidingTabLayout.setSelectedIndicatorColors(getResources().getColor(R.color.colorSelectedTab));
+        mSlidingTabLayout.setDistributeEvenly(true);
+        mSlidingTabLayout.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                //Caso tab e navigation tem os mesmos componentes
+                //navigationDrawerLeft.setSelection(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
 
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle("Mapa Ilustrativo");
@@ -52,7 +84,7 @@ public class MapActivity extends AppCompatActivity{
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        scale = this.getResources().getDisplayMetrics().density;
+        /*scale = this.getResources().getDisplayMetrics().density;
         width = this.getResources().getDisplayMetrics().widthPixels - (int)(14 * scale + 0.5f);
         height = (width/16)*9;
 
@@ -95,11 +127,11 @@ public class MapActivity extends AppCompatActivity{
 
                 dynamicPlot.getGraphWidget().getGridBackgroundPaint().setColor(Color.WHITE);
                 //set background to white to transperent */
-                drawMap();
-            }
-        }
+     //           drawMap();
+//            }
+        //}*/
     }
-
+/*
     private void drawMap(){
         // initialize our XYPlot reference:
         plot = (XYPlot) findViewById(R.id.plot);
@@ -154,7 +186,7 @@ public class MapActivity extends AppCompatActivity{
         // rotate domain labels 45 degrees to make them more compact horizontally:
         plot.getGraphWidget().setDomainLabelOrientation(-45);
     }
-
+    */
     public void launchRingDialog() {
         final ProgressDialog ringProgressDialog = ProgressDialog.show(MapActivity.this, "Please wait ...", "Searching for connections and settings ...", true);
         ringProgressDialog.setCancelable(true);
