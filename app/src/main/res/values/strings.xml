@@ -24,4 +24,17 @@
     <string name="lastVelW">Última Velocidade Angular: </string>
     <string name="lastWr">Última Wr: </string>
     <string name="lastWl">Última Wl: </string>
+
+    <string name="graph_prompt">Selecione um gráfico:</string>
+
+    <string-array name="graph_types">
+        <item>Percurso</item>
+        <item>Posição X x Tempo</item>
+        <item>Posição Y x Tempo</item>
+        <item>Theta x Tempo</item>
+        <item>Velocidade Linear x Tempo</item>
+        <item>Velocidade Angular x Tempo</item>
+        <item>Erro de posição x Tempo</item>
+    </string-array>
+
 </resources>

@@ -30,11 +30,11 @@
 
             <com.androidplot.xy.XYPlot
                 android:id="@+id/plot"
-                android:layout_width="350dp"
-                android:layout_height="300dp"
+                android:layout_width="345dp"
+                android:layout_height="450dp"
                 ap:label="A Simple XY Plot"
-                ap:rangeLabel="range"
-                ap:domainLabel="domain"
+                ap:rangeLabel="cm"
+                ap:domainLabel="s"
                 ap:borderColor="#000000"
                 ap:backgroundColor="#000000"
                 ap:graphBackgroundColor="#000000"
@@ -63,8 +63,22 @@
                 ap:legendIconWidth="15dp"
                 ap:legendHeight="25dp"
                 ap:legendAnchorPosition="right_bottom"
-                android:layout_below="@+id/end_mac_robo"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="false"
+                android:layout_alignParentLeft="false"
+                android:layout_alignWithParentIfMissing="false" />
+
+            <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/spGraphs"
+                android:layout_alignParentTop="true"
+                android:layout_alignStart="@+id/plot"
+                android:spinnerMode="dropdown"
+                android:prompt="@string/graph_prompt"
+                android:entries="@array/graph_types" />
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
