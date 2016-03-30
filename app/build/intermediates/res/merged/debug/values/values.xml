@@ -819,6 +819,7 @@
     <string name="lastAngTheta">Último Ângulo Theta: </string>
     <string name="lastCoordX">Última Coordenada X: </string>
     <string name="lastCoordY">Última Coordenada Y: </string>
+    <string name="lastError">Erro de posição: </string>
     <string name="lastVelV">Última Velocidade Linear: </string>
     <string name="lastVelW">Última Velocidade Angular: </string>
     <string name="lastWl">Última Wl: </string>

@@ -30,6 +30,7 @@ public class InformationFragment extends Fragment {
     private TextView tvLastTheta;
     private TextView tvLastVelV;
     private TextView tvLastVelW;
+    private TextView tvError;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,7 @@ public class InformationFragment extends Fragment {
         tvLastTheta = (TextView) view.findViewById(R.id.edtAngTheta);
         tvLastVelV = (TextView) view.findViewById(R.id.edtVelV);
         tvLastVelW = (TextView) view.findViewById(R.id.edtVelW);
+        tvError = (TextView) view.findViewById(R.id.edtError);
 
         if(moviments.size() > 0){
             tvLastCoordX.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getX())));
@@ -67,12 +69,14 @@ public class InformationFragment extends Fragment {
             tvLastTheta.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getTheta())));
             tvLastVelV.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getV())));
             tvLastVelW.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getW())));
+            tvError.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getE())));
         }else {
             tvLastCoordX.setText("0");
             tvLastCoordY.setText("0");
             tvLastTheta.setText("0");
             tvLastVelV.setText("0");
             tvLastVelW.setText("0");
+            tvError.setText("0");
         }
         return view;
     }
