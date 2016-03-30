@@ -10,4 +10,5 @@ public class Constants {
     public static final String NOTIFICATION = "Notificação";
     public static final String CONT_AUTO = "Controle Automático";
     public static final String CONT_MANUAL = "Controle Manual";
+    public static final int NUMBER_DECIMAIS = 4;
 }

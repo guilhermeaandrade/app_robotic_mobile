@@ -709,6 +709,9 @@ public class MainActivity extends AppCompatActivity {
     private void splitMessage(String readMessage){
         String[] splits = readMessage.split(",");
         Log.i("TAG", "splitMessage: "+splits.length);
+        for(int i = 0; i < splits.length; i++){
+            Log.i("TAG", "splitMessage: "+splits[i]);
+        }
         Position position = new Position(
                 Double.parseDouble(splits[0]),
                 Double.parseDouble(splits[1]),
