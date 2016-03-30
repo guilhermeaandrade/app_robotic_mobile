@@ -56,20 +56,24 @@ public class InformationFragment extends Fragment {
 
         //##############################################################################################################
         tvLastCoordX = (TextView) view.findViewById(R.id.edtCoordX);
-        tvLastCoordX.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getX())));
-
         tvLastCoordY = (TextView) view.findViewById(R.id.edtCoordY);
-        tvLastCoordY.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getY())));
-
         tvLastTheta = (TextView) view.findViewById(R.id.edtAngTheta);
-        tvLastTheta.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getTheta())));
-
         tvLastVelV = (TextView) view.findViewById(R.id.edtVelV);
-        tvLastVelV.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getV())));
-
         tvLastVelW = (TextView) view.findViewById(R.id.edtVelW);
-        tvLastVelW.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getW())));
 
+        if(moviments.size() > 0){
+            tvLastCoordX.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getX())));
+            tvLastCoordY.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getY())));
+            tvLastTheta.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getTheta())));
+            tvLastVelV.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getV())));
+            tvLastVelW.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getW())));
+        }else {
+            tvLastCoordX.setText("0");
+            tvLastCoordY.setText("0");
+            tvLastTheta.setText("0");
+            tvLastVelV.setText("0");
+            tvLastVelW.setText("0");
+        }
         return view;
     }
 

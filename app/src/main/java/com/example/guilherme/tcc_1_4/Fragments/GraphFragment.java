@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.graphics.DashPathEffect;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
+import com.example.guilherme.tcc_1_4.Utils.Constants;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,8 +53,30 @@ public class GraphFragment extends Fragment{
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-
+            //Log.i(Constants.TAG, "Position: "+position + "id: "+id);
+                switch (position){
+                    case 0:
+                        plot.setTitle("Percurso");
+                        break;
+                    case 1:
+                        plot.setTitle("Posição X x Tempo");
+                        break;
+                    case 2:
+                        plot.setTitle("Posição Y x Tempo");
+                        break;
+                    case 3:
+                        plot.setTitle("Theta x Tempo");
+                        break;
+                    case 4:
+                        plot.setTitle("Velocidade Linear x Tempo");
+                        break;
+                    case 5:
+                        plot.setTitle("Velocidade Angular x Tempo");
+                        break;
+                    case 6:
+                        plot.setTitle("Erro de posição x Tempo");
+                        break;
+                }
             }
 
             @Override

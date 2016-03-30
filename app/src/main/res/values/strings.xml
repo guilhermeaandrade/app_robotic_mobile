@@ -24,6 +24,7 @@
     <string name="lastVelW">Última Velocidade Angular: </string>
     <string name="lastWr">Última Wr: </string>
     <string name="lastWl">Última Wl: </string>
+    <string name="lastError">Erro de posição: </string>
 
     <string name="graph_prompt">Selecione um gráfico:</string>
 
