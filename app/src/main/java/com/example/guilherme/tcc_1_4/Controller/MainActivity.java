@@ -712,14 +712,18 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < splits.length; i++){
             Log.i("TAG", "splitMessage: "+splits[i]);
         }
-        Position position = new Position(
-                Double.parseDouble(splits[0]),
-                Double.parseDouble(splits[1]),
-                Double.parseDouble(splits[2]),
-                Double.parseDouble(splits[3]),
-                Double.parseDouble(splits[4]),
-                Double.parseDouble(splits[5]));
-        listOfPositions.add(position);
+        try {
+            Position position = new Position(
+                    Double.parseDouble(splits[0]),
+                    Double.parseDouble(splits[1]),
+                    Double.parseDouble(splits[2]),
+                    Double.parseDouble(splits[3]),
+                    Double.parseDouble(splits[4]),
+                    Double.parseDouble(splits[5]));
+            listOfPositions.add(position);
+        }catch (NumberFormatException ex){
+            Log.e(Constants.TAG, ex.getMessage().toString());
+        }
     }
 
     //###############################################################################################################################

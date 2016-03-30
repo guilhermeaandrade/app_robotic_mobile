@@ -38,7 +38,7 @@ public class SelectDevice extends AppCompatActivity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.tela02);
+        setContentView(R.layout.select_device_activity);
 
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle("Dispositivos");

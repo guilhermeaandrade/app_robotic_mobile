@@ -11,4 +11,6 @@ public class Constants {
     public static final String CONT_AUTO = "Controle Automático";
     public static final String CONT_MANUAL = "Controle Manual";
     public static final int NUMBER_DECIMAIS = 4;
+    public static final String TAG =  "TAG";
+
 }

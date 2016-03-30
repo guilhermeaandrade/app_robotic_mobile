@@ -102,8 +102,5 @@ public class Position implements Parcelable{
         v = in.readDouble();
         w = in.readDouble();
         e = in.readDouble();
-
-
-
     }
 }

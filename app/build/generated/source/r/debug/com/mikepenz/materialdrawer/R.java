@@ -902,10 +902,10 @@ public final class R {
 		public static final int material_drawer_item_switch = 0x7f040028;
 		public static final int material_drawer_item_toggle = 0x7f040029;
 		public static final int material_drawer_slider = 0x7f04002a;
-		public static final int select_dialog_item_material = 0x7f040034;
-		public static final int select_dialog_multichoice_material = 0x7f040035;
-		public static final int select_dialog_singlechoice_material = 0x7f040036;
-		public static final int support_simple_spinner_dropdown_item = 0x7f040037;
+		public static final int select_dialog_item_material = 0x7f040035;
+		public static final int select_dialog_multichoice_material = 0x7f040036;
+		public static final int select_dialog_singlechoice_material = 0x7f040037;
+		public static final int support_simple_spinner_dropdown_item = 0x7f040038;
 	}
 	public static final class string {
 		public static final int abc_action_bar_home_description = 0x7f070000;
