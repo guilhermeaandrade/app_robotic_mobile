@@ -2,7 +2,11 @@ package com.example.guilherme.tcc_1_4.Fragments;
 
 
 import android.bluetooth.BluetoothDevice;
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -49,6 +53,14 @@ public class GraphFragment extends Fragment{
         moviments = this.getArguments().getParcelableArrayList("moviments");
 
         spGraphType = (Spinner) view.findViewById(R.id.spGraphs);
+        spGraphType.setVisibility(View.VISIBLE);
+
+        Drawable spinnerDrawable = spGraphType.getBackground().getConstantState().newDrawable();
+        spinnerDrawable.setColorFilter(getResources().getColor(R.color.grey), PorterDuff.Mode.SRC_ATOP);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            spGraphType.setBackground(spinnerDrawable);
+        }
+
         spGraphType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
