@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.github.shell-software/fab/1.1.2/res/values-sw600dp-v13/values.xml -->
+    <eat-comment/>
+    <dimen name="fab_margin">24dp</dimen>
     <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.mikepenz.materialdrawer/library/2.8.2/res/values-sw600dp-v13/values.xml -->
     <eat-comment/>
     <dimen name="material_drawer_vertical_padding">24dp</dimen>

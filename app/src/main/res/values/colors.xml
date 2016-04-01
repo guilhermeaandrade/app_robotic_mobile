@@ -2,8 +2,11 @@
 <resources>
     <color name = "grey">#ddd</color>
     <color name = "black">#000</color>
+    <color name = "white">#FFFFFF</color>
 
     <color name = "colorPrimary">#009688</color>
+    <color name = "colorPrimaryPressed">#00695C</color>
+    <color name = "shadowActionButton">#E0E0E0</color>
     <color name = "colorPrimaryDark">#007968</color>
     <color name = "colorAccent">#795548</color>
 

@@ -31,4 +31,6 @@ dependencies {
         transitive = true
     }
     compile 'com.androidplot:androidplot-core:0.9.6'
+    compile 'com.github.shell-software:fab:1.1.2'
+    compile 'com.github.clans:fab:1.6.2'
 }

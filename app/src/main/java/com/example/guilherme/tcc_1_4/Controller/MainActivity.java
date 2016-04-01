@@ -34,6 +34,8 @@ import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -42,6 +44,7 @@ import com.mikepenz.materialdrawer.model.SwitchDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.OnCheckedChangeListener;
+import com.software.shell.fab.ActionButton;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -60,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
     private Handler bluetoothIn;
 
     //VARIAVEIS APLICACAO
-    private static final int[] idPhoto = new int[]{R.drawable.i1,R.drawable.i2, R.drawable.i3, R.drawable.i4};
     private Button btConectar;
     private Button btSelectType;
     private Button btForward;
@@ -88,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
     //VARIAVEIS TABS
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
+
+    private FloatingActionMenu actionMenu;
 
     //VARIAVEIS NAVIGATION
     private int mItemDrawerSelected;
@@ -138,13 +142,13 @@ public class MainActivity extends AppCompatActivity {
 
         //botao para conectar
         btConectar = (Button) findViewById(R.id.btnConnect);
-        btConectar.setOnClickListener(new View.OnClickListener(){
+        btConectar.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(adaptador.isEnabled()){
-                    startActivityForResult(it,TELA2);
-                }else{
+                if (adaptador.isEnabled()) {
+                    startActivityForResult(it, TELA2);
+                } else {
                     Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(enableBTIntent, 1);
                 }
@@ -189,16 +193,16 @@ public class MainActivity extends AppCompatActivity {
 
         //botao para tras
         btBackward = (Button) findViewById(R.id.btnBackward);
-        btBackward.setOnTouchListener(new View.OnTouchListener(){
+        btBackward.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(device == null){
+                if (device == null) {
                     Toast.makeText(getApplicationContext(), "Nenhum dispositivo conectado", Toast.LENGTH_LONG).show();
-                }else if(device != null){
-                    switch (event.getAction()){
+                } else if (device != null) {
+                    switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
-                            if(pressedUp == false){
+                            if (pressedUp == false) {
                                 pressedUp = true;
                                 new Enviar('m', 's', velocidade).start();
 
@@ -270,6 +274,7 @@ public class MainActivity extends AppCompatActivity {
         sbVelocidade.setProgress(velocidade);
         sbVelocidade.setMinimumWidth(1);
         sbVelocidade.setMax(50);
+        sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
         sbVelocidade.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -284,7 +289,6 @@ public class MainActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-
         disableAllButtons();
 
         bluetoothIn = new Handler(){
@@ -301,6 +305,38 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
+
+        actionMenu = (FloatingActionMenu) findViewById(R.id.actionMenu);
+        actionMenu.setIconAnimated(false);
+        actionMenu.getMenuIconView().setImageResource(R.drawable.ic_pencil);
+        actionMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
+            @Override
+            public void onMenuToggle(boolean b) {
+                //Toast.makeText(getApplicationContext(), "Is menu opened? " + (b ? "true" : "false"), Toast.LENGTH_SHORT).show();
+            }
+        });
+        actionMenu.showMenuButton(true);
+        actionMenu.setClosedOnTouchOutside(true);
+
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        fab1.setColorNormal(getResources().getColor(R.color.colorPrimary));
+        fab1.setColorPressed(getResources().getColor(R.color.colorPrimaryPressed));
+        fab1.setOnClickListener(new FloatingActionButton.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Controlador", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        fab2.setColorNormal(getResources().getColor(R.color.colorPrimary));
+        fab2.setColorPressed(getResources().getColor(R.color.colorPrimaryPressed));
+        fab2.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                Toast.makeText(getApplicationContext(), "Posicionamento", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //##############################################################################################################################
@@ -341,13 +377,13 @@ public class MainActivity extends AppCompatActivity {
                 .withCompactStyle(false)
                 .withSavedInstance(savedInstanceState)
                 .withThreeSmallProfileImages(false)
-                .withHeaderBackground(sortBackgraound())
+                .withHeaderBackground(R.drawable.robo)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
 
                     @Override
                     public boolean onProfileChanged(View view, IProfile iProfile, boolean b) {
                         Toast.makeText(MainActivity.this, "onProfileChanged", Toast.LENGTH_SHORT).show();
-                        headerNavigationLeft.setBackgroundRes(sortBackgraound());
+                        headerNavigationLeft.setBackgroundRes(R.drawable.robo);
                         navigationDrawerLeft.getAdapter().notifyDataSetChanged();
                         return true;
                     }
@@ -377,8 +413,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l, IDrawerItem iDrawerItem) {
-                        int valor = sortBackgraound(); //SORTEAR BACKGROUND
-
                         for (int count = 0, tam = navigationDrawerLeft.getDrawerItems().size(); count < tam;  count++) {
                             if(count == mPositionClicked && mPositionClicked != 1 && mPositionClicked <= 3){
                                 PrimaryDrawerItem aux = (PrimaryDrawerItem) navigationDrawerLeft.getDrawerItems().get(count);
@@ -392,8 +426,8 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         if(position == 3){
-                            ((SwitchDrawerItem) iDrawerItem).setIcon(getResources().getDrawable(getCorrectDrawerIcon(position,true)));
-                            headerNavigationLeft.setBackgroundRes(valor);
+                            ((SwitchDrawerItem) iDrawerItem).setIcon(getResources().getDrawable(getCorrectDrawerIcon(position, true)));
+                            headerNavigationLeft.setBackgroundRes(R.drawable.robo);
                             navigationDrawerLeft.getAdapter().notifyDataSetChanged();
                         }
 
@@ -407,7 +441,7 @@ public class MainActivity extends AppCompatActivity {
 
                         switch (mItemDrawerSelected) {
                             case 0:
-                                headerNavigationLeft.setBackgroundRes(valor);
+                                headerNavigationLeft.setBackgroundRes(R.drawable.robo);
                                 navigationDrawerLeft.getAdapter().notifyDataSetChanged();
 
                                 if(device != null) {
@@ -424,12 +458,12 @@ public class MainActivity extends AppCompatActivity {
 
                                 break;
                             case 2:
-                                headerNavigationLeft.setBackgroundRes(valor);
+                                headerNavigationLeft.setBackgroundRes(R.drawable.robo);
                                 navigationDrawerLeft.getAdapter().notifyDataSetChanged();
 
                                 break;
                             case 3:
-                                headerNavigationLeft.setBackgroundRes(valor);
+                                headerNavigationLeft.setBackgroundRes(R.drawable.robo);
                                 navigationDrawerLeft.getAdapter().notifyDataSetChanged();
 
                                 break;
@@ -445,44 +479,11 @@ public class MainActivity extends AppCompatActivity {
                 }).build();
 
         navigationDrawerLeft.addItem(new PrimaryDrawerItem().withName(Constants.PROCESS)
-                .withIcon(getResources().getDrawable(R.drawable.map)));
+                .withIcon(getResources().getDrawable(R.drawable.main)));
         navigationDrawerLeft.addItem(new DividerDrawerItem());
         navigationDrawerLeft.addItem(new PrimaryDrawerItem().withName(Constants.CONFIGURATION)
                 .withIcon(getResources().getDrawable(R.drawable.settings)));
         navigationDrawerLeft.addItem(new SwitchDrawerItem().withName(Constants.NOTIFICATION)
-                .withChecked(notificationClicked).withOnCheckedChangeListener(mOnCheckedChangeListener)
-                .withIcon(getResources().getDrawable(R.drawable.note))
-                .withSelectedColor(getResources().getColor(R.color.colorPrimary)));
-
-        //RIGHT
-        navigationDrawerRight = new Drawer()
-                .withActivity(this)
-                .withDisplayBelowToolbar(true)
-                .withActionBarDrawerToggleAnimated(true)
-                .withDrawerGravity(Gravity.END)
-                .withSavedInstance(savedInstanceState)
-                .withSelectedItem(-1)
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener(){
-
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l, IDrawerItem iDrawerItem) {
-
-                    }
-                }).withOnDrawerItemLongClickListener(new Drawer.OnDrawerItemLongClickListener() {
-
-                    @Override
-                    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l, IDrawerItem iDrawerItem) {
-
-                        return false;
-                    }
-                }).build();
-
-        navigationDrawerRight.addItem(new PrimaryDrawerItem().withName(Constants.PROCESS)
-                .withIcon(getResources().getDrawable(R.drawable.map)));
-        navigationDrawerRight.addItem(new DividerDrawerItem());
-        navigationDrawerRight.addItem(new PrimaryDrawerItem().withName(Constants.CONFIGURATION)
-                .withIcon(getResources().getDrawable(R.drawable.settings)));
-        navigationDrawerRight.addItem(new SwitchDrawerItem().withName(Constants.NOTIFICATION)
                 .withChecked(notificationClicked).withOnCheckedChangeListener(mOnCheckedChangeListener)
                 .withIcon(getResources().getDrawable(R.drawable.note))
                 .withSelectedColor(getResources().getColor(R.color.colorPrimary)));
@@ -491,19 +492,13 @@ public class MainActivity extends AppCompatActivity {
     private int getCorrectDrawerIcon(int position, boolean isSelected){
         switch (position){
             case 0:
-                return (isSelected ? R.drawable.map_selected : R.drawable.map);
+                return (isSelected ? R.drawable.main_selecetd : R.drawable.main);
             case 2:
                 return (isSelected ? R.drawable.settings_selected : R.drawable.settings);
             case 3:
                 return (isSelected ? R.drawable.note_selected: R.drawable.note);
         }
         return (0);
-    }
-
-    private int sortBackgraound(){
-        Random gerador = new Random();
-        int valor = (gerador.nextInt(4));
-        return idPhoto[valor];
     }
 
     //##############################################################################################################################
@@ -531,9 +526,12 @@ public class MainActivity extends AppCompatActivity {
                     if (option == 1) {
 
                         disableAllButtons();
-                        if(device != null) btSelectType.setEnabled(true);
-                        new Enviar('u', 'q', Byte.parseByte("0")).start();
+                        if (device != null) {
+                            btSelectType.setEnabled(true);
+                            sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
+                        }
 
+                        new Enviar('u', 'q', Byte.parseByte("0")).start();
                         new Receber().start();
 
                     } else if (option == 2) {
@@ -550,6 +548,37 @@ public class MainActivity extends AppCompatActivity {
                 disableAllButtons();
                 new Enviar('u', 'q', Byte.parseByte("0")).start();
             }
+        });
+
+        final AlertDialog b = dialogBuilder.create();
+        b.setCancelable(false);
+        b.show();
+    }
+
+    private void showDisableBluetoothDialog(){
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder
+                .setTitle("Desativar Bluetooth ")
+                .setMessage("Bluetooth está ativo e comunicando com outro dispositivo. Deseja desativá-lo?")
+                .setIcon(R.drawable.ic_bluetooth_connect)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(adaptador.isEnabled()){
+                            adaptador.disable();
+                        }
+                        disableAllButtons();
+                        btSelectType.setEnabled(false);
+                        device = null;
+                        //ENVIO UMA MENSAGEM PARA O ROBOR PARA FECHAR A CONEXAO
+                    }
+                }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
         });
 
         final AlertDialog b = dialogBuilder.create();
@@ -751,6 +780,8 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         if(navigationDrawerLeft.isDrawerOpen()){
             navigationDrawerLeft.closeDrawer();
+        }else if(actionMenu.isOpened()){
+            actionMenu.close(true);
         }else{
             super.onBackPressed();
         }
@@ -797,13 +828,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id){
             case R.id.action_disabled_bluetooth:
-                if(adaptador.isEnabled()){
-                    adaptador.disable();
-                }
-                disableAllButtons();
-                if(device != null) btSelectType.setEnabled(false);
-                device = null;
-
+                if(device != null) showDisableBluetoothDialog();
                 break;
 
             case R.id.action_out:

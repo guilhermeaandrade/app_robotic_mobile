@@ -7,14 +7,12 @@
         android:id="@+id/action_disabled_bluetooth"
         android:orderInCategory="100"
         android:title="Desativar Bluetooth"
-        android:icon="@drawable/ic_bluetooth_disabled"
         app:showAsAction="withText|never" />
 
     <item
         android:id="@+id/action_out"
         android:orderInCategory="100"
         android:title="Sair"
-        android:icon="@drawable/exit"
         app:showAsAction="never" />
 
 </menu>

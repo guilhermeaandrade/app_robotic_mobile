@@ -33,6 +33,7 @@ MERGED from [com.android.support:support-v4:23.0.1] /home/guilherme/Documentos/G
 MERGED from [com.android.support:cardview-v7:23.0.1] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.0.1/AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:appcompat-v7:23.0.0] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/AndroidManifest.xml:22:5-20
 MERGED from [com.android.support:support-v4:23.0.1] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/AndroidManifest.xml:22:5-20
+MERGED from [com.github.clans:fab:1.6.2] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.github.clans/fab/1.6.2/AndroidManifest.xml:12:5-20
 	android:label
 		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:12:9-41
 	android:allowBackup
@@ -83,6 +84,11 @@ MERGED from [com.android.support:appcompat-v7:23.0.0] /home/guilherme/Documentos
 MERGED from [com.android.support:support-v4:23.0.1] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/AndroidManifest.xml:20:5-43
 MERGED from [com.mikepenz.iconics:library:0.9.1] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.mikepenz.iconics/library/0.9.1/AndroidManifest.xml:8:5-10:41
 MERGED from [com.androidplot:androidplot-core:0.9.6] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.androidplot/androidplot-core/0.9.6/AndroidManifest.xml:26:5-28:41
+MERGED from [com.github.shell-software:fab:1.1.2] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.github.shell-software/fab/1.1.2/AndroidManifest.xml:25:5-27:41
+MERGED from [com.github.shell-software:uitools:1.1.0] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.github.shell-software/uitools/1.1.0/AndroidManifest.xml:25:5-27:41
+MERGED from [com.github.shell-software:viewmover:1.1.0] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.github.shell-software/viewmover/1.1.0/AndroidManifest.xml:25:5-27:41
+MERGED from [com.github.shell-software:uitools:1.1.0] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.github.shell-software/uitools/1.1.0/AndroidManifest.xml:25:5-27:41
+MERGED from [com.github.clans:fab:1.6.2] /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.github.clans/fab/1.6.2/AndroidManifest.xml:8:5-10:41
 	android:targetSdkVersion
 		INJECTED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml
 		INJECTED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml

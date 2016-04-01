@@ -2,88 +2,11 @@
 <items version="2" >
 
     <item
-        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.mikepenz.materialdrawer/library/2.8.2/jars/classes.jar"
+        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.github.clans/fab/1.6.2/jars/classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="6320445a7438321cdf32f75545581821f5759cf3">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/classes-93f71d9c1cb8e90a8831d5c903e6eb44e6269c86.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.mikepenz.iconics/library/0.9.1/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="4054f18e4e7d1c148fa71ded4b17348428273e21">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/classes-da8fbb9019ea48398dc2567ed70a8ebce72291bc.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/cardview-v7/23.0.1/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="39ae02ce40c3ac828abbf780ce0ff5d7a28b7d6a">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/classes-4dc9912ba61a3d8d91b1784e75dd7b537c93ff7c.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.androidplot/androidplot-core/0.9.6/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="be48755cb80a353468cc4bae132d36bb42b00560">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/classes-bcc5e8d224a1bfd3a98bb3e77a5c6b05ddc0d029.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/23.0.1/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="4356e230a981d1bbf047d848b91bc0d9b7c5bacc">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/classes-9fa3144963ff12ab8d68b7e74ee0f91b2ebba564.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/libs/internal_impl-23.0.1.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/internal_impl-23.0.1-e349341d582e0236a7021dfd50b174ea4499dbc2.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.1/support-annotations-23.0.1.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/support-annotations-23.0.1-293f57dfa6b0d4dd950b21a415b0fce5aa466410.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/classes-718c13d0760b2b70f79081e0ae0ce98e21152e91.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.daimajia.easing/library/1.0.1/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="d7e947f993bf32a00fcb3078cdda8bb11c930afb">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/classes-eab80b7a8ad51db8a0e3b3b76263f8c8c729a316.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/library-2.4.0-141c24d33c50e009c7e6aa3a31804820716f8728.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.daimajia.androidanimations/library/1.1.3/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="8cec50fc9cc847bad0d6ed7d93814f4b34744521">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/classes-8bd1444df456554861220e8ef2f7286ac6ea52c9.jar" />
-    </item>
-    <item
-        jar="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/classes.jar"
-        jumboMode="false"
-        revision="23.0.0"
-        sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
-        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/classes-a363c6099001c24ce887b0ea09735aed224111a1.jar" />
+        sha1="7e6a161b3796c15fe00755ce47e03067e568ecc4">
+        <dex dex="/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/pre-dexed/debug/classes-d02b45d88632fc05284fe2f00884878a0d342321.jar" />
     </item>
 
 </items>

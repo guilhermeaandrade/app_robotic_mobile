@@ -8,8 +8,8 @@ package com.mikepenz.iconics;
 
 public final class R {
 	public static final class attr {
-		public static final int iiv_color = 0x7f010051;
-		public static final int iiv_icon = 0x7f010050;
+		public static final int iiv_color = 0x7f01009e;
+		public static final int iiv_icon = 0x7f01009d;
 	}
 	public static final class string {
 		public static final int app_name = 0x7f070013;
@@ -27,7 +27,7 @@ public final class R {
 		public static final int library_AndroidIconics_year = 0x7f070037;
 	}
 	public static final class styleable {
-		public static final int[] IconicsImageView = { 0x7f010050, 0x7f010051 };
+		public static final int[] IconicsImageView = { 0x7f01009d, 0x7f01009e };
 		public static final int IconicsImageView_iiv_color = 1;
 		public static final int IconicsImageView_iiv_icon = 0;
 	}
