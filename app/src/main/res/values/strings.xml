@@ -27,6 +27,7 @@
     <string name="lastError">Erro de posição: </string>
 
     <string name="graph_prompt">Selecione um gráfico:</string>
+    <string name="controladorProporcional">Valor do Controlador: </string>
 
     <string-array name="graph_types">
         <item>Percurso</item>

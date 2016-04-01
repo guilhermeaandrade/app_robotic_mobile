@@ -11,11 +11,9 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:paddingBottom="15dp"
-        android:hint="@string/centimetro"
+        android:hint="90"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/coordY"
-        android:layout_toStartOf="@+id/tv_asterisco_inf"
-        android:layout_alignEnd="@+id/tv_asterisco_inf"
         android:maxLength="3"
         android:paddingLeft="7dp"/>
 
@@ -25,9 +23,9 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:paddingTop="16dp"
-        android:hint="@string/centimetro"
+        android:hint="90"
         android:layout_below="@+id/coordX"
-        android:layout_toEndOf="@+id/textView"
+        android:layout_toEndOf="@+id/tvController"
         android:maxLength="3"
         android:paddingLeft="7dp"/>
 
@@ -36,7 +34,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/coordenadaX"
-        android:id="@+id/textView"
+        android:id="@+id/tvController"
         android:layout_alignTop="@+id/coordX"
         android:layout_alignParentStart="true"
         android:paddingTop="15dp"
@@ -50,39 +48,7 @@
         android:id="@+id/textView2"
         android:layout_alignParentStart="true"
         android:paddingTop="15dp"
-        android:layout_below="@+id/textView"
+        android:layout_below="@+id/tvController"
         android:layout_alignBottom="@+id/coordY" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="*"
-        android:id="@+id/tv_asterisco_inf"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/black"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="*"
-        android:id="@+id/tv_asterisco_sup"
-        android:layout_alignTop="@+id/coordY"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/black"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/fieldObrigatorio"
-        android:id="@+id/tv_fieldObrigatorio"
-        android:layout_below="@+id/coordY"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/tv_asterisco_sup"
-        android:layout_alignParentEnd="true"
-        android:textColor="@color/black"/>
 
 </RelativeLayout>

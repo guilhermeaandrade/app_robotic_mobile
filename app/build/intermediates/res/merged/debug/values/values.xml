@@ -872,6 +872,7 @@
     <string name="avgWl">Média Wl: </string>
     <string name="avgWr">Média Wr: </string>
     <string name="centimetro">Máximo de 100 cm</string>
+    <string name="controladorProporcional">Valor do Controlador: </string>
     <string name="coordenadaX">Coordenada X:  </string>
     <string name="coordenadaY">Coordenada Y:  </string>
     <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.mikepenz.iconics/library/0.9.1/res/values/values.xml -->

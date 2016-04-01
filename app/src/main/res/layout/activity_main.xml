@@ -117,7 +117,7 @@
             fab:menu_colorPressed="@color/colorPrimaryPressed" >
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab1"
+                android:id="@+id/fabController"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/controller"
@@ -130,7 +130,7 @@
                 fab:menu_colorPressed="@color/colorPrimaryPressed"/>
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/fab2"
+                android:id="@+id/fabPosition"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/location"

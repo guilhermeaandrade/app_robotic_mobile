@@ -20,6 +20,7 @@ import android.transition.Explode;
 import android.transition.Fade;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -27,6 +28,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
+import com.example.guilherme.tcc_1_4.Utils.Mask;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.mikepenz.materialdrawer.Drawer;
@@ -84,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String address;
     private ConnectThread teste;
+    private float controlValue;
 
     private final CharSequence[] items = {Constants.CONT_AUTO, Constants.CONT_MANUAL};
 
@@ -318,23 +322,23 @@ public class MainActivity extends AppCompatActivity {
         actionMenu.showMenuButton(true);
         actionMenu.setClosedOnTouchOutside(true);
 
-        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fab1);
+        FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fabController);
         fab1.setColorNormal(getResources().getColor(R.color.colorPrimary));
         fab1.setColorPressed(getResources().getColor(R.color.colorPrimaryPressed));
         fab1.setOnClickListener(new FloatingActionButton.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Controlador", Toast.LENGTH_SHORT).show();
+                showChangeControllerDialog();
             }
         });
 
-        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fab2);
+        FloatingActionButton fab2 = (FloatingActionButton) findViewById(R.id.fabPosition);
         fab2.setColorNormal(getResources().getColor(R.color.colorPrimary));
         fab2.setColorPressed(getResources().getColor(R.color.colorPrimaryPressed));
         fab2.setOnClickListener(new FloatingActionButton.OnClickListener(){
             @Override
             public void onClick(View v){
-                Toast.makeText(getApplicationContext(), "Posicionamento", Toast.LENGTH_SHORT).show();
+                showChangePositionDialog();
             }
         });
     }
@@ -452,6 +456,7 @@ public class MainActivity extends AppCompatActivity {
 
                                     i.putExtras(bundle);
                                     startActivity(i);
+                                    actionMenu.close(true);
                                 }else{
                                     Toast.makeText(MainActivity.this, "Conecte-se a um dispositivo para iniciar essa atividade.", Toast.LENGTH_LONG).show();
                                 }
@@ -502,6 +507,73 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //##############################################################################################################################
+    private void showChangeControllerDialog(){
+        final EditText controllerValue;
+
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_controller_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        dialogBuilder.setTitle("Controlador Proporcional");
+        dialogBuilder.setIcon(R.drawable.controller);
+
+        controllerValue = (EditText) dialogView.findViewById(R.id.edtControllerValue);
+        controllerValue.addTextChangedListener(Mask.insert("#.###", controllerValue));
+
+        dialogBuilder.setMessage("Digite, por favor, o novo valor desejado: ");
+
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        controlValue = Float.parseFloat(controllerValue.getText().toString().trim());
+                        //enviar os dados para o robo
+                    }
+
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplication(), "O valor padrão para o controlador proporcional será "+Constants.KP_INITIAL, Toast.LENGTH_LONG).show();
+                    }
+        });
+
+        final AlertDialog b = dialogBuilder.create();
+        b.setCancelable(false);
+        b.show();
+    }
+
+    private void showChangePositionDialog() {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.custom_position_dialog, null);
+        dialogBuilder.setView(dialogView);
+
+        dialogBuilder.setTitle("Posição inicial");
+        dialogBuilder.setMessage("Digite, por favor, as coordenadas iniciais desejadas (em cm): ");
+        dialogBuilder.setIcon(R.drawable.location);
+
+        dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getApplication(), "O valor padrão para as coordenadas " +
+                                "inicias será (" + (Constants.INITIAL_X/100.00) + "," + (Constants.INITIAL_Y/100.00) +")", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        final AlertDialog b = dialogBuilder.create();
+        b.setCancelable(false);
+        b.show();
+    }
+
     private void showControlDialog(){
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setTitle("Escolha o tipo de controle: ")
