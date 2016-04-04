@@ -565,7 +565,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Toast.makeText(getApplication(), "O valor padrão para as coordenadas " +
-                                "inicias será (" + (Constants.INITIAL_X/100.00) + "," + (Constants.INITIAL_Y/100.00) +")", Toast.LENGTH_LONG).show();
+                                "inicias será (" + (Constants.INITIAL_X/100.00) + " , " + (Constants.INITIAL_Y/100.00) +")", Toast.LENGTH_LONG).show();
                     }
                 });
 

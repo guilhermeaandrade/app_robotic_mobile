@@ -14,7 +14,7 @@
         android:hint="90"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/coordY"
-        android:maxLength="3"
+        android:maxLength="2"
         android:paddingLeft="7dp"/>
 
     <EditText
@@ -26,7 +26,7 @@
         android:hint="90"
         android:layout_below="@+id/coordX"
         android:layout_toEndOf="@+id/tvController"
-        android:maxLength="3"
+        android:maxLength="2"
         android:paddingLeft="7dp"/>
 
     <TextView
