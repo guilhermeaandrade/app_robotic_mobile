@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputFilter;
 import android.transition.Explode;
 import android.transition.Fade;
 import android.util.Log;
@@ -36,6 +37,7 @@ import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
+import com.example.guilherme.tcc_1_4.Utils.InputFilterMinMax;
 import com.example.guilherme.tcc_1_4.Utils.Mask;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -87,7 +89,11 @@ public class MainActivity extends AppCompatActivity {
 
     private String address;
     private ConnectThread teste;
-    private float controlValue;
+    private Double controlValue;
+    private Double coordXAlvo;
+    private Double coordYAlvo;
+    private Double coordXInicial;
+    private Double coordYInicial;
 
     private final CharSequence[] items = {Constants.CONT_AUTO, Constants.CONT_MANUAL};
 
@@ -181,16 +187,15 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar('m', 'w', velocidade).start();
+                                new Enviar('m', 'w', Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar('m', 'q', velocidade).start();
+                            new Enviar('m', 'q', Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
                 }
-
                 return true;
             }
         });
@@ -208,12 +213,12 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar('m', 's', velocidade).start();
+                                new Enviar('m', 's', Double.valueOf(velocidade)).start();
 
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar('m', 'q', velocidade).start();
+                            new Enviar('m', 'q', Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -235,11 +240,11 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar('m', 'a', velocidade).start();
+                                new Enviar('m', 'a', Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar('m', 'q', velocidade).start();
+                            new Enviar('m', 'q', Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -261,11 +266,11 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar('m', 'd', velocidade).start();
+                                new Enviar('m', 'd', Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar('m', 'q', velocidade).start();
+                            new Enviar('m', 'q', Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -316,7 +321,13 @@ public class MainActivity extends AppCompatActivity {
         actionMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean b) {
-                //Toast.makeText(getApplicationContext(), "Is menu opened? " + (b ? "true" : "false"), Toast.LENGTH_SHORT).show();
+                if(b){
+                    actionMenu.setIconAnimated(false);
+                    actionMenu.getMenuIconView().setImageResource(R.drawable.close);
+                }else{
+                    actionMenu.setIconAnimated(false);
+                    actionMenu.getMenuIconView().setImageResource(R.drawable.ic_pencil);
+                }
             }
         });
         actionMenu.showMenuButton(true);
@@ -338,7 +349,17 @@ public class MainActivity extends AppCompatActivity {
         fab2.setOnClickListener(new FloatingActionButton.OnClickListener(){
             @Override
             public void onClick(View v){
-                showChangePositionDialog();
+                showChangePositionDialog(1);
+            }
+        });
+
+        FloatingActionButton fab3 = (FloatingActionButton) findViewById(R.id.fabPositionAlvo);
+        fab3.setColorNormal(getResources().getColor(R.color.colorPrimary));
+        fab3.setColorPressed(getResources().getColor(R.color.colorPrimaryPressed));
+        fab3.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                showChangePositionDialog(2);
             }
         });
     }
@@ -527,16 +548,21 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        controlValue = Float.parseFloat(controllerValue.getText().toString().trim());
-                        //enviar os dados para o robo
+                        String valor = controllerValue.getText().toString().trim();
+                        if(!valor.isEmpty()){
+                            controlValue = Double.parseDouble(valor);
+                        }else{
+                            controlValue = Constants.KP_INITIAL;
+                        }
+                        new Enviar(Constants.C_SETTINGS, Constants.I_CONTROLLER, controlValue);
                     }
 
         }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplication(), "O valor padrão para o controlador proporcional será "+Constants.KP_INITIAL, Toast.LENGTH_LONG).show();
-                    }
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplication(), "O valor padrão para o controlador proporcional será " + Constants.KP_INITIAL, Toast.LENGTH_LONG).show();
+            }
         });
 
         final AlertDialog b = dialogBuilder.create();
@@ -544,30 +570,87 @@ public class MainActivity extends AppCompatActivity {
         b.show();
     }
 
-    private void showChangePositionDialog() {
+    private void showChangePositionDialog(final int option) {
+        final EditText edtPosX;
+        final EditText edtPosY;
+
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.custom_position_dialog, null);
         dialogBuilder.setView(dialogView);
 
-        dialogBuilder.setTitle("Posição inicial");
-        dialogBuilder.setMessage("Digite, por favor, as coordenadas iniciais desejadas (em cm): ");
-        dialogBuilder.setIcon(R.drawable.location);
+        if(option == 1){
+            dialogBuilder.setTitle("Posição inicial");
+            dialogBuilder.setMessage("Digite, por favor, as coordenadas iniciais desejadas (em cm): ");
+            dialogBuilder.setIcon(R.drawable.location);
+        }else {
+            dialogBuilder.setTitle("Posição Alvo");
+            dialogBuilder.setMessage("Digite, por favor, as coordenadas alvo desejadas (em cm): ");
+            dialogBuilder.setIcon(R.drawable.final_location);
+        }
+
+        edtPosX = (EditText) dialogView.findViewById(R.id.coordX);
+        edtPosX.addTextChangedListener(Mask.insert("##.##", edtPosX));
+
+        edtPosY = (EditText) dialogView.findViewById(R.id.coordY);
+        edtPosY.addTextChangedListener(Mask.insert("##.##", edtPosY));
 
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                String x = edtPosX.getText().toString().trim();
+                String y = edtPosY.getText().toString().trim();
+
+                Double xValue, yValue;
+
+                if(!x.isEmpty() && !y.isEmpty()){
+                    xValue = Double.valueOf(x);
+                    yValue = Double.valueOf(y);
+                }else if(!x.isEmpty()){
+                    xValue = Double.valueOf(x);
+                    yValue = Constants.Y;
+                }else if(!y.isEmpty()){
+                    xValue = Constants.X;
+                    yValue = Double.valueOf(y);
+                }else{
+                    xValue = Constants.X;
+                    yValue = Constants.Y;
+                }
+
+                switch (option) {
+                    case 1:
+                        Log.i(Constants.TAG, "Valores: "+ xValue + " - " + yValue);
+                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_X_INITIAL, (xValue/10));
+                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_Y_INITIAL, (yValue/10));
+                        break;
+                    case 2:
+                        Log.i(Constants.TAG, "Valores: "+ xValue + " - " + yValue);
+                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_X_FINAL, (xValue/10));
+                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_Y_FINAL, (yValue/10));
+                        break;
+                }
 
             }
         }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getApplication(), "O valor padrão para as coordenadas " +
-                                "inicias será (" + (Constants.INITIAL_X/100.00) + " , " + (Constants.INITIAL_Y/100.00) +")", Toast.LENGTH_LONG).show();
-                    }
-                });
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(getApplication(), "O valor padrão para as coordenadas " +
+                        "inicias será ( " + Constants.X + " , " + Constants.Y + " )", Toast.LENGTH_LONG).show();
+
+                switch (option) {
+                    case 1:
+                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_X_INITIAL, Constants.X);
+                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_Y_INITIAL, Constants.Y);
+                        break;
+                    case 2:
+                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_X_FINAL, Constants.X);
+                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_Y_FINAL, Constants.Y);
+                        break;
+                }
+            }
+        });
 
         final AlertDialog b = dialogBuilder.create();
         b.setCancelable(false);
@@ -603,13 +686,13 @@ public class MainActivity extends AppCompatActivity {
                             sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
                         }
 
-                        new Enviar('u', 'q', Byte.parseByte("0")).start();
+                        new Enviar('u', 'q', Double.parseDouble("0")).start();
                         new Receber().start();
 
                     } else if (option == 2) {
 
                         enableAllButtons();
-                        new Enviar('m', 'q', Byte.parseByte("0")).start();
+                        new Enviar('m', 'q', Double.parseDouble("0")).start();
                     }
                 }
             }
@@ -618,7 +701,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 //SE A ESCOLHA FOR CANCEL.. A ESCOLHA PADRÃO SERÁ CONTROLE AUTOMATICO
                 disableAllButtons();
-                new Enviar('u', 'q', Byte.parseByte("0")).start();
             }
         });
 
@@ -773,15 +855,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class Enviar extends Thread {
-        private Character letra;
-        private Byte speed;
-        private Character controle;
+        private Character comando;
+        private Character identificador;
+        private Double value;
 
-
-        public Enviar(Character controle, Character letra, Byte speed) {
-            this.letra = letra;
-            this.speed = speed;
-            this.controle = controle;
+        public Enviar(Character c, Character i, Double v){
+            this.comando = c;
+            this.identificador = i;
+            this.value = v;
         }
 
         public void run(){
@@ -789,10 +870,10 @@ public class MainActivity extends AppCompatActivity {
                 if(socket != null){
                     output = new DataOutputStream(socket.getOutputStream());
                     if(socket.isConnected()){
-                        if(controle != null) output.writeChar(controle);
-                        if(letra != null && speed != null) {
-                            output.writeChar(letra);
-                            output.writeByte(speed);
+                        if(comando != null) output.writeChar(comando);
+                        if(identificador != null && value != null) {
+                            output.writeChar(identificador);
+                            output.writeDouble(value);
                         }
                         output.flush();
                     }
@@ -870,7 +951,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == TELA2){
             if(data == null) return;
-            showControlDialog();
+            //showControlDialog();
+            btSelectType.setEnabled(true);
             address = data.getExtras().getString("msg");
 
             device = adaptador.getRemoteDevice(address);

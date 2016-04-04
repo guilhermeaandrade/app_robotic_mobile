@@ -135,13 +135,25 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/location"
                 fab:fab_size="mini"
-                fab:fab_label="Posicionamento"
+                fab:fab_label="Posição Inicial"
                 fab:menu_labels_style="@style/MenuLabelsStyle"
                 fab:menu_labels_textColor="@color/colorPrimary"
                 fab:menu_labels_colorRipple="@color/grey"
                 fab:menu_colorNormal="@color/colorPrimary"
                 fab:menu_colorPressed="@color/colorPrimaryPressed"/>
 
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabPositionAlvo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/final_location"
+                fab:fab_size="mini"
+                fab:fab_label="Posição Alvo"
+                fab:menu_labels_style="@style/MenuLabelsStyle"
+                fab:menu_labels_textColor="@color/colorPrimary"
+                fab:menu_labels_colorRipple="@color/grey"
+                fab:menu_colorNormal="@color/colorPrimary"
+                fab:menu_colorPressed="@color/colorPrimaryPressed"/>
         </com.github.clans.fab.FloatingActionMenu>
 
 

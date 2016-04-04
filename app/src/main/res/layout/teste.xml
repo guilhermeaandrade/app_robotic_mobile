@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    tools:context=".MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_main"
+        android:elevation="4dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_alignParentLeft="true"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/grey">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONECTAR-SE A UM DISPOSITIVO"
+            android:id="@+id/btnConectar"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ESCOLHER CONTROLE"
+            android:id="@+id/btnChooseControl"
+            android:layout_below="@+id/btnConectar"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Posicao Inicial"
+            android:id="@+id/tvPosicaoInicial"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_below="@+id/btnChooseControl"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="X: "
+            android:id="@+id/tvXInicial"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:padding="10dp"
+            android:layout_alignBottom="@+id/edtXInicial"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/edtXInicial"
+            android:text="0.0"
+            android:layout_below="@+id/tvPosicaoInicial"
+            android:layout_toEndOf="@+id/tvXInicial" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Y: "
+            android:id="@+id/tvYInicial"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:padding="10dp"
+            android:layout_alignBottom="@+id/edtXInicial"
+            android:layout_alignEnd="@+id/tvPosicaoInicial" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/edtYInicial"
+            android:layout_alignBottom="@+id/tvYInicial"
+            android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@+id/tvPosicaoInicial"
+            android:text="0.0" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Posição Alvo"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:id="@+id/tvPosicaoAlvo"
+            android:layout_below="@+id/edtXInicial"
+            android:layout_alignEnd="@+id/tvYInicial" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="X:"
+            android:id="@+id/tvXAlvo"
+            android:textSize="16sp"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:layout_below="@+id/tvPosicaoAlvo"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/edtXAlvo"
+            android:layout_below="@+id/tvPosicaoAlvo"
+            android:text="0.0"
+            android:layout_toStartOf="@+id/tvYAlvo"
+            android:layout_alignEnd="@+id/tvVelocidade" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Y:"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:id="@+id/tvYAlvo"
+            android:padding="10dp"
+            android:layout_alignBottom="@+id/edtXAlvo"
+            android:layout_toEndOf="@+id/edtXInicial" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/edtYAlvo"
+            android:layout_alignBottom="@+id/tvYAlvo"
+            android:layout_alignStart="@+id/edtYInicial"
+            android:text="0.0" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="F"
+            android:id="@+id/btnForward"
+            android:layout_below="@+id/edtXAlvo"
+            android:layout_alignStart="@+id/tvPosicaoInicial"
+            android:layout_marginTop="37dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="L"
+            android:id="@+id/btnLeft"
+            android:layout_below="@+id/btnForward"
+            android:layout_toEndOf="@+id/tvXAlvo" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R"
+            android:id="@+id/btnRigth"
+            android:layout_alignBottom="@+id/btnLeft"
+            android:layout_toEndOf="@+id/tvYAlvo" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="B"
+            android:id="@+id/btnBackward"
+            android:layout_below="@+id/btnRigth"
+            android:layout_alignEnd="@+id/btnForward" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Velocidade"
+            android:padding="7dp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/black"
+            android:id="@+id/tvVelocidade"
+            android:layout_below="@+id/btnBackward"
+            android:layout_toEndOf="@+id/btnLeft" />
+
+        <SeekBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekVelocidade"
+            android:layout_below="@+id/tvVelocidade"
+            android:layout_alignStart="@+id/edtXAlvo"
+            android:layout_alignEnd="@+id/btnRigth"
+            android:max="50"
+            android:progress="1"
+            android:indeterminate="false" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0"
+            android:textColor="@color/black"
+
+            android:id="@+id/tvValorInicialSeek"
+            android:layout_below="@+id/seekVelocidade"
+            android:layout_alignStart="@+id/seekVelocidade" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="50"
+            android:textColor="@color/black"
+            android:id="@+id/tvValueFinalSeek"
+            android:layout_below="@+id/seekVelocidade"
+            android:layout_alignEnd="@+id/seekVelocidade" />
+
+        <com.github.clans.fab.FloatingActionMenu
+            xmlns:fab="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/actionMenu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:src="@drawable/ic_pencil"
+            fab:menu_labels_style="@style/MenuLabelsStyle"
+            fab:menu_labels_ellipsize="end"
+            fab:menu_labels_singleLine="true"
+            fab:menu_backgroundColor="#ccffffff"
+            fab:menu_colorNormal="@color/colorPrimary"
+            fab:menu_colorPressed="@color/colorPrimaryPressed" >
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabController"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/controller"
+                fab:fab_size="mini"
+                fab:fab_label="Controlador"
+                fab:menu_labels_style="@style/MenuLabelsStyle"
+                fab:menu_labels_textColor="@color/colorPrimary"
+                fab:menu_labels_colorRipple="@color/grey"
+                fab:menu_colorNormal="@color/colorPrimary"
+                fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+
+            <com.github.clans.fab.FloatingActionButton
+                android:id="@+id/fabPosition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/location"
+                fab:fab_size="mini"
+                fab:fab_label="Posicionamento"
+                fab:menu_labels_style="@style/MenuLabelsStyle"
+                fab:menu_labels_textColor="@color/colorPrimary"
+                fab:menu_labels_colorRipple="@color/grey"
+                fab:menu_colorNormal="@color/colorPrimary"
+                fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+
+        </com.github.clans.fab.FloatingActionMenu>
+
+    </RelativeLayout>
+</LinearLayout>

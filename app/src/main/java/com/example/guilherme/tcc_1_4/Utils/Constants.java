@@ -12,7 +12,20 @@ public class Constants {
     public static final String CONT_MANUAL = "Controle Manual";
     public static final int NUMBER_DECIMAIS = 4;
     public static final String TAG =  "TAG";
-    public static final float KP_INITIAL = 1.23f;
-    public static final int INITIAL_X = 90;
-    public static final int INITIAL_Y = 90;
+
+    public static final Double KP_INITIAL = 1.35;
+    public static final Double X = 0.0;
+    public static final Double Y = 0.0;
+
+    public static final Character C_MANUAL_CONTROL = 'm';
+    public static final Character C_AUTOMATIC_CONTROL = 'u';
+    public static final Character C_SETTINGS = 's';
+    public static final Character I_CONTROLLER = 'k';
+    public static final Character I_POS_X_INITIAL = 'x';
+    public static final Character I_POS_Y_INITIAL = 'y';
+    public static final Character I_POS_X_FINAL = 'v';
+    public static final Character I_POS_Y_FINAL = 'o';
+
+
+
 }

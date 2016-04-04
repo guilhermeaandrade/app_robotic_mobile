@@ -11,10 +11,10 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:paddingBottom="15dp"
-        android:hint="90"
+        android:hint="00.00"
         android:layout_alignParentTop="true"
         android:layout_alignStart="@+id/coordY"
-        android:maxLength="2"
+        android:maxLength="5"
         android:paddingLeft="7dp"/>
 
     <EditText
@@ -23,10 +23,10 @@
         android:layout_height="wrap_content"
         android:inputType="number"
         android:paddingTop="16dp"
-        android:hint="90"
+        android:hint="00.00"
         android:layout_below="@+id/coordX"
-        android:layout_toEndOf="@+id/tvController"
-        android:maxLength="2"
+        android:layout_toEndOf="@+id/tvCoordX"
+        android:maxLength="5"
         android:paddingLeft="7dp"/>
 
     <TextView
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/coordenadaX"
-        android:id="@+id/tvController"
+        android:id="@+id/tvCoordX"
         android:layout_alignTop="@+id/coordX"
         android:layout_alignParentStart="true"
         android:paddingTop="15dp"
@@ -45,10 +45,10 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/coordenadaY"
-        android:id="@+id/textView2"
+        android:id="@+id/tvCoordY"
         android:layout_alignParentStart="true"
         android:paddingTop="15dp"
-        android:layout_below="@+id/tvController"
+        android:layout_below="@+id/tvCoordX"
         android:layout_alignBottom="@+id/coordY" />
 
 </RelativeLayout>
