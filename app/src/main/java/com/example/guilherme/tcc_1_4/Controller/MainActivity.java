@@ -190,11 +190,11 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar('m', 'w', Double.valueOf(velocidade)).start();
+                                new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_FWD, Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar('m', 'q', Double.valueOf(velocidade)).start();
+                            new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -216,12 +216,12 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar('m', 's', Double.valueOf(velocidade)).start();
+                                new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_BWD, Double.valueOf(velocidade)).start();
 
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar('m', 'q', Double.valueOf(velocidade)).start();
+                            new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -243,11 +243,11 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar('m', 'a', Double.valueOf(velocidade)).start();
+                                new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_LEFT, Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar('m', 'q', Double.valueOf(velocidade)).start();
+                            new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -269,11 +269,11 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar('m', 'd', Double.valueOf(velocidade)).start();
+                                new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_RIGTH, Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar('m', 'q', Double.valueOf(velocidade)).start();
+                            new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -333,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        actionMenu.showMenuButton(true);
+        actionMenu.hideMenuButton(true);
         actionMenu.setClosedOnTouchOutside(true);
 
         FloatingActionButton fab1 = (FloatingActionButton) findViewById(R.id.fabController);
@@ -684,13 +684,13 @@ public class MainActivity extends AppCompatActivity {
                             sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
                         }
 
-                        new Enviar('u', 'q', Double.parseDouble("0")).start();
+                        new Enviar(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
                         new Receber().start();
 
                     } else if (option == 2) {
 
                         enableAllButtons();
-                        new Enviar('m', 'q', Double.parseDouble("0")).start();
+                        new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
                     }
                 }
             }
@@ -723,6 +723,7 @@ public class MainActivity extends AppCompatActivity {
                         disableAllButtons();
                         btSelectType.setEnabled(false);
                         device = null;
+                        actionMenu.hideMenuButton(true);
                         //ENVIO UMA MENSAGEM PARA O ROBOR PARA FECHAR A CONEXAO
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -991,14 +992,21 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == TELA2){
-            if(data == null) return;
-            btSelectType.setEnabled(true);
-            address = data.getExtras().getString("msg");
+            if(device == null){
+                if(data == null) return;
 
-            device = adaptador.getRemoteDevice(address);
-            teste = new ConnectThread(device);
+                actionMenu.showMenuButton(true);
 
-            teste.start();
+                btSelectType.setEnabled(true);
+                address = data.getExtras().getString("msg");
+
+                device = adaptador.getRemoteDevice(address);
+                teste = new ConnectThread(device);
+
+                teste.start();
+            }else{
+                new Enviar(Constants.C_STOP_CONNECTION, Constants.I_STOP, 0d).start();
+            }
         }
 
         if(requestCode == REQUEST_ENABLE_BT){
