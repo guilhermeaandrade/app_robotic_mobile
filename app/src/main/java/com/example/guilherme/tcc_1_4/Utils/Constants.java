@@ -21,11 +21,17 @@ public class Constants {
     public static final Character C_AUTOMATIC_CONTROL = 'u';
     public static final Character C_SETTINGS = 's';
     public static final Character I_CONTROLLER = 'k';
-    public static final Character I_POS_X_INITIAL = 'x';
-    public static final Character I_POS_Y_INITIAL = 'y';
-    public static final Character I_POS_X_FINAL = 'v';
-    public static final Character I_POS_Y_FINAL = 'o';
+    public static final Character I_POS_INITIAL = 'i';
+    public static final Character I_POS_FINAL = 'f';
+    //public static final Character I_POS_X_INITIAL = 'x';
+    //public static final Character I_POS_Y_INITIAL = 'y';
+    //public static final Character I_POS_X_FINAL = 'v';
+    //public static final Character I_POS_Y_FINAL = 'o';
 
-
+    public static final Character I_LEFT = 'a';
+    public static final Character I_RIGTH = 'd';
+    public static final Character I_FWD = 'w';
+    public static final Character I_BWD = 's';
+    public static final Character I_STOP = 'q';
 
 }

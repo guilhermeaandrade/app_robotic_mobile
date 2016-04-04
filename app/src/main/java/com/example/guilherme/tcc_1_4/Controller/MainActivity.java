@@ -58,6 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.Semaphore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -94,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
     private Double coordYAlvo;
     private Double coordXInicial;
     private Double coordYInicial;
+
+    public Semaphore semaphore = new Semaphore(1);
 
     private final CharSequence[] items = {Constants.CONT_AUTO, Constants.CONT_MANUAL};
 
@@ -321,10 +324,10 @@ public class MainActivity extends AppCompatActivity {
         actionMenu.setOnMenuToggleListener(new FloatingActionMenu.OnMenuToggleListener() {
             @Override
             public void onMenuToggle(boolean b) {
-                if(b){
+                if (b) {
                     actionMenu.setIconAnimated(false);
                     actionMenu.getMenuIconView().setImageResource(R.drawable.close);
-                }else{
+                } else {
                     actionMenu.setIconAnimated(false);
                     actionMenu.getMenuIconView().setImageResource(R.drawable.ic_pencil);
                 }
@@ -554,7 +557,7 @@ public class MainActivity extends AppCompatActivity {
                         }else{
                             controlValue = Constants.KP_INITIAL;
                         }
-                        new Enviar(Constants.C_SETTINGS, Constants.I_CONTROLLER, controlValue);
+                        new Enviar(Constants.C_SETTINGS, Constants.I_CONTROLLER, controlValue).start();
                     }
 
         }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -620,14 +623,12 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (option) {
                     case 1:
-                        Log.i(Constants.TAG, "Valores: "+ xValue + " - " + yValue);
-                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_X_INITIAL, (xValue/10));
-                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_Y_INITIAL, (yValue/10));
+                        Log.i(Constants.TAG, "Valores: " + xValue + " - " + yValue);
+                        new EnviarPosicoes(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (xValue/100), (yValue/100)).start();
                         break;
                     case 2:
-                        Log.i(Constants.TAG, "Valores: "+ xValue + " - " + yValue);
-                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_X_FINAL, (xValue/10));
-                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_Y_FINAL, (yValue/10));
+                        Log.i(Constants.TAG, "Valores: " + xValue + " - " + yValue);
+                        new EnviarPosicoes(Constants.C_SETTINGS, Constants.I_POS_FINAL, (xValue/100), (yValue/100)).start();
                         break;
                 }
 
@@ -638,15 +639,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(getApplication(), "O valor padrão para as coordenadas " +
                         "inicias será ( " + Constants.X + " , " + Constants.Y + " )", Toast.LENGTH_LONG).show();
-
                 switch (option) {
                     case 1:
-                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_X_INITIAL, Constants.X);
-                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_Y_INITIAL, Constants.Y);
+                        new EnviarPosicoes(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (Constants.X/100), (Constants.Y/100)).start();
                         break;
                     case 2:
-                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_X_FINAL, Constants.X);
-                        new Enviar(Constants.C_SETTINGS, Constants.I_POS_Y_FINAL, Constants.Y);
+                        new EnviarPosicoes(Constants.C_SETTINGS, Constants.I_POS_FINAL, (Constants.X/100), (Constants.Y/100)).start();
                         break;
                 }
             }
@@ -854,6 +852,43 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private class EnviarPosicoes extends Thread {
+        private Character comando;
+        private Character identificador;
+        private Double firstValue;
+        private Double secondValue;
+
+        public EnviarPosicoes(Character c, Character i, Double v1, Double v2) {
+            this.comando = c;
+            this.identificador = i;
+            this.firstValue = v1;
+            this.secondValue = v2;
+        }
+
+        public void run(){
+            try {
+                if(socket != null){
+                    output = new DataOutputStream(socket.getOutputStream());
+                    semaphore.acquire();
+
+                    if(socket.isConnected()){
+                        if(comando != null) output.writeChar(comando);
+                        if(identificador != null && firstValue != null && secondValue != null) {
+                            output.writeChar(identificador);
+                            output.writeDouble(firstValue);
+                            output.writeDouble(secondValue);
+                        }
+                        output.flush();
+                    }
+
+                    semaphore.release();
+                }
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
     private class Enviar extends Thread {
         private Character comando;
         private Character identificador;
@@ -869,6 +904,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null){
                     output = new DataOutputStream(socket.getOutputStream());
+                    semaphore.acquire();
+
                     if(socket.isConnected()){
                         if(comando != null) output.writeChar(comando);
                         if(identificador != null && value != null) {
@@ -877,8 +914,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                         output.flush();
                     }
+
+                    semaphore.release();
                 }
-            }catch (IOException erro){}
+            }catch (Exception erro){
+
+            }
         }
 
         public void cancel() {
@@ -951,7 +992,6 @@ public class MainActivity extends AppCompatActivity {
 
         if(requestCode == TELA2){
             if(data == null) return;
-            //showControlDialog();
             btSelectType.setEnabled(true);
             address = data.getExtras().getString("msg");
 
