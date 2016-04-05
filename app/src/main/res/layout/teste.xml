@@ -20,6 +20,11 @@
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+    </ScrollView>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,137 +39,169 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ESCOLHER CONTROLE"
-            android:id="@+id/btnChooseControl"
-            android:layout_below="@+id/btnConectar"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Posicao Inicial"
-            android:id="@+id/tvPosicaoInicial"
+            android:text="Tipo de Controle: "
             android:textSize="18sp"
-            android:textStyle="bold"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="15dp"
+            android:paddingTop="15dp"
             android:textColor="@color/black"
-            android:layout_below="@+id/btnChooseControl"
-            android:layout_centerHorizontal="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="X: "
-            android:id="@+id/tvXInicial"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:padding="10dp"
-            android:layout_alignBottom="@+id/edtXInicial"
+            android:id="@+id/tvControle"
+            android:layout_below="@+id/btnConectar"
             android:layout_alignParentStart="true" />
 
-        <EditText
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/edtXInicial"
-            android:text="0.0"
-            android:layout_below="@+id/tvPosicaoInicial"
-            android:layout_toEndOf="@+id/tvXInicial" />
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@+id/tvControle"
+            android:layout_below="@+id/btnConectar"
+            android:id="@+id/radioGroup">]
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Automático"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:id="@+id/radioButtonAutomatico" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Manual"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:id="@+id/radioButtonManul" />
+        </RadioGroup>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Y: "
-            android:id="@+id/tvYInicial"
-            android:textSize="16sp"
-            android:textColor="@color/black"
+            android:text="Posição Inicial"
+            android:id="@+id/tvPosInicial"
             android:padding="10dp"
-            android:layout_alignBottom="@+id/edtXInicial"
-            android:layout_alignEnd="@+id/tvPosicaoInicial" />
-
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/edtYInicial"
-            android:layout_alignBottom="@+id/tvYInicial"
-            android:layout_alignParentEnd="true"
-            android:layout_toEndOf="@+id/tvPosicaoInicial"
-            android:text="0.0" />
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_below="@+id/radioGroup"
+            android:layout_toStartOf="@+id/radioGroup" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Posição Alvo"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:id="@+id/tvPosAlvo"
+            android:padding="10dp"
             android:textColor="@color/black"
-            android:id="@+id/tvPosicaoAlvo"
-            android:layout_below="@+id/edtXInicial"
-            android:layout_alignEnd="@+id/tvYInicial" />
+            android:layout_marginRight="50dp"
+            android:textSize="16sp"
+            android:layout_below="@+id/radioGroup"
+            android:layout_alignEnd="@+id/radioGroup"
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="X:"
-            android:id="@+id/tvXAlvo"
-            android:textSize="16sp"
-            android:padding="10dp"
+            android:text="x: "
             android:textColor="@color/black"
-            android:layout_below="@+id/tvPosicaoAlvo"
-            android:layout_alignParentStart="true" />
+            android:textSize="16sp"
+            android:id="@+id/tvXInicial"
+            android:layout_below="@+id/tvPosInicial"
+            android:layout_alignStart="@+id/tvPosInicial"
+            android:layout_marginStart="35dp" />
 
-        <EditText
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/edtXAlvo"
-            android:layout_below="@+id/tvPosicaoAlvo"
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="0.0"
-            android:layout_toStartOf="@+id/tvYAlvo"
-            android:layout_alignEnd="@+id/tvVelocidade" />
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:id="@+id/tvXInicialValue"
+            android:layout_below="@+id/tvPosInicial"
+            android:layout_alignEnd="@+id/tvYInicialValue" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Y:"
-            android:textSize="16sp"
+            android:text="y: "
             android:textColor="@color/black"
-            android:id="@+id/tvYAlvo"
-            android:padding="10dp"
-            android:layout_alignBottom="@+id/edtXAlvo"
-            android:layout_toEndOf="@+id/edtXInicial" />
+            android:textSize="16sp"
+            android:id="@+id/tvYInicial"
+            android:layout_below="@+id/tvXInicial"
+            android:layout_alignStart="@+id/tvXInicial" />
 
-        <EditText
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal"
-            android:ems="10"
-            android:id="@+id/edtYAlvo"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0.0"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:id="@+id/tvYInicialValue"
+            android:layout_alignTop="@+id/tvYInicial"
+            android:layout_toEndOf="@+id/tvXInicial" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="x: "
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:id="@+id/tvXAlvo"
+            android:layout_alignBottom="@+id/tvXInicialValue"
+            android:layout_alignStart="@+id/tvPosAlvo"
+            android:layout_marginStart="31dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0.0"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:id="@+id/tvXAlvoValue"
+            android:layout_alignTop="@+id/tvXAlvo"
+            android:layout_toEndOf="@+id/tvXAlvo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="y: "
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:id="@+id/tvYAlvo"
+            android:layout_alignTop="@+id/tvYInicialValue"
+            android:layout_alignStart="@+id/tvXAlvo" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="0.0"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:id="@+id/tvYAlvoValue"
             android:layout_alignBottom="@+id/tvYAlvo"
-            android:layout_alignStart="@+id/edtYInicial"
-            android:text="0.0" />
+            android:layout_toEndOf="@+id/tvYAlvo" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="F"
             android:id="@+id/btnForward"
-            android:layout_below="@+id/edtXAlvo"
-            android:layout_alignStart="@+id/tvPosicaoInicial"
-            android:layout_marginTop="37dp" />
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
         <Button
             android:layout_width="wrap_content"
@@ -172,46 +209,43 @@
             android:text="L"
             android:id="@+id/btnLeft"
             android:layout_below="@+id/btnForward"
-            android:layout_toEndOf="@+id/tvXAlvo" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="R"
-            android:id="@+id/btnRigth"
-            android:layout_alignBottom="@+id/btnLeft"
-            android:layout_toEndOf="@+id/tvYAlvo" />
+            android:layout_toStartOf="@+id/btnForward" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="B"
             android:id="@+id/btnBackward"
-            android:layout_below="@+id/btnRigth"
-            android:layout_alignEnd="@+id/btnForward" />
+            android:layout_below="@+id/btnLeft"
+            android:layout_alignStart="@+id/btnForward" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="R"
+            android:id="@+id/btnRight"
+            android:layout_above="@+id/btnBackward"
+            android:layout_toEndOf="@+id/btnBackward" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Velocidade"
-            android:padding="7dp"
-            android:gravity="center_horizontal"
-            android:textColor="@color/black"
             android:id="@+id/tvVelocidade"
+            android:paddingTop="20dp"
             android:layout_below="@+id/btnBackward"
-            android:layout_toEndOf="@+id/btnLeft" />
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_toStartOf="@+id/tvYAlvo" />
 
         <SeekBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/seekVelocidade"
+            android:id="@+id/seekBar2"
+            android:layout_alignEnd="@+id/tvPosAlvo"
             android:layout_below="@+id/tvVelocidade"
-            android:layout_alignStart="@+id/edtXAlvo"
-            android:layout_alignEnd="@+id/btnRigth"
-            android:max="50"
-            android:progress="1"
-            android:indeterminate="false" />
+            android:layout_alignStart="@+id/tvPosInicial" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -219,10 +253,10 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="0"
             android:textColor="@color/black"
-
-            android:id="@+id/tvValorInicialSeek"
-            android:layout_below="@+id/seekVelocidade"
-            android:layout_alignStart="@+id/seekVelocidade" />
+            android:textSize="16sp"
+            android:id="@+id/tvISeek"
+            android:layout_alignTop="@+id/tvFSeek"
+            android:layout_alignStart="@+id/seekBar2" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -230,11 +264,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="50"
             android:textColor="@color/black"
-            android:id="@+id/tvValueFinalSeek"
-            android:layout_below="@+id/seekVelocidade"
-            android:layout_alignEnd="@+id/seekVelocidade" />
+            android:textSize="16sp"
+            android:id="@+id/tvFSeek"
+            android:layout_below="@+id/seekBar2"
+            android:layout_alignEnd="@+id/seekBar2" />
 
-        <com.github.clans.fab.FloatingActionMenu
+
+        <!--<com.github.clans.fab.FloatingActionMenu
             xmlns:fab="http://schemas.android.com/apk/res-auto"
             android:id="@+id/actionMenu"
             android:layout_width="match_parent"
@@ -278,7 +314,7 @@
                 fab:menu_colorNormal="@color/colorPrimary"
                 fab:menu_colorPressed="@color/colorPrimaryPressed"/>
 
-        </com.github.clans.fab.FloatingActionMenu>
+        </com.github.clans.fab.FloatingActionMenu> -->
 
     </RelativeLayout>
 </LinearLayout>

@@ -91,10 +91,6 @@ public class MainActivity extends AppCompatActivity {
     private String address;
     private ConnectThread teste;
     private Double controlValue;
-    private Double coordXAlvo;
-    private Double coordYAlvo;
-    private Double coordXInicial;
-    private Double coordYInicial;
 
     public Semaphore semaphore = new Semaphore(1);
 
@@ -139,11 +135,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.teste);
+        //setContentView(R.layout.activity_main);
 
-        init(savedInstanceState);
+        //init(savedInstanceState);
 
-        device = null;
+        /*device = null;
         address = null;
         it = new Intent(this, SelectDevice.class);
 
@@ -364,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v){
                 showChangePositionDialog(2);
             }
-        });
+        });*/
     }
 
     //##############################################################################################################################
@@ -827,6 +824,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null) {
                     input = new DataInputStream(socket.getInputStream());
+                    semaphore.acquire();
+
                     if (socket.isConnected()) {
                         byte[] buffer = new byte[1024];
                         int bytes = 0;
@@ -840,8 +839,10 @@ public class MainActivity extends AppCompatActivity {
                             bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
                         }
                     }
+
+                    semaphore.release();
                 }
-            }catch (IOException e){
+            }catch (Exception e){
                 e.printStackTrace();
             }
         }
@@ -1006,6 +1007,23 @@ public class MainActivity extends AppCompatActivity {
                 teste.start();
             }else{
                 new Enviar(Constants.C_STOP_CONNECTION, Constants.I_STOP, 0d).start();
+
+                Log.i(Constants.TAG, "ELSE -> device != null");
+                try {
+                    Log.i(Constants.TAG, "Entrei no try -> fechar tudo");
+                    if(input != null) input.close();
+                    if(output != null) output.close();
+                    if(socket != null) socket.close();
+
+                    device = null;
+                    address = null;
+                    input = null;
+                    output = null;
+                    socket = null;
+                } catch(IOException e){
+                    e.printStackTrace();
+                    Log.e(Constants.TAG, "Erro no catch -> "+e.getMessage().toString());
+                }
             }
         }
 
@@ -1030,7 +1048,7 @@ public class MainActivity extends AppCompatActivity {
 
         switch (id){
             case R.id.action_disabled_bluetooth:
-                if(device != null) showDisableBluetoothDialog();
+                showDisableBluetoothDialog();
                 break;
 
             case R.id.action_out:
