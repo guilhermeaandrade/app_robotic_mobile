@@ -203,6 +203,8 @@
     <eat-comment/>
     <color name="colorAccent">#795548</color>
     <color name="colorBackgroundNavigation">#BDBDBD</color>
+    <color name="colorDisableButtons">#4DB6AC</color>
+    <color name="colorDisableText">#9E9E9E</color>
     <color name="colorDivider">#ccc</color>
     <color name="colorLink">#1ea4f7</color>
     <color name="colorPrimary">#009688</color>
@@ -888,14 +890,14 @@
     <string name="fieldObrigatorio">Campos assinalados com * são obrigatórios</string>
     <string name="graph_prompt">Selecione um gráfico:</string>
     <string name="hello_world">Hello world!</string>
-    <string name="lastAngTheta">Último Ângulo Theta: </string>
-    <string name="lastCoordX">Última Coordenada X: </string>
-    <string name="lastCoordY">Última Coordenada Y: </string>
-    <string name="lastError">Erro de posição: </string>
-    <string name="lastVelV">Última Velocidade Linear: </string>
-    <string name="lastVelW">Última Velocidade Angular: </string>
-    <string name="lastWl">Última Wl: </string>
-    <string name="lastWr">Última Wr: </string>
+    <string name="lastAngTheta">Ângulo Theta atual: </string>
+    <string name="lastCoordX">Coordenada X atual: </string>
+    <string name="lastCoordY">Coordenada Y atual: </string>
+    <string name="lastError">Erro de posição atual:</string>
+    <string name="lastVelV">Velocidade Linear atual: </string>
+    <string name="lastVelW">Velocidade Angular atual: </string>
+    <string name="lastWl">Wl atual: </string>
+    <string name="lastWr">Wr atual: </string>
     <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.mikepenz.iconics/library/0.9.1/res/values/values.xml -->
     <eat-comment/>
     <string name="library_AndroidIconics_author">Mike Penz</string>
@@ -934,7 +936,7 @@
     <string name="library_materialdrawer_year">2015</string>
     <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/res/values/strings.xml -->
     <eat-comment/>
-    <string name="position"> Posicionamento</string>
+    <string name="position">Variáveis do Processo</string>
     <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/res/values/values.xml -->
     <eat-comment/>
     <string name="status_bar_notification_info_overflow">999+</string>

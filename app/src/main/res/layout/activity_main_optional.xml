@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey"
+    tools:context=".MainActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tb_main"
+        android:elevation="4dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_alignParentLeft="true"
+        android:background="?attr/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/cv"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="#B2DFDB"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="false"
+        app:cardPreventCornerOverlap="true"
+        app:cardMaxElevation="4dp"
+        app:cardCornerRadius="6dp"
+        tools:context=".MainActivity">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/grey">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CONECTAR-SE A UM DISPOSITIVO"
+                    android:id="@+id/btnConectar"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/colorPrimary"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/white"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Tipo de Controle: "
+                    android:textSize="18sp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="15dp"
+                    android:paddingTop="15dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:id="@+id/tvControle"
+                    android:layout_below="@+id/btnConectar"
+                    android:layout_alignParentStart="true" />
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toEndOf="@+id/tvControle"
+                    android:layout_below="@+id/btnConectar"
+                    android:id="@+id/radioGroup">]
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Automático"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:id="@+id/radioButtonAutomatico"
+                        android:checked="false" />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Manual"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"
+                        android:id="@+id/radioButtonManul" />
+                </RadioGroup>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Posição Inicial"
+                    android:id="@+id/tvPosInicial"
+                    android:padding="10dp"
+                    android:textStyle="bold"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:layout_below="@+id/radioGroup"
+                    android:layout_toStartOf="@+id/radioGroup" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Posição Alvo"
+                    android:id="@+id/tvPosAlvo"
+                    android:padding="10dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginRight="45dp"
+                    android:textSize="18sp"
+                    android:layout_below="@+id/radioGroup"
+                    android:layout_alignEnd="@+id/radioGroup"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="x: "
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/tvXInicial"
+                    android:layout_below="@+id/tvPosInicial"
+                    android:layout_alignStart="@+id/tvPosInicial"
+                    android:layout_marginStart="35dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="0.0"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/tvXInicialValue"
+                    android:layout_below="@+id/tvPosInicial"
+                    android:layout_alignEnd="@+id/tvControle"
+                    android:layout_above="@+id/tvYInicialValue"
+                    android:layout_alignStart="@+id/tvYInicialValue" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="y: "
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/tvYInicial"
+                    android:layout_below="@+id/tvXInicial"
+                    android:layout_alignStart="@+id/tvXInicial" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="0.0"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/tvYInicialValue"
+                    android:layout_alignTop="@+id/tvYInicial"
+                    android:layout_alignEnd="@+id/tvControle"
+                    android:layout_alignBottom="@+id/tvYInicial"
+                    android:layout_toEndOf="@+id/tvXInicial" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="x: "
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/tvXAlvo"
+                    android:layout_alignBottom="@+id/tvXInicialValue"
+                    android:layout_alignStart="@+id/tvPosAlvo"
+                    android:layout_marginStart="31dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="0.0"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/tvXAlvoValue"
+                    android:layout_alignTop="@+id/tvXAlvo"
+                    android:layout_alignEnd="@+id/tvPosAlvo"
+                    android:layout_above="@+id/tvYAlvo"
+                    android:layout_toEndOf="@+id/tvXAlvo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="y: "
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/tvYAlvo"
+                    android:layout_alignTop="@+id/tvYInicialValue"
+                    android:layout_alignStart="@+id/tvXAlvo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="0.0"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/tvYAlvoValue"
+                    android:layout_alignEnd="@+id/tvXAlvoValue"
+                    android:layout_alignBottom="@+id/tvYAlvo"
+                    android:layout_alignStart="@+id/tvXAlvoValue" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="F"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:id="@+id/btnForward"
+                    android:layout_below="@+id/tvControlador"
+                    android:layout_toStartOf="@+id/btnRight" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="L"
+                    android:id="@+id/btnLeft"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:layout_below="@+id/btnForward"
+                    android:layout_toStartOf="@+id/btnForward" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B"
+                    android:id="@+id/btnBackward"
+                    android:layout_below="@+id/btnLeft"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:layout_alignStart="@+id/btnForward" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="R"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:id="@+id/btnRight"
+                    android:layout_above="@+id/btnBackward"
+                    android:layout_toEndOf="@+id/tvYAlvo" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Velocidade"
+                    android:id="@+id/tvVelocidade"
+                    android:paddingTop="20dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:layout_below="@+id/btnBackward"
+                    android:layout_alignEnd="@+id/btnBackward"
+                    android:layout_alignStart="@+id/btnBackward" />
+
+                <SeekBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/sbVelocidade"
+                    android:layout_alignStart="@+id/tvPosInicial"
+                    android:max="0"
+                    android:progress="1"
+                    android:indeterminate="false"
+                    android:layout_below="@+id/tvVelocidade"
+                    android:layout_alignEnd="@+id/btnRight" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="1"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/tvISeek"
+                    android:layout_below="@+id/sbVelocidade"
+                    android:layout_alignStart="@+id/btnLeft" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="50"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:id="@+id/tvFSeek"
+                    android:layout_below="@+id/sbVelocidade"
+                    android:layout_alignEnd="@+id/sbVelocidade" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Controlador: "
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="5dp"
+                    android:id="@+id/tvControlador"
+                    android:layout_alignTop="@+id/tvControladorValue"
+                    android:layout_alignStart="@+id/tvPosInicial" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="0.0"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"
+                    android:id="@+id/tvControladorValue"
+                    android:layout_below="@+id/tvYInicialValue"
+                    android:layout_toEndOf="@+id/tvControlador" />
+
+                <com.github.clans.fab.FloatingActionMenu
+                    xmlns:fab="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/actionMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:paddingRight="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:src="@drawable/ic_pencil"
+                    fab:menu_labels_style="@style/MenuLabelsStyle"
+                    fab:menu_labels_ellipsize="end"
+                    fab:menu_labels_singleLine="true"
+                    fab:menu_backgroundColor="#ccffffff"
+                    fab:menu_colorNormal="@color/colorPrimary"
+                    fab:menu_colorPressed="@color/colorPrimaryPressed"
+                    android:layout_alignEnd="@+id/radioGroup">
+
+                    <com.github.clans.fab.FloatingActionButton
+                        android:id="@+id/fabController"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/controller"
+                        fab:fab_size="mini"
+                        fab:fab_label="Controlador"
+                        fab:menu_labels_style="@style/MenuLabelsStyle"
+                        fab:menu_labels_textColor="@color/colorPrimary"
+                        fab:menu_labels_colorRipple="@color/grey"
+                        fab:menu_colorNormal="@color/colorPrimary"
+                        fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+
+                    <com.github.clans.fab.FloatingActionButton
+                        android:id="@+id/fabPosition"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/location"
+                        fab:fab_size="mini"
+                        fab:fab_label="Posição Inicial"
+                        fab:menu_labels_style="@style/MenuLabelsStyle"
+                        fab:menu_labels_textColor="@color/colorPrimary"
+                        fab:menu_labels_colorRipple="@color/grey"
+                        fab:menu_colorNormal="@color/colorPrimary"
+                        fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+
+                    <com.github.clans.fab.FloatingActionButton
+                        android:id="@+id/fabPositionAlvo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/final_location"
+                        fab:fab_size="mini"
+                        fab:fab_label="Posição Alvo"
+                        fab:menu_labels_style="@style/MenuLabelsStyle"
+                        fab:menu_labels_textColor="@color/colorPrimary"
+                        fab:menu_labels_colorRipple="@color/grey"
+                        fab:menu_colorNormal="@color/colorPrimary"
+                        fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+                </com.github.clans.fab.FloatingActionMenu>
+
+            </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout
+        android:id="@+id/stl_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+    </android.support.v4.view.ViewPager>
+</LinearLayout>

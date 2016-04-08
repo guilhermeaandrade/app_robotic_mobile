@@ -8,7 +8,7 @@
     <string name="coordenadaX">Coordenada X:  </string>
     <string name="coordenadaY">Coordenada Y:  </string>
 
-    <string name="position"> Posicionamento</string>
+    <string name="position">Variáveis do Processo</string>
     <string name="avgCoordX">Média Coordenada X: </string>
     <string name="avgCoordY">Média Coordenada Y: </string>
     <string name="avgAngTheta">Média Ângulo Theta: </string>
@@ -17,14 +17,14 @@
     <string name="avgWr">Média Wr: </string>
     <string name="avgWl">Média Wl: </string>
 
-    <string name="lastCoordX">Última Coordenada X: </string>
-    <string name="lastCoordY">Última Coordenada Y: </string>
-    <string name="lastAngTheta">Último Ângulo Theta: </string>
-    <string name="lastVelV">Última Velocidade Linear: </string>
-    <string name="lastVelW">Última Velocidade Angular: </string>
-    <string name="lastWr">Última Wr: </string>
-    <string name="lastWl">Última Wl: </string>
-    <string name="lastError">Erro de posição: </string>
+    <string name="lastCoordX">Coordenada X atual: </string>
+    <string name="lastCoordY">Coordenada Y atual: </string>
+    <string name="lastAngTheta">Ângulo Theta atual: </string>
+    <string name="lastVelV">Velocidade Linear atual: </string>
+    <string name="lastVelW">Velocidade Angular atual: </string>
+    <string name="lastWr">Wr atual: </string>
+    <string name="lastWl">Wl atual: </string>
+    <string name="lastError">Erro de posição atual:</string>
 
     <string name="graph_prompt">Selecione um gráfico:</string>
     <string name="controladorProporcional">Valor do Controlador: </string>

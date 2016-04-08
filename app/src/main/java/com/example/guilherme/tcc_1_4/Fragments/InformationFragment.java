@@ -1,6 +1,7 @@
 package com.example.guilherme.tcc_1_4.Fragments;
 
 
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -78,6 +79,7 @@ public class InformationFragment extends Fragment {
             tvLastVelW.setText("0");
             tvError.setText("0");
         }
+
         return view;
     }
 
@@ -87,14 +89,25 @@ public class InformationFragment extends Fragment {
         long tmp = Math.round(value);
         return (double) tmp / factor;
     }
-    /*
-    public static double round(double value, int places) {
-    if (places < 0) throw new IllegalArgumentException();
 
-    long factor = (long) Math.pow(10, places);
-    value = value * factor;
-    long tmp = Math.round(value);
-    return (double) tmp / factor;
-}
-     */
+    @Override
+    public void onResume() {
+        super.onResume();
+        //launchRingDialog();
+    }
+
+    public void launchRingDialog() {
+        final ProgressDialog ringProgressDialog = ProgressDialog.show(getActivity(), "Please wait ...", "Gerando as informações necessárias", true);
+        ringProgressDialog.setCancelable(true);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                    //finish();
+                } catch (Exception e) {}
+                ringProgressDialog.dismiss();
+            }
+        }).start();
+    }
 }

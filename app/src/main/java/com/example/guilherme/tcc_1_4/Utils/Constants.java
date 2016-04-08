@@ -31,4 +31,9 @@ public class Constants {
     public static final Character I_BWD = 's';
     public static final Character I_STOP = 'q';
 
+    public static final float FINAL_SECOND = 35.0f;
+    public static final float INITIAL_SECOND = 0.0f;
+    public static final int BUCKET_COUNT = 9;
+    public static final int COUNT_VALUES = 3;
+    public static final int COUNT_POINTS = 20;
 }

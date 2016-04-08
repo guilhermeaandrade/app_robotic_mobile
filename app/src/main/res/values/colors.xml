@@ -16,4 +16,7 @@
     <color name="colorSelectedTab">#004D40</color>
     <color name="colorBackgroundNavigation">#BDBDBD</color>
     <color name="colorDivider">#ccc</color>
+
+    <color name="colorDisableButtons">#4DB6AC</color>
+    <color name="colorDisableText">#9E9E9E</color>
 </resources>

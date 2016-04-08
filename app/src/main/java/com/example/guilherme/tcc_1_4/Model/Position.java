@@ -11,14 +11,16 @@ public class Position implements Parcelable{
     private Double v;
     private Double w;
     private Double e;
+    private Float t;
 
-    public Position(Double x, Double y, Double theta, Double v, Double w, Double e){
+    public Position(Double x, Double y, Double theta, Double v, Double w, Double e, Float t){
         this.x = x;
         this.y = y;
         this.theta = theta;
         this.v = v;
         this.w = w;
         this.e = e;
+        this.t = t;
     }
 
     public Double getX() {
@@ -69,6 +71,14 @@ public class Position implements Parcelable{
         this.e = e;
     }
 
+    public Float getT() {
+        return t;
+    }
+
+    public void setT(Float t) {
+        this.t = t;
+    }
+
     @Override
     public int describeContents() {
         return hashCode();
@@ -82,6 +92,7 @@ public class Position implements Parcelable{
         dest.writeDouble(v);
         dest.writeDouble(w);
         dest.writeDouble(e);
+        dest.writeFloat(t);
     }
 
     public static final Parcelable.Creator<Position> CREATOR
@@ -102,5 +113,6 @@ public class Position implements Parcelable{
         v = in.readDouble();
         w = in.readDouble();
         e = in.readDouble();
+        t = in.readFloat();
     }
 }
