@@ -36,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
+import com.example.guilherme.tcc_1_4.Model.ManualPosition;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_ENABLE_BT = 1;
 
     private List<Position> listOfPositions;
+    private List<ManualPosition> listOfManualPositions;
     private final int handlerState = 0;
     private Handler bluetoothIn;
 
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
     private Intent it;
     private static final int TELA2 = 2;
     private int option = -1;
+    private int optionControl = -1;
 
     private String address;
     private ConnectThread teste;
@@ -158,8 +161,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        //setContentView(R.layout.activity_main_optional);
+        //setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_optional);
 
         init(savedInstanceState);
 
@@ -179,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
     //##############################################################################################################################
 
     private void initVariables(){
-        /*tvTypeController = (TextView) findViewById(R.id.tvControle);
+        tvTypeController = (TextView) findViewById(R.id.tvControle);
         tvPosicaoInicial = (TextView) findViewById(R.id.tvPosInicial);
         tvXPosInicial= (TextView) findViewById(R.id.tvXInicial);
         tvYPosInicial = (TextView) findViewById(R.id.tvYInicial);
@@ -232,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 switch(checkedId){
                     case R.id.radioButtonAutomatico:
 
+                        optionControl = 1;
                         Log.i(Constants.TAG, "AUTOMATICO");
                         if (device != null) {
                             disableManualControlComponents();
@@ -244,18 +248,20 @@ public class MainActivity extends AppCompatActivity {
                         break;
 
                     case R.id.radioButtonManul:
-
+                        optionControl = 2;
                         Log.i(Constants.TAG, "MANUAL");
                         enableAllComponents();
 
                         new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
+                        new Receber().start();
                         break;
                 }
             }
-        }); */
+        });
 
         //botao para conectar
-        btConectar = (Button) findViewById(R.id.btnConnect);
+        //btConectar = (Button) findViewById(R.id.btnConnect);
+        btConectar = (Button) findViewById(R.id.btnConectar);
         btConectar.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -269,13 +275,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
         btSelectType = (Button) findViewById(R.id.btnTypeControl);
         btSelectType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showControlDialog();
             }
-        });
+        }); */
 
         //botao para frente
         btForward = (Button) findViewById(R.id.btnForward);
@@ -382,6 +389,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        /*
         sbVelocidade = (SeekBar) findViewById(R.id.seekBar);
         sbVelocidade.setProgress(velocidade);
         sbVelocidade.setMinimumWidth(1);
@@ -400,8 +408,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
-        });
-        /*sbVelocidade = (SeekBar) findViewById(R.id.sbVelocidade);
+        }); */
+
+        sbVelocidade = (SeekBar) findViewById(R.id.sbVelocidade);
         sbVelocidade.setProgress(velocidade);
         sbVelocidade.setMinimumWidth(1);
         sbVelocidade.setMax(50);
@@ -419,10 +428,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
-        });*/
+        });
 
-        disableAllButtons();
-        //disableAllComponents();
+        //disableAllButtons();
+        disableAllComponents();
 
         bluetoothIn = new Handler(){
 
@@ -491,6 +500,8 @@ public class MainActivity extends AppCompatActivity {
     private void init(Bundle savedInstanceState){
         // ------------------------------ TABS e VIEWPAGER ----------------------------------------------
         listOfPositions = new ArrayList<Position>();
+        listOfManualPositions = new ArrayList<ManualPosition>();
+
         mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
 
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
@@ -593,18 +604,23 @@ public class MainActivity extends AppCompatActivity {
                                 navigationDrawerLeft.getAdapter().notifyDataSetChanged();
 
                                 if (device != null) {
-                                    //if (!listOfPositions.isEmpty()) {
+                                    if (optionControl == 1 || optionControl == 2) {
+                                        //if (!listOfPositions.isEmpty()) {
                                         Intent i = new Intent(MainActivity.this, MapActivity.class);
                                         Bundle bundle = new Bundle();
                                         bundle.putParcelable("device", device);
-                                        bundle.putParcelableArrayList("moviments", (ArrayList<? extends Parcelable>) listOfPositions);
-
+                                        bundle.putInt("optionControl", optionControl);
+                                        bundle.putParcelableArrayList("automaticMoviments", (ArrayList<? extends Parcelable>) listOfPositions);
+                                        bundle.putParcelableArrayList("manualMoviments", (ArrayList<? extends Parcelable>) listOfManualPositions);
                                         i.putExtras(bundle);
                                         startActivity(i);
                                         actionMenu.close(true);
-                                    //} else {
-                                      // Toast.makeText(MainActivity.this, "Nenhuma informação útil obtida até o momento.", Toast.LENGTH_LONG).show();
-                                    //}
+                                        //} else {
+                                        // Toast.makeText(MainActivity.this, "Nenhuma informação útil obtida até o momento.", Toast.LENGTH_LONG).show();
+                                        //}
+                                    } else {
+                                        Toast.makeText(MainActivity.this, "Nenhuma ação realizada para iniciar essa atividade.", Toast.LENGTH_LONG).show();
+                                    }
                                 } else {
                                     Toast.makeText(MainActivity.this, "Conecte-se a um dispositivo para iniciar essa atividade.", Toast.LENGTH_LONG).show();
                                 }
@@ -818,6 +834,7 @@ public class MainActivity extends AppCompatActivity {
                         //enableAllComponents();
                         enableAllButtons();
                         new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
+                        new Receber().start();
                     }
                 }
             }
@@ -877,7 +894,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(adaptador.isEnabled()){
+                        if (adaptador.isEnabled()) {
                             adaptador.disable();
                         }
                         finish();
@@ -913,7 +930,7 @@ public class MainActivity extends AppCompatActivity {
         if(device == null) btSelectType.setEnabled(false);
     }
 
-    /*private void enableAllComponents(){
+    private void enableAllComponents(){
         tvController.setTextColor(getResources().getColor(R.color.black));
         tvMaxSeekVelocidade.setTextColor(getResources().getColor(R.color.black));
         tvMinSeekVelocidade.setTextColor(getResources().getColor(R.color.black));
@@ -1038,7 +1055,8 @@ public class MainActivity extends AppCompatActivity {
         btRight.setBackgroundColor(getResources().getColor(R.color.colorDisableText));
 
         sbVelocidade.setEnabled(false);
-    }*/
+    }
+
     //##############################################################################################################################
     private class ConnectThread extends Thread{
         private final BluetoothDevice mmDevice;
@@ -1091,11 +1109,12 @@ public class MainActivity extends AppCompatActivity {
                             Log.i("TAG", "-----> bytes: "+bytes);
                             String readMessage = new String(buffer, 0, bytes);
                             if(readMessage.equalsIgnoreCase(Constants.FIM_TRANSFER)) break;
-                            Log.i("TAG", "-----> readMessage: "+readMessage);
+                            Log.i("TAG", "-----> readMessage: " + readMessage);
                             splitMessage(readMessage);
-                            bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
+                            bluetoothIn.obtainMessage(handlerState, bytes, optionControl, readMessage).sendToTarget();
+                            //bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
                         }
-                        Log.i("TAG", "-----> arraySize: "+listOfPositions.size());
+                        Log.i("TAG", "-----> arraySize: " + listOfPositions.size());
                     }
 
                     semaphore.release();
@@ -1196,15 +1215,25 @@ public class MainActivity extends AppCompatActivity {
             Log.i("TAG", "splitMessage: "+splits[i]);
         }
         try {
-            Position position = new Position(
-                    Double.parseDouble(splits[0]),
-                    Double.parseDouble(splits[1]),
-                    Double.parseDouble(splits[2]),
-                    Double.parseDouble(splits[3]),
-                    Double.parseDouble(splits[4]),
-                    Double.parseDouble(splits[5]),
-                    Float.parseFloat(splits[6]));
-            listOfPositions.add(position);
+            if(optionControl == 1){
+                Position position = new Position(
+                            Double.parseDouble(splits[0]),
+                            Double.parseDouble(splits[1]),
+                            Double.parseDouble(splits[2]),
+                            Double.parseDouble(splits[3]),
+                            Double.parseDouble(splits[4]),
+                            Double.parseDouble(splits[5]),
+                            Float.parseFloat(splits[6]));
+                listOfPositions.add(position);
+            }
+            if(optionControl == 2){
+                ManualPosition manualPosition = new ManualPosition(
+                            Double.parseDouble(splits[0]),
+                            Double.parseDouble(splits[1]),
+                            Double.parseDouble(splits[2]),
+                            Double.parseDouble(splits[3]));
+                listOfManualPositions.add(manualPosition);
+            }
         }catch (NumberFormatException ex){
             Log.e(Constants.TAG, ex.getMessage().toString());
         }
@@ -1258,8 +1287,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Esolha o controle desejado.", Toast.LENGTH_LONG).show();
 
                 actionMenu.showMenuButton(true);
-                btSelectType.setEnabled(true);
-                //enableChoiceControl();
+                //btSelectType.setEnabled(true);
+                enableChoiceControl();
 
                 address = data.getExtras().getString("msg");
 

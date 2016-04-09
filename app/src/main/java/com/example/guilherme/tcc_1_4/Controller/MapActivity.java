@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import com.example.guilherme.tcc_1_4.Adapter.TabsAdapter;
 import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
+import com.example.guilherme.tcc_1_4.Model.ManualPosition;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
@@ -23,26 +24,30 @@ public class MapActivity extends AppCompatActivity{
     private Toolbar mToolbar;
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
-    private List<Position> moviments;
-
+    private List<Position> automaticMoviments;
+    private List<ManualPosition> manualMoviments;
+    private int optionControl;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.process_activity_layout);
 
-        moviments =  new ArrayList<Position>();
+        automaticMoviments =  new ArrayList<Position>();
+        manualMoviments = new ArrayList<ManualPosition>();
 
         Intent intentExtras = getIntent();
         Bundle extrasBundle = intentExtras.getExtras();
         if(!extrasBundle.isEmpty()){
             device = extrasBundle.getParcelable("device");
-            moviments = extrasBundle.getParcelableArrayList("moviments");
-            Log.i("TAG", "MapActivity -> "+moviments.size());
+            optionControl = extrasBundle.getInt("optionControl");
+            automaticMoviments = extrasBundle.getParcelableArrayList("automaticMoviments");
+            manualMoviments = extrasBundle.getParcelableArrayList("manualMoviments");
+            Log.i("TAG", "MapActivity -> " + automaticMoviments.size());
         }
 
         mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
-        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), MapActivity.this, device, moviments));
+        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), MapActivity.this, device, optionControl, automaticMoviments, manualMoviments));
 
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);

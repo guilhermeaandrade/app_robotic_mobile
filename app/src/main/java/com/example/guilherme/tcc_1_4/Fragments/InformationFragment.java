@@ -3,6 +3,7 @@ package com.example.guilherme.tcc_1_4.Fragments;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.guilherme.tcc_1_4.Model.ManualPosition;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
@@ -21,7 +23,9 @@ import java.util.List;
 public class InformationFragment extends Fragment {
 
     private BluetoothDevice mDevice;
-    private List<Position> moviments;
+    private List<Position> automaticMoviments;
+    private List<ManualPosition> manualMoviments;
+    private int optionControl;
 
     private TextView tvName;
     private TextView tvAddress;
@@ -32,6 +36,8 @@ public class InformationFragment extends Fragment {
     private TextView tvLastVelV;
     private TextView tvLastVelW;
     private TextView tvError;
+    private TextView tvErrorText;
+    private TextView tvVelWText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,16 +51,21 @@ public class InformationFragment extends Fragment {
         View view = inflater.inflate(R.layout.information_fragment_layout, container, false);
 
         mDevice = this.getArguments().getParcelable("device");
-        moviments = this.getArguments().getParcelableArrayList("moviments");
+        automaticMoviments = this.getArguments().getParcelableArrayList("automaticMoviments");
+        manualMoviments = this.getArguments().getParcelableArrayList("manualMoviments");
+        optionControl = this.getArguments().getInt("optionControl");
 
-        Log.i("TAG", "MOVIMENTS -> INFORMATION -> length: " + moviments.size());
+        Log.i("TAG", "MOVIMENTS -> INFORMATION -> length: " + automaticMoviments.size());
 
+        init(view);
+        fillAllVariables();
+        return view;
+    }
+
+    private void init(View view){
         //##############################################################################################################
         tvName = (TextView) view.findViewById(R.id.name_robo);
-        tvName.setText(mDevice.getName());
-
         tvAddress = (TextView) view.findViewById(R.id.end_mac_robo);
-        tvAddress.setText(mDevice.getAddress());
 
         //##############################################################################################################
         tvLastCoordX = (TextView) view.findViewById(R.id.edtCoordX);
@@ -63,24 +74,51 @@ public class InformationFragment extends Fragment {
         tvLastVelV = (TextView) view.findViewById(R.id.edtVelV);
         tvLastVelW = (TextView) view.findViewById(R.id.edtVelW);
         tvError = (TextView) view.findViewById(R.id.edtError);
+        tvErrorText = (TextView) view.findViewById(R.id.erroPosicao);
+        tvVelWText = (TextView) view.findViewById(R.id.velW);
+    }
 
-        if(moviments.size() > 0){
-            tvLastCoordX.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getX())));
-            tvLastCoordY.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getY())));
-            tvLastTheta.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getTheta())));
-            tvLastVelV.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getV())));
-            tvLastVelW.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getW())));
-            tvError.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getE())));
-        }else {
-            tvLastCoordX.setText("0");
-            tvLastCoordY.setText("0");
-            tvLastTheta.setText("0");
-            tvLastVelV.setText("0");
-            tvLastVelW.setText("0");
-            tvError.setText("0");
+    private void fillAllVariables(){
+        //##############################################################################################################
+        tvName.setText(mDevice.getName());
+        tvAddress.setText(mDevice.getAddress());
+
+        //##############################################################################################################
+        if(optionControl == 1){
+            if(automaticMoviments.size() > 0){
+                tvLastCoordX.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getX())));
+                tvLastCoordY.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getY())));
+                tvLastTheta.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getTheta())));
+                tvLastVelV.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getV())));
+                tvLastVelW.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getW())));
+                tvError.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getE())));
+            }else {
+                tvLastCoordX.setText("0");
+                tvLastCoordY.setText("0");
+                tvLastTheta.setText("0");
+                tvLastVelV.setText("0");
+                tvLastVelW.setText("0");
+                tvError.setText("0");
+            }
         }
+        if(optionControl == 2){
+            tvLastVelW.setTextColor(Color.WHITE);
+            tvError.setTextColor(Color.WHITE);
+            tvErrorText.setTextColor(Color.WHITE);
+            tvVelWText.setTextColor(Color.WHITE);
 
-        return view;
+            if(automaticMoviments.size() > 0){
+                tvLastCoordX.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getX())));
+                tvLastCoordY.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getY())));
+                tvLastTheta.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getTheta())));
+                tvLastVelV.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getV())));
+            }else {
+                tvLastCoordX.setText("0");
+                tvLastCoordY.setText("0");
+                tvLastTheta.setText("0");
+                tvLastVelV.setText("0");
+            }
+        }
     }
 
     private Double round(Double value){
@@ -93,7 +131,6 @@ public class InformationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //launchRingDialog();
     }
 
     public void launchRingDialog() {

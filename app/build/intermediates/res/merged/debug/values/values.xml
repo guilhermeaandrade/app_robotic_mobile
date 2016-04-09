@@ -628,6 +628,7 @@
     <color name="switch_thumb_normal_material_light">#fff1f1f1</color>
     <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/res/values/colors.xml -->
     <eat-comment/>
+    <color name="textColorInformation">#B2DFDB</color>
     <color name="white">#FFFFFF</color>
     <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.mikepenz.materialdrawer/library/2.8.2/res/values/values.xml -->
     <eat-comment/>

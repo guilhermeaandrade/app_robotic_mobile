@@ -19,4 +19,6 @@
 
     <color name="colorDisableButtons">#4DB6AC</color>
     <color name="colorDisableText">#9E9E9E</color>
+    <color name="textColorInformation">#B2DFDB</color>
+
 </resources>
