@@ -56,6 +56,7 @@ public class InformationFragment extends Fragment {
         optionControl = this.getArguments().getInt("optionControl");
 
         Log.i("TAG", "MOVIMENTS -> INFORMATION -> length: " + automaticMoviments.size());
+        Log.i(Constants.TAG, "MOVIMENTS -> INFORMATION -> length: " + manualMoviments.size());
 
         init(view);
         fillAllVariables();
@@ -107,7 +108,7 @@ public class InformationFragment extends Fragment {
             tvErrorText.setTextColor(Color.WHITE);
             tvVelWText.setTextColor(Color.WHITE);
 
-            if(automaticMoviments.size() > 0){
+            if(manualMoviments.size() > 0){
                 tvLastCoordX.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getX())));
                 tvLastCoordY.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getY())));
                 tvLastTheta.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getTheta())));
@@ -126,11 +127,6 @@ public class InformationFragment extends Fragment {
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     public void launchRingDialog() {

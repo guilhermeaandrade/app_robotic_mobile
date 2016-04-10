@@ -52,8 +52,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mikepenz.materialdrawer.model.interfaces.OnCheckedChangeListener;
 
-import org.w3c.dom.Text;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -118,7 +116,8 @@ public class MainActivity extends AppCompatActivity {
     private Double controlValue;
     private Double xValue, yValue;
 
-    public Semaphore semaphore = new Semaphore(1);
+    public Semaphore sendSemaphore = new Semaphore(1);
+    public Semaphore receiveSemaphore = new Semaphore(1);
 
     private final CharSequence[] items = {Constants.CONT_AUTO, Constants.CONT_MANUAL};
 
@@ -161,7 +160,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
         setContentView(R.layout.activity_main_optional);
 
         init(savedInstanceState);
@@ -176,7 +174,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         initVariables();
-
     }
 
     //##############################################################################################################################
@@ -211,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
         edtControlador = (TextView) findViewById(R.id.tvControladorValue);
         edtControlador.setText(String.valueOf(Constants.KP_INITIAL));
 
-
         //botao para conectar
         btConectar = (Button) findViewById(R.id.btnConectar);
         btConectar.setOnClickListener(new View.OnClickListener() {
@@ -229,60 +225,30 @@ public class MainActivity extends AppCompatActivity {
 
         radioControlGroup = (RadioGroup) findViewById(R.id.radioGroup);
         radioControlGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                 switch(checkedId){
                     case R.id.radioButtonAutomatico:
-
                         optionControl = 1;
-                        Log.i(Constants.TAG, "AUTOMATICO");
                         if (device != null) {
                             disableManualControlComponents();
                             sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
                         }
-
                         new Enviar(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
                         new Receber().start();
-
                         break;
 
                     case R.id.radioButtonManul:
                         optionControl = 2;
-                        Log.i(Constants.TAG, "MANUAL");
                         enableAllComponents();
-
                         new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
                         new Receber().start();
                         break;
                 }
             }
         });
-
-        //botao para conectar
-        //btConectar = (Button) findViewById(R.id.btnConnect);
-        btConectar = (Button) findViewById(R.id.btnConectar);
-        btConectar.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (adaptador.isEnabled()) {
-                    startActivityForResult(it, TELA2);
-                } else {
-                    Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableBTIntent, 1);
-                }
-            }
-        });
-
-        /*
-        btSelectType = (Button) findViewById(R.id.btnTypeControl);
-        btSelectType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showControlDialog();
-            }
-        }); */
 
         //botao para frente
         btForward = (Button) findViewById(R.id.btnForward);
@@ -388,27 +354,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        /*
-        sbVelocidade = (SeekBar) findViewById(R.id.seekBar);
-        sbVelocidade.setProgress(velocidade);
-        sbVelocidade.setMinimumWidth(1);
-        sbVelocidade.setMax(50);
-        sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
-        sbVelocidade.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                velocidade = (byte) progress;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        }); */
 
         sbVelocidade = (SeekBar) findViewById(R.id.sbVelocidade);
         sbVelocidade.setProgress(velocidade);
@@ -841,9 +786,7 @@ public class MainActivity extends AppCompatActivity {
         }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //SE A ESCOLHA FOR CANCEL.. A ESCOLHA PADRÃO SERÁ CONTROLE AUTOMATICO
                 disableAllButtons();
-                // disableAllComponents();
             }
         });
 
@@ -862,14 +805,14 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
                         if (adaptador.isEnabled()) {
                             adaptador.disable();
                         }
-                        //disableAllComponents();
                         disableAllButtons();
                         device = null;
                         actionMenu.hideMenuButton(true);
-                        //ENVIO UMA MENSAGEM PARA O ROBOR PARA FECHAR A CONEXAO
+
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
@@ -971,6 +914,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void disableAllComponents(){
+
         tvController.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvMaxSeekVelocidade.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvMinSeekVelocidade.setTextColor(getResources().getColor(R.color.colorDisableText));
@@ -1099,7 +1043,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null) {
                     input = new DataInputStream(socket.getInputStream());
-                    semaphore.acquire();
+                    receiveSemaphore.acquire();
 
                     if (socket.isConnected()) {
                         byte[] buffer = new byte[1024];
@@ -1108,16 +1052,14 @@ public class MainActivity extends AppCompatActivity {
                             bytes = input.read(buffer);
                             Log.i("TAG", "-----> bytes: "+bytes);
                             String readMessage = new String(buffer, 0, bytes);
-                            if(readMessage.equalsIgnoreCase(Constants.FIM_TRANSFER)) break;
+                                if(readMessage.equalsIgnoreCase(Constants.FIM_TRANSFER)) break;
                             Log.i("TAG", "-----> readMessage: " + readMessage);
                             splitMessage(readMessage);
-                            bluetoothIn.obtainMessage(handlerState, bytes, optionControl, readMessage).sendToTarget();
-                            //bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
+                            bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
                         }
-                        Log.i("TAG", "-----> arraySize: " + listOfPositions.size());
                     }
 
-                    semaphore.release();
+                    receiveSemaphore.release();
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -1148,7 +1090,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null){
                     output = new DataOutputStream(socket.getOutputStream());
-                    semaphore.acquire();
+                    sendSemaphore.acquire();
 
                     if(socket.isConnected()){
                         if(comando != null) output.writeChar(comando);
@@ -1160,10 +1102,10 @@ public class MainActivity extends AppCompatActivity {
                         output.flush();
                     }
 
-                    semaphore.release();
+                    sendSemaphore.release();
                 }
             } catch (Exception e) {
-
+                Log.e(Constants.TAG, "ENVIAR ERRO: "+e.getMessage());
             }
         }
     }
@@ -1183,7 +1125,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null){
                     output = new DataOutputStream(socket.getOutputStream());
-                    semaphore.acquire();
+                    sendSemaphore.acquire();
 
                     if(socket.isConnected()){
                         if(comando != null) output.writeChar(comando);
@@ -1194,7 +1136,7 @@ public class MainActivity extends AppCompatActivity {
                         output.flush();
                     }
 
-                    semaphore.release();
+                    sendSemaphore.release();
                 }
             }catch (Exception erro){
 
@@ -1287,21 +1229,18 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Esolha o controle desejado.", Toast.LENGTH_LONG).show();
 
                 actionMenu.showMenuButton(true);
-                //btSelectType.setEnabled(true);
                 enableChoiceControl();
 
                 address = data.getExtras().getString("msg");
 
                 device = adaptador.getRemoteDevice(address);
                 teste = new ConnectThread(device);
-
                 teste.start();
+
             }else{
                 new Enviar(Constants.C_STOP_CONNECTION, Constants.I_STOP, 0d).start();
 
-                Log.i(Constants.TAG, "ELSE -> device != null");
                 try {
-                    Log.i(Constants.TAG, "Entrei no try -> fechar tudo");
                     if(input != null) input.close();
                     if(output != null) output.close();
                     if(socket != null) socket.close();
@@ -1313,7 +1252,6 @@ public class MainActivity extends AppCompatActivity {
                     socket = null;
                 } catch(IOException e){
                     e.printStackTrace();
-                    Log.e(Constants.TAG, "Erro no catch -> "+e.getMessage().toString());
                 }
             }
         }
@@ -1348,5 +1286,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }
