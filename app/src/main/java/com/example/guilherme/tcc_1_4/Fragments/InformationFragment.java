@@ -3,29 +3,23 @@ package com.example.guilherme.tcc_1_4.Fragments;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.guilherme.tcc_1_4.Model.ManualPosition;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 public class InformationFragment extends Fragment {
 
     private BluetoothDevice mDevice;
-    private List<Position> automaticMoviments;
-    private List<ManualPosition> manualMoviments;
-    private int optionControl;
+    private List<Position> moviments;
 
     private TextView tvName;
     private TextView tvAddress;
@@ -51,12 +45,7 @@ public class InformationFragment extends Fragment {
         View view = inflater.inflate(R.layout.information_fragment_layout, container, false);
 
         mDevice = this.getArguments().getParcelable("device");
-        automaticMoviments = this.getArguments().getParcelableArrayList("automaticMoviments");
-        manualMoviments = this.getArguments().getParcelableArrayList("manualMoviments");
-        optionControl = this.getArguments().getInt("optionControl");
-
-        Log.i("TAG", "MOVIMENTS -> INFORMATION -> length: " + automaticMoviments.size());
-        Log.i(Constants.TAG, "MOVIMENTS -> INFORMATION -> length: " + manualMoviments.size());
+        moviments = this.getArguments().getParcelableArrayList("moviments");
 
         init(view);
         fillAllVariables();
@@ -85,40 +74,20 @@ public class InformationFragment extends Fragment {
         tvAddress.setText(mDevice.getAddress());
 
         //##############################################################################################################
-        if(optionControl == 1){
-            if(automaticMoviments.size() > 0){
-                tvLastCoordX.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getX())));
-                tvLastCoordY.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getY())));
-                tvLastTheta.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getTheta())));
-                tvLastVelV.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getV())));
-                tvLastVelW.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getW())));
-                tvError.setText(String.valueOf(round(automaticMoviments.get(automaticMoviments.size() - 1).getE())));
-            }else {
-                tvLastCoordX.setText("0");
-                tvLastCoordY.setText("0");
-                tvLastTheta.setText("0");
-                tvLastVelV.setText("0");
-                tvLastVelW.setText("0");
-                tvError.setText("0");
-            }
-        }
-        if(optionControl == 2){
-            tvLastVelW.setTextColor(Color.WHITE);
-            tvError.setTextColor(Color.WHITE);
-            tvErrorText.setTextColor(Color.WHITE);
-            tvVelWText.setTextColor(Color.WHITE);
-
-            if(manualMoviments.size() > 0){
-                tvLastCoordX.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getX())));
-                tvLastCoordY.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getY())));
-                tvLastTheta.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getTheta())));
-                tvLastVelV.setText(String.valueOf(round(manualMoviments.get(manualMoviments.size() - 1).getV())));
-            }else {
-                tvLastCoordX.setText("0");
-                tvLastCoordY.setText("0");
-                tvLastTheta.setText("0");
-                tvLastVelV.setText("0");
-            }
+        if(moviments.size() > 0){
+            tvLastCoordX.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getX())));
+            tvLastCoordY.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getY())));
+            tvLastTheta.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getTheta())));
+            tvLastVelV.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getV())));
+            tvLastVelW.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getW())));
+            tvError.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getE())));
+        }else {
+            tvLastCoordX.setText("0");
+            tvLastCoordY.setText("0");
+            tvLastTheta.setText("0");
+            tvLastVelV.setText("0");
+            tvLastVelW.setText("0");
+            tvError.setText("0");
         }
     }
 

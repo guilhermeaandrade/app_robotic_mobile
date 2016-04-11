@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.example.guilherme.tcc_1_4.Fragments.GraphFragment;
 import com.example.guilherme.tcc_1_4.Fragments.InformationFragment;
-import com.example.guilherme.tcc_1_4.Model.ManualPosition;
 import com.example.guilherme.tcc_1_4.Model.Position;
 
 import java.util.ArrayList;
@@ -21,15 +20,11 @@ public class TabsAdapter extends FragmentPagerAdapter {
     private String[] titles = new String[]{"INFORMAÇÕES", "GRÁFICOS"};
     private Context mContext;
     private BluetoothDevice mDevice;
-    private int optionControl;
-    private List<Position> automaticMoviments;
-    private List<ManualPosition> manualMoviments;
+    private List<Position> moviments;
 
-    public TabsAdapter(FragmentManager fragmentManager, Context context, BluetoothDevice device, int opt, List<Position> pos, List<ManualPosition> mPos){
+    public TabsAdapter(FragmentManager fragmentManager, Context context, BluetoothDevice device, List<Position> pos){
         super(fragmentManager);
-        optionControl = opt;
-        automaticMoviments = pos;
-        manualMoviments = mPos;
+        moviments = pos;
         mContext = context;
         mDevice = device;
     }
@@ -45,10 +40,9 @@ public class TabsAdapter extends FragmentPagerAdapter {
 
         //Passar dados para o fragment
         Bundle bundle = new Bundle();
+
         bundle.putParcelable("device", mDevice);
-        bundle.putInt("optionControl", optionControl);
-        bundle.putParcelableArrayList("automaticMoviments", (ArrayList<? extends Parcelable>) automaticMoviments);
-        bundle.putParcelableArrayList("manualMoviments", (ArrayList<? extends Parcelable>) manualMoviments);
+        bundle.putParcelableArrayList("moviments", (ArrayList<? extends Parcelable>) moviments);
 
         frag.setArguments(bundle);
         return frag;

@@ -36,7 +36,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
-import com.example.guilherme.tcc_1_4.Model.ManualPosition;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
@@ -65,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
     public static final int REQUEST_ENABLE_BT = 1;
 
     private List<Position> listOfPositions;
-    private List<ManualPosition> listOfManualPositions;
     private final int handlerState = 0;
     private Handler bluetoothIn;
 
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
     private Button btConectar;
     private Button btSelectType;
     private RadioGroup radioControlGroup;
-    private RadioButton radioControlButton;
     private Button btForward;
     private Button btBackward;
     private Button btRight;
@@ -445,7 +442,6 @@ public class MainActivity extends AppCompatActivity {
     private void init(Bundle savedInstanceState){
         // ------------------------------ TABS e VIEWPAGER ----------------------------------------------
         listOfPositions = new ArrayList<Position>();
-        listOfManualPositions = new ArrayList<ManualPosition>();
 
         mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
 
@@ -553,10 +549,10 @@ public class MainActivity extends AppCompatActivity {
                                         //if (!listOfPositions.isEmpty()) {
                                         Intent i = new Intent(MainActivity.this, MapActivity.class);
                                         Bundle bundle = new Bundle();
+
                                         bundle.putParcelable("device", device);
-                                        bundle.putInt("optionControl", optionControl);
-                                        bundle.putParcelableArrayList("automaticMoviments", (ArrayList<? extends Parcelable>) listOfPositions);
-                                        bundle.putParcelableArrayList("manualMoviments", (ArrayList<? extends Parcelable>) listOfManualPositions);
+                                        bundle.putParcelableArrayList("moviments", (ArrayList<? extends Parcelable>) listOfPositions);
+
                                         i.putExtras(bundle);
                                         startActivity(i);
                                         actionMenu.close(true);
@@ -1157,25 +1153,17 @@ public class MainActivity extends AppCompatActivity {
             Log.i("TAG", "splitMessage: "+splits[i]);
         }
         try {
-            if(optionControl == 1){
-                Position position = new Position(
-                            Double.parseDouble(splits[0]),
-                            Double.parseDouble(splits[1]),
-                            Double.parseDouble(splits[2]),
-                            Double.parseDouble(splits[3]),
-                            Double.parseDouble(splits[4]),
-                            Double.parseDouble(splits[5]),
-                            Float.parseFloat(splits[6]));
-                listOfPositions.add(position);
-            }
-            if(optionControl == 2){
-                ManualPosition manualPosition = new ManualPosition(
-                            Double.parseDouble(splits[0]),
-                            Double.parseDouble(splits[1]),
-                            Double.parseDouble(splits[2]),
-                            Double.parseDouble(splits[3]));
-                listOfManualPositions.add(manualPosition);
-            }
+            Position position = new Position(
+                    Double.parseDouble(splits[0]),
+                    Double.parseDouble(splits[1]),
+                    Double.parseDouble(splits[2]),
+                    Double.parseDouble(splits[3]),
+                    Double.parseDouble(splits[4]),
+                    Double.parseDouble(splits[5]),
+                    Float.parseFloat(splits[6]),
+                    Integer.parseInt(splits[7]));
+            listOfPositions.add(position);
+
         }catch (NumberFormatException ex){
             Log.e(Constants.TAG, ex.getMessage().toString());
         }

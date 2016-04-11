@@ -22,7 +22,6 @@ import com.androidplot.xy.PointLabelFormatter;
 import com.androidplot.xy.XYPlot;
 import com.androidplot.xy.XYSeries;
 import com.androidplot.xy.XYStepMode;
-import com.example.guilherme.tcc_1_4.Model.ManualPosition;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
@@ -33,10 +32,7 @@ import java.util.List;
 
 public class GraphFragment extends Fragment{
 
-    private BluetoothDevice mDevice;
-    private List<Position> automaticMoviments;
-    private List<ManualPosition> manualMoviments;
-    private int optionControl;
+    private List<Position> moviments;
 
     private Spinner spGraphType;
 
@@ -58,10 +54,7 @@ public class GraphFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.graph_fragment_layout, container, false);
 
-        mDevice = this.getArguments().getParcelable("device");
-        automaticMoviments = this.getArguments().getParcelableArrayList("automaticMoviments");
-        manualMoviments = this.getArguments().getParcelableArrayList("manualMoviments");
-        optionControl = this.getArguments().getInt("optionControl");
+        moviments = this.getArguments().getParcelableArrayList("moviments");
 
         spGraphType = (Spinner) view.findViewById(R.id.spGraphs);
         spGraphType.setVisibility(View.VISIBLE);
@@ -256,25 +249,25 @@ public class GraphFragment extends Fragment{
 
         switch (option){
             case 0:
-                minValueX = (automaticMoviments.get(0).getX()).floatValue();
-                maxValueX = (automaticMoviments.get(0).getX()).floatValue();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getX() < minValueX) {
-                        minValueX = (automaticMoviments.get(i).getX()).floatValue();
-                    } else if (automaticMoviments.get(i).getX() > maxValueX) {
-                        maxValueX = (automaticMoviments.get(i).getX()).floatValue();
+                minValueX = (moviments.get(0).getX()).floatValue();
+                maxValueX = (moviments.get(0).getX()).floatValue();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getX() < minValueX) {
+                        minValueX = (moviments.get(i).getX()).floatValue();
+                    } else if (moviments.get(i).getX() > maxValueX) {
+                        maxValueX = (moviments.get(i).getX()).floatValue();
                     }
                 }
                 bound[0] = minValueX;
                 bound[1] = maxValueX;
 
-                minValueY = (automaticMoviments.get(0).getY()).floatValue();
-                maxValueY = (automaticMoviments.get(0).getY()).floatValue();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getY() < minValueY) {
-                        minValueY = (automaticMoviments.get(i).getY()).floatValue();
-                    } else if (automaticMoviments.get(i).getY() > maxValueY) {
-                        maxValueY = (automaticMoviments.get(i).getY()).floatValue();
+                minValueY = (moviments.get(0).getY()).floatValue();
+                maxValueY = (moviments.get(0).getY()).floatValue();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getY() < minValueY) {
+                        minValueY = (moviments.get(i).getY()).floatValue();
+                    } else if (moviments.get(i).getY() > maxValueY) {
+                        maxValueY = (moviments.get(i).getY()).floatValue();
                     }
                 }
                 bound[2] = minValueY;
@@ -283,25 +276,25 @@ public class GraphFragment extends Fragment{
                 break;
 
             case 1:
-                minValueX = automaticMoviments.get(0).getT();
-                maxValueX = automaticMoviments.get(0).getT();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getT() < minValueX) {
-                        minValueX = automaticMoviments.get(i).getT();
-                    } else if (automaticMoviments.get(i).getT() > maxValueX) {
-                        maxValueX = automaticMoviments.get(i).getT();
+                minValueX = moviments.get(0).getT();
+                maxValueX = moviments.get(0).getT();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getT() < minValueX) {
+                        minValueX = moviments.get(i).getT();
+                    } else if (moviments.get(i).getT() > maxValueX) {
+                        maxValueX = moviments.get(i).getT();
                     }
                 }
                 bound[0] = minValueX;
                 bound[1] = maxValueX;
 
-                minValueY = automaticMoviments.get(0).getX().floatValue();
-                maxValueY = automaticMoviments.get(0).getX().floatValue();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getX() < minValueY) {
-                        minValueY = automaticMoviments.get(i).getX().floatValue();
-                    } else if (automaticMoviments.get(i).getX() > maxValueY) {
-                        maxValueY = automaticMoviments.get(i).getX().floatValue();
+                minValueY = moviments.get(0).getX().floatValue();
+                maxValueY = moviments.get(0).getX().floatValue();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getX() < minValueY) {
+                        minValueY = moviments.get(i).getX().floatValue();
+                    } else if (moviments.get(i).getX() > maxValueY) {
+                        maxValueY = moviments.get(i).getX().floatValue();
                     }
                 }
                 bound[2] = minValueY;
@@ -309,25 +302,25 @@ public class GraphFragment extends Fragment{
 
                 break;
             case 2:
-                minValueX = automaticMoviments.get(0).getT();
-                maxValueX = automaticMoviments.get(0).getT();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getT() < minValueX) {
-                        minValueY = automaticMoviments.get(i).getT();
-                    } else if (automaticMoviments.get(i).getT() > maxValueX) {
-                        maxValueY = automaticMoviments.get(i).getT();
+                minValueX = moviments.get(0).getT();
+                maxValueX = moviments.get(0).getT();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getT() < minValueX) {
+                        minValueY = moviments.get(i).getT();
+                    } else if (moviments.get(i).getT() > maxValueX) {
+                        maxValueY = moviments.get(i).getT();
                     }
                 }
                 bound[0] = minValueX;
                 bound[1] = maxValueX;
 
-                minValueY = automaticMoviments.get(0).getY().floatValue();
-                maxValueY = automaticMoviments.get(0).getY().floatValue();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getY() < minValueY) {
-                        minValueY = automaticMoviments.get(i).getY().floatValue();
-                    } else if (automaticMoviments.get(i).getY() > maxValueY) {
-                        maxValueY = automaticMoviments.get(i).getY().floatValue();
+                minValueY = moviments.get(0).getY().floatValue();
+                maxValueY = moviments.get(0).getY().floatValue();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getY() < minValueY) {
+                        minValueY = moviments.get(i).getY().floatValue();
+                    } else if (moviments.get(i).getY() > maxValueY) {
+                        maxValueY = moviments.get(i).getY().floatValue();
                     }
                 }
                 bound[2] = minValueY;
@@ -335,25 +328,25 @@ public class GraphFragment extends Fragment{
 
                 break;
             case 3:
-                minValueX = automaticMoviments.get(0).getT();
-                maxValueX = automaticMoviments.get(0).getT();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getT() < minValueX) {
-                        minValueX = automaticMoviments.get(i).getT();
-                    } else if (automaticMoviments.get(i).getT() > maxValueX) {
-                        maxValueX = automaticMoviments.get(i).getT();
+                minValueX = moviments.get(0).getT();
+                maxValueX = moviments.get(0).getT();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getT() < minValueX) {
+                        minValueX = moviments.get(i).getT();
+                    } else if (moviments.get(i).getT() > maxValueX) {
+                        maxValueX = moviments.get(i).getT();
                     }
                 }
                 bound[0] = minValueX;
                 bound[1] = maxValueX;
 
-                minValueY = automaticMoviments.get(0).getTheta().floatValue();
-                maxValueY = automaticMoviments.get(0).getTheta().floatValue();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getTheta() < minValueY) {
-                        minValueY = automaticMoviments.get(i).getTheta().floatValue();
-                    } else if (automaticMoviments.get(i).getTheta() > maxValueY) {
-                        maxValueY = automaticMoviments.get(i).getTheta().floatValue();
+                minValueY = moviments.get(0).getTheta().floatValue();
+                maxValueY = moviments.get(0).getTheta().floatValue();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getTheta() < minValueY) {
+                        minValueY = moviments.get(i).getTheta().floatValue();
+                    } else if (moviments.get(i).getTheta() > maxValueY) {
+                        maxValueY = moviments.get(i).getTheta().floatValue();
                     }
                 }
                 bound[2] = minValueY;
@@ -361,25 +354,25 @@ public class GraphFragment extends Fragment{
 
                 break;
             case 4:
-                minValueX = automaticMoviments.get(0).getT();
-                maxValueX = automaticMoviments.get(0).getT();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getT() < minValueX) {
-                        minValueX = automaticMoviments.get(i).getT();
-                    } else if (automaticMoviments.get(i).getT() > maxValueX) {
-                        maxValueX = automaticMoviments.get(i).getT();
+                minValueX = moviments.get(0).getT();
+                maxValueX = moviments.get(0).getT();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getT() < minValueX) {
+                        minValueX = moviments.get(i).getT();
+                    } else if (moviments.get(i).getT() > maxValueX) {
+                        maxValueX = moviments.get(i).getT();
                     }
                 }
                 bound[0] = minValueX;
                 bound[1] = maxValueX;
 
-                minValueY = automaticMoviments.get(0).getV().floatValue();
-                maxValueY = automaticMoviments.get(0).getV().floatValue();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getV() < minValueY) {
-                        minValueY = automaticMoviments.get(i).getV().floatValue();
-                    } else if (automaticMoviments.get(i).getV() > maxValueY) {
-                        maxValueY = automaticMoviments.get(i).getV().floatValue();
+                minValueY = moviments.get(0).getV().floatValue();
+                maxValueY = moviments.get(0).getV().floatValue();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getV() < minValueY) {
+                        minValueY = moviments.get(i).getV().floatValue();
+                    } else if (moviments.get(i).getV() > maxValueY) {
+                        maxValueY = moviments.get(i).getV().floatValue();
                     }
                 }
                 bound[2] = minValueY;
@@ -387,25 +380,25 @@ public class GraphFragment extends Fragment{
 
                 break;
             case 5:
-                minValueX = automaticMoviments.get(0).getT();
-                maxValueX = automaticMoviments.get(0).getT();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getT() < minValueX) {
-                        minValueX = automaticMoviments.get(i).getT();
-                    } else if (automaticMoviments.get(i).getT() > maxValueX) {
-                        maxValueX = automaticMoviments.get(i).getT();
+                minValueX = moviments.get(0).getT();
+                maxValueX = moviments.get(0).getT();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getT() < minValueX) {
+                        minValueX = moviments.get(i).getT();
+                    } else if (moviments.get(i).getT() > maxValueX) {
+                        maxValueX = moviments.get(i).getT();
                     }
                 }
                 bound[0] = minValueX;
                 bound[1] = maxValueX;
 
-                minValueY = automaticMoviments.get(0).getW().floatValue();
-                maxValueY = automaticMoviments.get(0).getW().floatValue();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getW() < minValueY) {
-                        minValueY = automaticMoviments.get(i).getW().floatValue();
-                    } else if (automaticMoviments.get(i).getW() > maxValueY) {
-                        maxValueY = automaticMoviments.get(i).getW().floatValue();
+                minValueY = moviments.get(0).getW().floatValue();
+                maxValueY = moviments.get(0).getW().floatValue();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getW() < minValueY) {
+                        minValueY = moviments.get(i).getW().floatValue();
+                    } else if (moviments.get(i).getW() > maxValueY) {
+                        maxValueY = moviments.get(i).getW().floatValue();
                     }
                 }
                 bound[2] = minValueY;
@@ -413,25 +406,25 @@ public class GraphFragment extends Fragment{
 
                 break;
             case 6:
-                minValueX = automaticMoviments.get(0).getT();
-                maxValueX = automaticMoviments.get(0).getT();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getT() < minValueX) {
-                        minValueX = automaticMoviments.get(i).getT();
-                    } else if (automaticMoviments.get(i).getT() > maxValueX) {
-                        maxValueX = automaticMoviments.get(i).getT();
+                minValueX = moviments.get(0).getT();
+                maxValueX = moviments.get(0).getT();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getT() < minValueX) {
+                        minValueX = moviments.get(i).getT();
+                    } else if (moviments.get(i).getT() > maxValueX) {
+                        maxValueX = moviments.get(i).getT();
                     }
                 }
                 bound[0] = minValueX;
                 bound[1] = maxValueX;
 
-                minValueY = automaticMoviments.get(0).getE().floatValue();
-                maxValueY = automaticMoviments.get(0).getE().floatValue();
-                for (int i = 1; i < automaticMoviments.size(); i++) {
-                    if (automaticMoviments.get(i).getE() < minValueY) {
-                        minValueY = automaticMoviments.get(i).getE().floatValue();
-                    } else if (automaticMoviments.get(i).getE() > maxValueY) {
-                        maxValueY = automaticMoviments.get(i).getE().floatValue();
+                minValueY = moviments.get(0).getE().floatValue();
+                maxValueY = moviments.get(0).getE().floatValue();
+                for (int i = 1; i < moviments.size(); i++) {
+                    if (moviments.get(i).getE() < minValueY) {
+                        minValueY = moviments.get(i).getE().floatValue();
+                    } else if (moviments.get(i).getE() > maxValueY) {
+                        maxValueY = moviments.get(i).getE().floatValue();
                     }
                 }
                 bound[2] = minValueY;
@@ -444,7 +437,7 @@ public class GraphFragment extends Fragment{
     }
 
     private void getDataSource(int option){
-        if(automaticMoviments.size() <= 1) return;
+        if(moviments.size() <= 1) return;
 
         float high = Constants.FINAL_SECOND;
         float low = Constants.INITIAL_SECOND;
@@ -455,8 +448,8 @@ public class GraphFragment extends Fragment{
             buckets[i] =  new ArrayList<>();
         }
 
-        for (int i = 0; i < automaticMoviments.size(); i++) {
-            buckets[(int)((automaticMoviments.get(i).getT() - low)/interval)].add(automaticMoviments.get(i));
+        for (int i = 0; i < moviments.size(); i++) {
+            buckets[(int)((moviments.get(i).getT() - low)/interval)].add(moviments.get(i));
         }
 
         fillFirsAndLastValue(option);
@@ -473,59 +466,59 @@ public class GraphFragment extends Fragment{
     private void fillFirsAndLastValue(int option) {
         switch (option){
             case 0:
-                AdataX[0] = (automaticMoviments.get(0).getX().floatValue());
-                AdataY[0] = (automaticMoviments.get(0).getY().floatValue());
+                AdataX[0] = (moviments.get(0).getX().floatValue());
+                AdataY[0] = (moviments.get(0).getY().floatValue());
 
-                AdataX[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getX().floatValue());
-                AdataY[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getY().floatValue());
+                AdataX[19] = (moviments.get(moviments.size() - 1).getX().floatValue());
+                AdataY[19] = (moviments.get(moviments.size() - 1).getY().floatValue());
                 break;
 
             case 1:
-                AdataX[0] = (automaticMoviments.get(0).getT().floatValue());
-                AdataY[0] = (automaticMoviments.get(0).getX().floatValue());
+                AdataX[0] = (moviments.get(0).getT().floatValue());
+                AdataY[0] = (moviments.get(0).getX().floatValue());
 
-                AdataX[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getT().floatValue());
-                AdataY[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getX().floatValue());
+                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
+                AdataY[19] = (moviments.get(moviments.size() - 1).getX().floatValue());
                 break;
 
             case 2:
-                AdataX[0] = (automaticMoviments.get(0).getT().floatValue());
-                AdataY[0] = (automaticMoviments.get(0).getY().floatValue());
+                AdataX[0] = (moviments.get(0).getT().floatValue());
+                AdataY[0] = (moviments.get(0).getY().floatValue());
 
-                AdataX[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getT().floatValue());
-                AdataY[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getY().floatValue());
+                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
+                AdataY[19] = (moviments.get(moviments.size() - 1).getY().floatValue());
                 break;
 
             case 3:
-                AdataX[0] = (automaticMoviments.get(0).getT().floatValue());
-                AdataY[0] = (automaticMoviments.get(0).getTheta().floatValue());
+                AdataX[0] = (moviments.get(0).getT().floatValue());
+                AdataY[0] = (moviments.get(0).getTheta().floatValue());
 
-                AdataX[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getT().floatValue());
-                AdataY[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getTheta().floatValue());
+                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
+                AdataY[19] = (moviments.get(moviments.size() - 1).getTheta().floatValue());
                 break;
 
             case 4:
-                AdataX[0] = (automaticMoviments.get(0).getT().floatValue());
-                AdataY[0] = (automaticMoviments.get(0).getV().floatValue());
+                AdataX[0] = (moviments.get(0).getT().floatValue());
+                AdataY[0] = (moviments.get(0).getV().floatValue());
 
-                AdataX[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getT().floatValue());
-                AdataY[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getV().floatValue());
+                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
+                AdataY[19] = (moviments.get(moviments.size() - 1).getV().floatValue());
                 break;
 
             case 5:
-                AdataX[0] = (automaticMoviments.get(0).getT().floatValue());
-                AdataY[0] = (automaticMoviments.get(0).getW().floatValue());
+                AdataX[0] = (moviments.get(0).getT().floatValue());
+                AdataY[0] = (moviments.get(0).getW().floatValue());
 
-                AdataX[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getT().floatValue());
-                AdataY[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getW().floatValue());
+                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
+                AdataY[19] = (moviments.get(moviments.size() - 1).getW().floatValue());
                 break;
 
             case 6:
-                AdataX[0] = (automaticMoviments.get(0).getT().floatValue());
-                AdataY[0] = (automaticMoviments.get(0).getE().floatValue());
+                AdataX[0] = (moviments.get(0).getT().floatValue());
+                AdataY[0] = (moviments.get(0).getE().floatValue());
 
-                AdataX[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getT().floatValue());
-                AdataY[19] = (automaticMoviments.get(automaticMoviments.size() - 1).getE().floatValue());
+                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
+                AdataY[19] = (moviments.get(moviments.size() - 1).getE().floatValue());
                 break;
         }
     }
