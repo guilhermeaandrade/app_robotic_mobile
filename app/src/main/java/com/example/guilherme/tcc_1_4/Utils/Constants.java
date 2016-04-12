@@ -36,4 +36,5 @@ public class Constants {
     public static final int BUCKET_COUNT = 9;
     public static final int COUNT_VALUES = 3;
     public static final int COUNT_POINTS = 20;
+    public static final int NUMBER_SCALE = 15;
 }

@@ -3,13 +3,16 @@ package com.example.guilherme.tcc_1_4.Fragments;
 
 import android.bluetooth.BluetoothDevice;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -29,8 +32,20 @@ import com.example.guilherme.tcc_1_4.Utils.Constants;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GraphFragment extends Fragment{
+
+    private static final int NONE = 0;
+    private  static final int ONE_FINGER_DRAG = 1;
+    private static final int TWO_FINGERS_DRAG = 2;
+    int mode = NONE;
+
+    PointF firstFinger;
+    float lastScrolling;
+    float distBetweenFingers;
+    float lastZooming;
 
     private List<Position> moviments;
 
@@ -42,6 +57,9 @@ public class GraphFragment extends Fragment{
     private ArrayList<Number> ALdataX, ALdataY;
     private float AdataX[], AdataY[];
     private int init = 0;
+    private float[] bounderies = new float[4];
+    private PointF minXY;
+    private PointF maxXY;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +73,7 @@ public class GraphFragment extends Fragment{
         View view = inflater.inflate(R.layout.graph_fragment_layout, container, false);
 
         moviments = this.getArguments().getParcelableArrayList("moviments");
+        Log.i(Constants.TAG, "Moviments size: "+moviments.size());
 
         spGraphType = (Spinner) view.findViewById(R.id.spGraphs);
         spGraphType.setVisibility(View.VISIBLE);
@@ -73,19 +92,22 @@ public class GraphFragment extends Fragment{
                 init = 1;
                 switch (position) {
                     case 0:
+                        scriptUpdatePlot(0);
+
                         xyPlot.setDomainLabel("x (m)");
-                        xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 0.05);
+                        xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 0.025);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#.##"));
 
                         xyPlot.setRangeLabel("y (m)");
                         xyPlot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 0.025);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
 
-                        scriptUpdatePlot(0);
                         xyPlot.redraw();
                         break;
 
                     case 1:
+                        scriptUpdatePlot(1);
+
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
@@ -93,11 +115,13 @@ public class GraphFragment extends Fragment{
                         xyPlot.setRangeLabel("x (m)");
                         xyPlot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 0.025);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
-                        scriptUpdatePlot(1);
+
                         xyPlot.redraw();
                         break;
 
                     case 2:
+                        scriptUpdatePlot(2);
+
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
@@ -105,11 +129,13 @@ public class GraphFragment extends Fragment{
                         xyPlot.setRangeLabel("y (m)");
                         xyPlot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 0.025);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
-                        scriptUpdatePlot(2);
+
                         xyPlot.redraw();
                         break;
 
                     case 3:
+                        scriptUpdatePlot(3);
+
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
@@ -117,11 +143,13 @@ public class GraphFragment extends Fragment{
                         xyPlot.setRangeLabel("Angulo (graus)");
                         xyPlot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 0.5);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
-                        scriptUpdatePlot(3);
+
                         xyPlot.redraw();
                         break;
 
                     case 4:
+                        scriptUpdatePlot(4);
+
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
@@ -129,11 +157,13 @@ public class GraphFragment extends Fragment{
                         xyPlot.setRangeLabel("v (cm/s)");
                         xyPlot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 0.005);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
-                        scriptUpdatePlot(4);
+
                         xyPlot.redraw();
                         break;
 
                     case 5:
+                        scriptUpdatePlot(5);
+
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
@@ -141,10 +171,13 @@ public class GraphFragment extends Fragment{
                         xyPlot.setRangeLabel("w (cm/s)");
                         xyPlot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 0.5);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
-                        scriptUpdatePlot(5);
+
                         xyPlot.redraw();
                         break;
+
                     case 6:
+                        scriptUpdatePlot(6);
+
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
@@ -152,7 +185,7 @@ public class GraphFragment extends Fragment{
                         xyPlot.setRangeLabel("erro");
                         xyPlot.setRangeStep(XYStepMode.INCREMENT_BY_VAL, 0.025);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
-                        scriptUpdatePlot(6);
+
                         xyPlot.redraw();
                         break;
                 }
@@ -170,7 +203,6 @@ public class GraphFragment extends Fragment{
         ALdataX = new ArrayList<Number>();
         ALdataY = new ArrayList<Number>();
 
-        // configure interpolation on the formatter:
         series1Format = new LineAndPointFormatter();
         series1Format.setPointLabelFormatter(new PointLabelFormatter(Color.TRANSPARENT));
         series1Format.configure(getActivity().getApplicationContext(),
@@ -178,12 +210,18 @@ public class GraphFragment extends Fragment{
         series1Format.setInterpolationParams(
                 new CatmullRomInterpolator.Params(20, CatmullRomInterpolator.Type.Centripetal));
 
-        // reduce the number of range labels
         xyPlot.setTicksPerRangeLabel(3);
+        xyPlot.setTicksPerDomainLabel(3);
 
-        // rotate domain labels 45 degrees to make them more compact horizontally:
         xyPlot.getGraphWidget().setDomainLabelOrientation(-45);
 
+        xyPlot.calculateMinMaxVals();
+        minXY=new PointF(xyPlot.getCalculatedMinX().floatValue(), xyPlot.getCalculatedMinY().floatValue());
+        maxXY=new PointF(xyPlot.getCalculatedMaxX().floatValue(), xyPlot.getCalculatedMaxY().floatValue());
+
+
+        /*view.setOnTouchListener(new View.OnTouchListener() {
+        });*/
         return view;
     }
 
@@ -198,8 +236,8 @@ public class GraphFragment extends Fragment{
         AdataY = new float[Constants.COUNT_POINTS];
         getDataSource(option);
 
-        float[] bounderies = getBoundaries(option);
-        Log.i(Constants.TAG, "BOUNDERIES: "+bounderies[0]+" - "+bounderies[1]+" - "+bounderies[2]+" - "+bounderies[3]);
+        bounderies = getBoundaries(option);
+        Log.i(Constants.TAG, "BOUNDERIES: " + bounderies[0] + " - " + bounderies[1] + " - " + bounderies[2] + " - " + bounderies[3]);
         xyPlot.setDomainBoundaries(bounderies[0], bounderies[1], BoundaryMode.AUTO);
         xyPlot.setRangeBoundaries(bounderies[2], bounderies[3], BoundaryMode.AUTO);
 
@@ -247,208 +285,218 @@ public class GraphFragment extends Fragment{
         Float minValueY;
         Float maxValueY;
 
-        switch (option){
-            case 0:
-                minValueX = (moviments.get(0).getX()).floatValue();
-                maxValueX = (moviments.get(0).getX()).floatValue();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getX() < minValueX) {
-                        minValueX = (moviments.get(i).getX()).floatValue();
-                    } else if (moviments.get(i).getX() > maxValueX) {
-                        maxValueX = (moviments.get(i).getX()).floatValue();
+        if(moviments.size() > 0){
+            switch (option){
+                case 0:
+                    minValueX = (moviments.get(0).getX()).floatValue();
+                    maxValueX = (moviments.get(0).getX()).floatValue();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getX() < minValueX) {
+                            minValueX = (moviments.get(i).getX()).floatValue();
+                        } else if (moviments.get(i).getX() > maxValueX) {
+                            maxValueX = (moviments.get(i).getX()).floatValue();
+                        }
                     }
-                }
-                bound[0] = minValueX;
-                bound[1] = maxValueX;
+                    bound[0] = minValueX;
+                    bound[1] = maxValueX;
 
-                minValueY = (moviments.get(0).getY()).floatValue();
-                maxValueY = (moviments.get(0).getY()).floatValue();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getY() < minValueY) {
-                        minValueY = (moviments.get(i).getY()).floatValue();
-                    } else if (moviments.get(i).getY() > maxValueY) {
-                        maxValueY = (moviments.get(i).getY()).floatValue();
+                    minValueY = (moviments.get(0).getY()).floatValue();
+                    maxValueY = (moviments.get(0).getY()).floatValue();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getY() < minValueY) {
+                            minValueY = (moviments.get(i).getY()).floatValue();
+                        } else if (moviments.get(i).getY() > maxValueY) {
+                            maxValueY = (moviments.get(i).getY()).floatValue();
+                        }
                     }
-                }
-                bound[2] = minValueY;
-                bound[3] = maxValueY;
+                    bound[2] = minValueY;
+                    bound[3] = maxValueY;
 
-                break;
+                    break;
 
-            case 1:
-                minValueX = moviments.get(0).getT();
-                maxValueX = moviments.get(0).getT();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getT() < minValueX) {
-                        minValueX = moviments.get(i).getT();
-                    } else if (moviments.get(i).getT() > maxValueX) {
-                        maxValueX = moviments.get(i).getT();
+                case 1:
+                    minValueX = moviments.get(0).getT();
+                    maxValueX = moviments.get(0).getT();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getT() < minValueX) {
+                            minValueX = moviments.get(i).getT();
+                        } else if (moviments.get(i).getT() > maxValueX) {
+                            maxValueX = moviments.get(i).getT();
+                        }
                     }
-                }
-                bound[0] = minValueX;
-                bound[1] = maxValueX;
+                    bound[0] = minValueX;
+                    bound[1] = maxValueX;
 
-                minValueY = moviments.get(0).getX().floatValue();
-                maxValueY = moviments.get(0).getX().floatValue();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getX() < minValueY) {
-                        minValueY = moviments.get(i).getX().floatValue();
-                    } else if (moviments.get(i).getX() > maxValueY) {
-                        maxValueY = moviments.get(i).getX().floatValue();
+                    minValueY = moviments.get(0).getX().floatValue();
+                    maxValueY = moviments.get(0).getX().floatValue();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getX() < minValueY) {
+                            minValueY = moviments.get(i).getX().floatValue();
+                        } else if (moviments.get(i).getX() > maxValueY) {
+                            maxValueY = moviments.get(i).getX().floatValue();
+                        }
                     }
-                }
-                bound[2] = minValueY;
-                bound[3] = maxValueY;
+                    bound[2] = minValueY;
+                    bound[3] = maxValueY;
 
-                break;
-            case 2:
-                minValueX = moviments.get(0).getT();
-                maxValueX = moviments.get(0).getT();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getT() < minValueX) {
-                        minValueY = moviments.get(i).getT();
-                    } else if (moviments.get(i).getT() > maxValueX) {
-                        maxValueY = moviments.get(i).getT();
+                    break;
+                case 2:
+                    minValueX = moviments.get(0).getT();
+                    maxValueX = moviments.get(0).getT();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getT() < minValueX) {
+                            minValueY = moviments.get(i).getT();
+                        } else if (moviments.get(i).getT() > maxValueX) {
+                            maxValueY = moviments.get(i).getT();
+                        }
                     }
-                }
-                bound[0] = minValueX;
-                bound[1] = maxValueX;
+                    bound[0] = minValueX;
+                    bound[1] = maxValueX;
 
-                minValueY = moviments.get(0).getY().floatValue();
-                maxValueY = moviments.get(0).getY().floatValue();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getY() < minValueY) {
-                        minValueY = moviments.get(i).getY().floatValue();
-                    } else if (moviments.get(i).getY() > maxValueY) {
-                        maxValueY = moviments.get(i).getY().floatValue();
+                    minValueY = moviments.get(0).getY().floatValue();
+                    maxValueY = moviments.get(0).getY().floatValue();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getY() < minValueY) {
+                            minValueY = moviments.get(i).getY().floatValue();
+                        } else if (moviments.get(i).getY() > maxValueY) {
+                            maxValueY = moviments.get(i).getY().floatValue();
+                        }
                     }
-                }
-                bound[2] = minValueY;
-                bound[3] = maxValueY;
+                    bound[2] = minValueY;
+                    bound[3] = maxValueY;
 
-                break;
-            case 3:
-                minValueX = moviments.get(0).getT();
-                maxValueX = moviments.get(0).getT();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getT() < minValueX) {
-                        minValueX = moviments.get(i).getT();
-                    } else if (moviments.get(i).getT() > maxValueX) {
-                        maxValueX = moviments.get(i).getT();
+                    break;
+                case 3:
+                    minValueX = moviments.get(0).getT();
+                    maxValueX = moviments.get(0).getT();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getT() < minValueX) {
+                            minValueX = moviments.get(i).getT();
+                        } else if (moviments.get(i).getT() > maxValueX) {
+                            maxValueX = moviments.get(i).getT();
+                        }
                     }
-                }
-                bound[0] = minValueX;
-                bound[1] = maxValueX;
+                    bound[0] = minValueX;
+                    bound[1] = maxValueX;
 
-                minValueY = moviments.get(0).getTheta().floatValue();
-                maxValueY = moviments.get(0).getTheta().floatValue();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getTheta() < minValueY) {
-                        minValueY = moviments.get(i).getTheta().floatValue();
-                    } else if (moviments.get(i).getTheta() > maxValueY) {
-                        maxValueY = moviments.get(i).getTheta().floatValue();
+                    minValueY = moviments.get(0).getTheta().floatValue();
+                    maxValueY = moviments.get(0).getTheta().floatValue();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getTheta() < minValueY) {
+                            minValueY = moviments.get(i).getTheta().floatValue();
+                        } else if (moviments.get(i).getTheta() > maxValueY) {
+                            maxValueY = moviments.get(i).getTheta().floatValue();
+                        }
                     }
-                }
-                bound[2] = minValueY;
-                bound[3] = maxValueY;
+                    bound[2] = minValueY;
+                    bound[3] = maxValueY;
 
-                break;
-            case 4:
-                minValueX = moviments.get(0).getT();
-                maxValueX = moviments.get(0).getT();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getT() < minValueX) {
-                        minValueX = moviments.get(i).getT();
-                    } else if (moviments.get(i).getT() > maxValueX) {
-                        maxValueX = moviments.get(i).getT();
+                    break;
+                case 4:
+                    minValueX = moviments.get(0).getT();
+                    maxValueX = moviments.get(0).getT();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getT() < minValueX) {
+                            minValueX = moviments.get(i).getT();
+                        } else if (moviments.get(i).getT() > maxValueX) {
+                            maxValueX = moviments.get(i).getT();
+                        }
                     }
-                }
-                bound[0] = minValueX;
-                bound[1] = maxValueX;
+                    bound[0] = minValueX;
+                    bound[1] = maxValueX;
 
-                minValueY = moviments.get(0).getV().floatValue();
-                maxValueY = moviments.get(0).getV().floatValue();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getV() < minValueY) {
-                        minValueY = moviments.get(i).getV().floatValue();
-                    } else if (moviments.get(i).getV() > maxValueY) {
-                        maxValueY = moviments.get(i).getV().floatValue();
+                    minValueY = moviments.get(0).getV().floatValue();
+                    maxValueY = moviments.get(0).getV().floatValue();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getV() < minValueY) {
+                            minValueY = moviments.get(i).getV().floatValue();
+                        } else if (moviments.get(i).getV() > maxValueY) {
+                            maxValueY = moviments.get(i).getV().floatValue();
+                        }
                     }
-                }
-                bound[2] = minValueY;
-                bound[3] = maxValueY;
+                    bound[2] = minValueY;
+                    bound[3] = maxValueY;
 
-                break;
-            case 5:
-                minValueX = moviments.get(0).getT();
-                maxValueX = moviments.get(0).getT();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getT() < minValueX) {
-                        minValueX = moviments.get(i).getT();
-                    } else if (moviments.get(i).getT() > maxValueX) {
-                        maxValueX = moviments.get(i).getT();
+                    break;
+                case 5:
+                    minValueX = moviments.get(0).getT();
+                    maxValueX = moviments.get(0).getT();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getT() < minValueX) {
+                            minValueX = moviments.get(i).getT();
+                        } else if (moviments.get(i).getT() > maxValueX) {
+                            maxValueX = moviments.get(i).getT();
+                        }
                     }
-                }
-                bound[0] = minValueX;
-                bound[1] = maxValueX;
+                    bound[0] = minValueX;
+                    bound[1] = maxValueX;
 
-                minValueY = moviments.get(0).getW().floatValue();
-                maxValueY = moviments.get(0).getW().floatValue();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getW() < minValueY) {
-                        minValueY = moviments.get(i).getW().floatValue();
-                    } else if (moviments.get(i).getW() > maxValueY) {
-                        maxValueY = moviments.get(i).getW().floatValue();
+                    minValueY = moviments.get(0).getW().floatValue();
+                    maxValueY = moviments.get(0).getW().floatValue();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getW() < minValueY) {
+                            minValueY = moviments.get(i).getW().floatValue();
+                        } else if (moviments.get(i).getW() > maxValueY) {
+                            maxValueY = moviments.get(i).getW().floatValue();
+                        }
                     }
-                }
-                bound[2] = minValueY;
-                bound[3] = maxValueY;
+                    bound[2] = minValueY;
+                    bound[3] = maxValueY;
 
-                break;
-            case 6:
-                minValueX = moviments.get(0).getT();
-                maxValueX = moviments.get(0).getT();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getT() < minValueX) {
-                        minValueX = moviments.get(i).getT();
-                    } else if (moviments.get(i).getT() > maxValueX) {
-                        maxValueX = moviments.get(i).getT();
+                    break;
+                case 6:
+                    minValueX = moviments.get(0).getT();
+                    maxValueX = moviments.get(0).getT();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getT() < minValueX) {
+                            minValueX = moviments.get(i).getT();
+                        } else if (moviments.get(i).getT() > maxValueX) {
+                            maxValueX = moviments.get(i).getT();
+                        }
                     }
-                }
-                bound[0] = minValueX;
-                bound[1] = maxValueX;
+                    bound[0] = minValueX;
+                    bound[1] = maxValueX;
 
-                minValueY = moviments.get(0).getE().floatValue();
-                maxValueY = moviments.get(0).getE().floatValue();
-                for (int i = 1; i < moviments.size(); i++) {
-                    if (moviments.get(i).getE() < minValueY) {
-                        minValueY = moviments.get(i).getE().floatValue();
-                    } else if (moviments.get(i).getE() > maxValueY) {
-                        maxValueY = moviments.get(i).getE().floatValue();
+                    minValueY = moviments.get(0).getE().floatValue();
+                    maxValueY = moviments.get(0).getE().floatValue();
+                    for (int i = 1; i < moviments.size(); i++) {
+                        if (moviments.get(i).getE() < minValueY) {
+                            minValueY = moviments.get(i).getE().floatValue();
+                        } else if (moviments.get(i).getE() > maxValueY) {
+                            maxValueY = moviments.get(i).getE().floatValue();
+                        }
                     }
-                }
-                bound[2] = minValueY;
-                bound[3] = maxValueY;
+                    bound[2] = minValueY;
+                    bound[3] = maxValueY;
 
-                break;
+                    break;
+            }
         }
-
         return bound;
+    }
+
+    private float getIntervalScale(float low, float high){
+        float interval = (float) (high - low + 1)/Constants.NUMBER_SCALE;
+        Log.i(Constants.TAG, "------------> Interval: " + interval);
+        return  interval;
     }
 
     private void getDataSource(int option){
         if(moviments.size() <= 1) return;
 
-        float high = Constants.FINAL_SECOND;
-        float low = Constants.INITIAL_SECOND;
-        double interval = (double) (high - low + 1)/Constants.BUCKET_COUNT;
+        float high = moviments.get(moviments.size() - 1).getT();
+        float low = moviments.get(0).getT();
 
+        double interval = (double) ((high - low + 1)/Constants.BUCKET_COUNT);
         ArrayList<Position> buckets[] = new ArrayList[Constants.BUCKET_COUNT];
+
         for(int i = 0; i < Constants.BUCKET_COUNT; i++){
             buckets[i] =  new ArrayList<>();
         }
 
+        Log.i(Constants.TAG, "---> Moviments size: "+moviments.size());
         for (int i = 0; i < moviments.size(); i++) {
+            Log.i(Constants.TAG, "-------> POSICIONAMENTO DO BUCKET: " +(int)((moviments.get(i).getT() - low)/interval));
             buckets[(int)((moviments.get(i).getT() - low)/interval)].add(moviments.get(i));
         }
 
@@ -456,14 +504,32 @@ public class GraphFragment extends Fragment{
 
         for(int i = 0; i < buckets.length; i++){
             Log.i(Constants.TAG, "BUCKET: " + i);
+            Log.i(Constants.TAG, "BUCKET SIZE: " + buckets[i].size());
             getValuesXY(buckets[i], option);
-            for(int j = 0; j < buckets[i].size(); j++){
-                Log.i(Constants.TAG, "Y: "+buckets[i].get(j).getY());
-            }
+        }
+
+        Log.i(Constants.TAG, "AdataX size: "+AdataX.length);
+        Log.i(Constants.TAG, "AdataY size: "+AdataY.length);
+        for (int i = 0; i < AdataX.length; i++){
+            Log.i(Constants.TAG, "AdataX: "+AdataX[i]);
+            Log.i(Constants.TAG, "AdataY: "+AdataY[i]);
         }
     }
 
     private void fillFirsAndLastValue(int option) {
+        Log.i(Constants.TAG, "Primeiro e ultimo");
+        Log.i(Constants.TAG, "x: "+moviments.get(0).getX());
+        Log.i(Constants.TAG, "lx: "+moviments.get(moviments.size() - 1).getX());
+
+        Log.i(Constants.TAG, "y: "+moviments.get(0).getY());
+        Log.i(Constants.TAG, "ly: "+moviments.get(moviments.size() - 1).getY());
+
+        Log.i(Constants.TAG, "theta: "+moviments.get(0).getTheta());
+        Log.i(Constants.TAG, "ltheta: "+moviments.get(moviments.size() - 1).getTheta());
+
+        Log.i(Constants.TAG, "t: "+moviments.get(0).getT());
+        Log.i(Constants.TAG, "lt: "+moviments.get(moviments.size() - 1).getT());
+
         switch (option){
             case 0:
                 AdataX[0] = (moviments.get(0).getX().floatValue());
@@ -524,75 +590,355 @@ public class GraphFragment extends Fragment{
     }
 
     private void getValuesXY(ArrayList<Position> bucket, int option) {
-        int interval = (int) ((bucket.size()-1) - 0 + 1)/Constants.COUNT_VALUES;
+        Log.i(Constants.TAG, "getValuesXY ----> BUCKET SIZE: " + bucket.size());
+
+        //int interval = (int) ((bucket.size()-1) - 0 + 1)/Constants.COUNT_VALUES;
+        int interval = (int) (bucket.size() - 0 + 1)/Constants.COUNT_VALUES;
+        Log.i(Constants.TAG, "getValuesXY ----> interval: "+interval);
+        Log.i(Constants.TAG, "AdataX[init] = "+AdataX[init] + " | AdataY[init] = " +AdataY[init]);
+        Log.i(Constants.TAG, "AdataX[init] = "+AdataX[Constants.COUNT_POINTS - 1] + " | AdataY[init] = " +AdataY[Constants.COUNT_POINTS - 1]);
+
+        if(bucket.size() == 0){
+            Log.i(Constants.TAG, "BUCKET VAZIO");
+        }else{
+            for(int i = 0; i < bucket.size(); i++){
+                Log.i(Constants.TAG, "VALOR TEMPO: "+bucket.get(i).getT());
+            }
+        }
+
 
         switch (option){
             case 0:
-                AdataX[init] = (bucket.get(interval).getX()).floatValue();
-                AdataY[init] = (bucket.get(interval).getY()).floatValue();
-                init += 1;
-                AdataX[init] = (bucket.get(interval*2).getX()).floatValue();
-                AdataY[init] = (bucket.get(interval*2).getY()).floatValue();
-                init += 1;
+                switch(bucket.size()){
+                    case 0:
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        break;
+
+                    case 1:
+                        AdataX[init] = bucket.get(0).getX().floatValue();
+                        AdataY[init] = bucket.get(0).getY().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(0).getX().floatValue();
+                        AdataY[init] = bucket.get(0).getY().floatValue();
+                        init += 1;
+                        break;
+
+                    case 2:
+                        AdataX[init] = bucket.get(0).getX().floatValue();
+                        AdataY[init] = bucket.get(0).getY().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(1).getX().floatValue();
+                        AdataY[init] = bucket.get(1).getY().floatValue();
+                        init += 1;
+                        break;
+                    case 3:
+                        AdataX[init] = bucket.get(0).getX().floatValue();
+                        AdataY[init] = bucket.get(0).getY().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(2).getX().floatValue();
+                        AdataY[init] = bucket.get(2).getY().floatValue();
+                        init += 1;
+                        break;
+
+                    default:
+                        AdataX[init] = (bucket.get(interval).getX()).floatValue();
+                        AdataY[init] = (bucket.get(interval).getY()).floatValue();
+                        init += 1;
+                        AdataX[init] = (bucket.get(interval*2).getX()).floatValue();
+                        AdataY[init] = (bucket.get(interval*2).getY()).floatValue();
+                        init += 1;
+                }
                 break;
 
             case 1:
-                AdataX[init] = (bucket.get(interval).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval).getX()).floatValue();
-                init += 1;
-                AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval*2).getX()).floatValue();
-                init += 1;
+                switch(bucket.size()){
+                    case 0:
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        break;
+
+                    case 1:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getX().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getX().floatValue();
+                        init += 1;
+                        break;
+
+                    case 2:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getX().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(1).getT().floatValue();
+                        AdataY[init] = bucket.get(1).getX().floatValue();
+                        init += 1;
+                        break;
+                    case 3:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getX().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(2).getT().floatValue();
+                        AdataY[init] = bucket.get(2).getX().floatValue();
+                        init += 1;
+                        break;
+
+                    default:
+                        AdataX[init] = (bucket.get(interval).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval).getX()).floatValue();
+                        init += 1;
+                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval*2).getX()).floatValue();
+                        init += 1;
+                }
                 break;
 
             case 2:
-                AdataX[init] = (bucket.get(interval).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval).getY()).floatValue();
-                init += 1;
-                AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval*2).getY()).floatValue();
-                init += 1;
+                switch(bucket.size()){
+                    case 0:
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        break;
+
+                    case 1:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getY().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getY().floatValue();
+                        init += 1;
+                        break;
+
+                    case 2:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getY().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(1).getT().floatValue();
+                        AdataY[init] = bucket.get(1).getY().floatValue();
+                        init += 1;
+                        break;
+                    case 3:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getY().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(2).getT().floatValue();
+                        AdataY[init] = bucket.get(2).getY().floatValue();
+                        init += 1;
+                        break;
+
+                    default:
+                        AdataX[init] = (bucket.get(interval).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval).getY()).floatValue();
+                        init += 1;
+                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval*2).getY()).floatValue();
+                        init += 1;
+                }
                 break;
 
             case 3:
-                AdataX[init] = (bucket.get(interval).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval).getTheta()).floatValue();
-                init += 1;
-                AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval*2).getTheta()).floatValue();
-                init += 1;
+                switch(bucket.size()){
+                    case 0:
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        break;
+
+                    case 1:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getTheta().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getTheta().floatValue();
+                        init += 1;
+                        break;
+
+                    case 2:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getTheta().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(1).getT().floatValue();
+                        AdataY[init] = bucket.get(1).getTheta().floatValue();
+                        init += 1;
+                        break;
+                    case 3:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getTheta().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(2).getT().floatValue();
+                        AdataY[init] = bucket.get(2).getTheta().floatValue();
+                        init += 1;
+                        break;
+
+                    default:
+                        AdataX[init] = (bucket.get(interval).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval).getTheta()).floatValue();
+                        init += 1;
+                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval*2).getTheta()).floatValue();
+                        init += 1;
+                }
                 break;
 
             case 4:
-                AdataX[init] = (bucket.get(interval).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval).getV()).floatValue();
-                init += 1;
-                AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval*2).getV()).floatValue();
-                init += 1;
+                switch(bucket.size()){
+                    case 0:
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        break;
+
+                    case 1:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getV().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getV().floatValue();
+                        init += 1;
+                        break;
+
+                    case 2:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getV().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(1).getT().floatValue();
+                        AdataY[init] = bucket.get(1).getV().floatValue();
+                        init += 1;
+                        break;
+                    case 3:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getV().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(2).getT().floatValue();
+                        AdataY[init] = bucket.get(2).getV().floatValue();
+                        init += 1;
+                        break;
+
+                    default:
+                        AdataX[init] = (bucket.get(interval).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval).getV()).floatValue();
+                        init += 1;
+                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval*2).getV()).floatValue();
+                        init += 1;
+                }
                 break;
 
             case 5:
-                AdataX[init] = (bucket.get(interval).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval).getW()).floatValue();
-                init += 1;
-                AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval*2).getW()).floatValue();
-                init += 1;
+                switch(bucket.size()){
+                    case 0:
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        break;
+
+                    case 1:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getW().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getW().floatValue();
+                        init += 1;
+                        break;
+
+                    case 2:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getW().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(1).getT().floatValue();
+                        AdataY[init] = bucket.get(1).getW().floatValue();
+                        init += 1;
+                        break;
+                    case 3:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getW().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(2).getT().floatValue();
+                        AdataY[init] = bucket.get(2).getW().floatValue();
+                        init += 1;
+                        break;
+
+                    default:
+                        AdataX[init] = (bucket.get(interval).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval).getW()).floatValue();
+                        init += 1;
+                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval*2).getW()).floatValue();
+                        init += 1;
+                }
                 break;
 
             case 6:
-                AdataX[init] = (bucket.get(interval).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval).getE()).floatValue();
-                init += 1;
-                AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                AdataY[init] = (bucket.get(interval*2).getE()).floatValue();
-                init += 1;
+                switch(bucket.size()){
+                    case 0:
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        AdataX[init] = AdataX[init - 1];
+                        AdataY[init] = AdataY[init - 1];
+                        init += 1;
+                        break;
+
+                    case 1:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getE().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getE().floatValue();
+                        init += 1;
+                        break;
+
+                    case 2:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getE().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(1).getT().floatValue();
+                        AdataY[init] = bucket.get(1).getE().floatValue();
+                        init += 1;
+                        break;
+                    case 3:
+                        AdataX[init] = bucket.get(0).getT().floatValue();
+                        AdataY[init] = bucket.get(0).getE().floatValue();
+                        init += 1;
+                        AdataX[init] = bucket.get(2).getT().floatValue();
+                        AdataY[init] = bucket.get(2).getE().floatValue();
+                        init += 1;
+                        break;
+
+                    default:
+                        AdataX[init] = (bucket.get(interval).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval).getE()).floatValue();
+                        init += 1;
+                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval*2).getE()).floatValue();
+                        init += 1;
+                }
                 break;
         }
-
     }
-    
+
     private class XYSeriesShimmer implements XYSeries {
         private List<Number> dataX;
         private List<Number> dataY;
@@ -641,5 +987,86 @@ public class GraphFragment extends Fragment{
             this.dataY=datasourceY;
         }
 
+    }
+
+    public boolean onTouch(View arg0, MotionEvent event) {
+        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+            case MotionEvent.ACTION_DOWN: // Start gesture
+                firstFinger = new PointF(event.getX(), event.getY());
+                mode = ONE_FINGER_DRAG;
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_POINTER_UP:
+                //When the gesture ends, a thread is created to give inertia to the scrolling and zoom
+                Timer t = new Timer();
+                t.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        while (Math.abs(lastScrolling) > 1f || Math.abs(lastZooming - 1) < 1.01) {
+                            lastScrolling *= .8;
+                            scroll(lastScrolling);
+                            lastZooming += (1 - lastZooming) * .2;
+                            zoom(lastZooming);
+                            xyPlot.setDomainBoundaries(minXY.x, maxXY.x, BoundaryMode.AUTO);
+                            xyPlot.redraw();
+                        }
+                    }
+                }, 0);
+
+            case MotionEvent.ACTION_POINTER_DOWN: // second finger
+                distBetweenFingers = spacing(event);
+                // the distance check is done to avoid false alarms
+                if (distBetweenFingers > 5f) {
+                    mode = TWO_FINGERS_DRAG;
+                }
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (mode == ONE_FINGER_DRAG) {
+                    PointF oldFirstFinger = firstFinger;
+                    firstFinger = new PointF(event.getX(), event.getY());
+                    lastScrolling = oldFirstFinger.x - firstFinger.x;
+                    scroll(lastScrolling);
+                    lastZooming = (firstFinger.y - oldFirstFinger.y) / xyPlot.getHeight();
+                    if (lastZooming < 0)
+                        lastZooming = 1 / (1 - lastZooming);
+                    else
+                        lastZooming += 1;
+                    zoom(lastZooming);
+                    xyPlot.setDomainBoundaries(minXY.x, maxXY.x, BoundaryMode.AUTO);
+                    xyPlot.redraw();
+
+                } else if (mode == TWO_FINGERS_DRAG) {
+                    float oldDist = distBetweenFingers;
+                    distBetweenFingers = spacing(event);
+                    lastZooming = oldDist / distBetweenFingers;
+                    zoom(lastZooming);
+                    xyPlot.setDomainBoundaries(minXY.x, maxXY.x, BoundaryMode.AUTO);
+                    xyPlot.redraw();
+                }
+                break;
+        }
+        return true;
+    }
+
+    private void zoom(float scale) {
+        float domainSpan = maxXY.x	- minXY.x;
+        float domainMidPoint = maxXY.x		- domainSpan / 2.0f;
+        float offset = domainSpan * scale / 2.0f;
+        minXY.x=domainMidPoint- offset;
+        maxXY.x=domainMidPoint+offset;
+    }
+
+    private void scroll(float pan) {
+        float domainSpan = maxXY.x	- minXY.x;
+        float step = domainSpan / xyPlot.getWidth();
+        float offset = pan * step;
+        minXY.x+= offset;
+        maxXY.x+= offset;
+    }
+
+    private float spacing(MotionEvent event) {
+        float x = event.getX(0) - event.getX(1);
+        float y = event.getY(0) - event.getY(1);
+        return (float)Math.sqrt(x * x + y * y);
     }
 }
