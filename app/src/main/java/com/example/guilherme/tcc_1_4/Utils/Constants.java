@@ -14,6 +14,7 @@ public class Constants {
     public static final String TAG =  "TAG";
 
     public static final Double KP_INITIAL = 1.35;
+    public static final Double KI_INITIAL = 0.00;
     public static final Double X = 0.0;
     public static final Double Y = 0.0;
 

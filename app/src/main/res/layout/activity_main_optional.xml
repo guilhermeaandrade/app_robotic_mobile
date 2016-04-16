@@ -75,8 +75,8 @@
 
                 <RadioGroup
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_height="70dp"
+                    android:layout_marginTop="8dp"
                     android:layout_toEndOf="@+id/tvControle"
                     android:layout_below="@+id/btnConectar"
                     android:id="@+id/radioGroup">]
@@ -105,7 +105,10 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Posição Inicial"
                     android:id="@+id/tvPosInicial"
-                    android:padding="10dp"
+                    android:paddingTop="1dp"
+                    android:paddingRight="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingBottom="8dp"
                     android:textStyle="bold"
                     android:layout_marginLeft="10dp"
                     android:textColor="@color/black"
@@ -119,7 +122,10 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Posição Alvo"
                     android:id="@+id/tvPosAlvo"
-                    android:padding="10dp"
+                    android:paddingTop="1dp"
+                    android:paddingRight="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingBottom="6dp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:layout_marginRight="45dp"
@@ -137,6 +143,7 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:id="@+id/tvXInicial"
+                    android:padding="2dp"
                     android:layout_below="@+id/tvPosInicial"
                     android:layout_alignStart="@+id/tvPosInicial"
                     android:layout_marginStart="35dp" />
@@ -148,6 +155,7 @@
                     android:text="0.0"
                     android:textColor="@color/black"
                     android:textSize="16sp"
+                    android:padding="2dp"
                     android:id="@+id/tvXInicialValue"
                     android:layout_below="@+id/tvPosInicial"
                     android:layout_alignEnd="@+id/tvControle"
@@ -162,6 +170,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp"
+                    android:padding="2dp"
                     android:id="@+id/tvYInicial"
                     android:layout_below="@+id/tvXInicial"
                     android:layout_alignStart="@+id/tvXInicial" />
@@ -173,6 +182,7 @@
                     android:text="0.0"
                     android:textColor="@color/black"
                     android:textSize="16sp"
+                    android:padding="2dp"
                     android:id="@+id/tvYInicialValue"
                     android:layout_alignTop="@+id/tvYInicial"
                     android:layout_alignEnd="@+id/tvControle"
@@ -187,6 +197,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp"
+                    android:padding="2dp"
                     android:id="@+id/tvXAlvo"
                     android:layout_alignBottom="@+id/tvXInicialValue"
                     android:layout_alignStart="@+id/tvPosAlvo"
@@ -199,6 +210,7 @@
                     android:text="0.0"
                     android:textColor="@color/black"
                     android:textSize="16sp"
+                    android:padding="2dp"
                     android:id="@+id/tvXAlvoValue"
                     android:layout_alignTop="@+id/tvXAlvo"
                     android:layout_alignEnd="@+id/tvPosAlvo"
@@ -213,6 +225,7 @@
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp"
+                    android:padding="2dp"
                     android:id="@+id/tvYAlvo"
                     android:layout_alignTop="@+id/tvYInicialValue"
                     android:layout_alignStart="@+id/tvXAlvo" />
@@ -222,6 +235,7 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="0.0"
+                    android:padding="2dp"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:id="@+id/tvYAlvoValue"
@@ -236,8 +250,8 @@
                     android:background="@color/colorPrimary"
                     android:textColor="@color/white"
                     android:id="@+id/btnForward"
-                    android:layout_below="@+id/tvControlador"
-                    android:layout_toStartOf="@+id/btnRight" />
+                    android:layout_below="@+id/tvControladorI"
+                    android:layout_toEndOf="@+id/btnLeft" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -247,7 +261,7 @@
                     android:background="@color/colorPrimary"
                     android:textColor="@color/white"
                     android:layout_below="@+id/btnForward"
-                    android:layout_toStartOf="@+id/btnForward" />
+                    android:layout_alignStart="@+id/tvControladorI" />
 
                 <Button
                     android:layout_width="wrap_content"
@@ -267,7 +281,7 @@
                     android:textColor="@color/white"
                     android:id="@+id/btnRight"
                     android:layout_above="@+id/btnBackward"
-                    android:layout_toEndOf="@+id/tvYAlvo" />
+                    android:layout_toEndOf="@+id/btnBackward" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -280,8 +294,8 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:layout_below="@+id/btnBackward"
-                    android:layout_alignEnd="@+id/btnBackward"
-                    android:layout_alignStart="@+id/btnBackward" />
+                    android:layout_alignStart="@+id/btnBackward"
+                    android:layout_toStartOf="@+id/tvYAlvoValue" />
 
                 <SeekBar
                     android:layout_width="wrap_content"
@@ -322,16 +336,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Controlador: "
+                    android:text="Ganho Controlador P: "
                     android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="5dp"
                     android:paddingRight="5dp"
-                    android:id="@+id/tvControlador"
-                    android:layout_alignTop="@+id/tvControladorValue"
+                    android:id="@+id/tvControladorP"
+                    android:layout_alignTop="@+id/tvControladorPValue"
                     android:layout_alignStart="@+id/tvPosInicial" />
 
                 <TextView
@@ -342,70 +356,101 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:paddingBottom="5dp"
                     android:paddingLeft="5dp"
-                    android:paddingRight="10dp"
-                    android:id="@+id/tvControladorValue"
+                    android:paddingRight="5dp"
+                    android:id="@+id/tvControladorPValue"
                     android:layout_below="@+id/tvYInicialValue"
-                    android:layout_toEndOf="@+id/tvControlador" />
+                    android:layout_toEndOf="@+id/tvControladorP" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="Ganho Controlador I: "
+                    android:id="@+id/tvControladorI"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:paddingTop="5dp"
+                    android:layout_below="@+id/tvControladorP"
+                    android:layout_alignStart="@+id/tvControladorP" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="0.0"
+                    android:id="@+id/tvControladorIValue"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:layout_below="@+id/tvControladorPValue"
+                    android:layout_toEndOf="@+id/tvControladorP" />
 
                 <com.github.clans.fab.FloatingActionMenu
-                    xmlns:fab="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/actionMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="10dp"
-                    android:paddingLeft="10dp"
-                    android:src="@drawable/ic_pencil"
-                    fab:menu_labels_style="@style/MenuLabelsStyle"
-                    fab:menu_labels_ellipsize="end"
-                    fab:menu_labels_singleLine="true"
-                    fab:menu_backgroundColor="#ccffffff"
-                    fab:menu_colorNormal="@color/colorPrimary"
-                    fab:menu_colorPressed="@color/colorPrimaryPressed"
-                    android:layout_alignEnd="@+id/radioGroup">
+                     xmlns:fab="http://schemas.android.com/apk/res-auto"
+                     android:id="@+id/actionMenu"
+                     android:layout_width="match_parent"
+                     android:layout_height="match_parent"
+                     android:layout_alignParentBottom="true"
+                     android:paddingRight="10dp"
+                     android:paddingBottom="10dp"
+                     android:paddingLeft="10dp"
+                     android:src="@drawable/ic_pencil"
+                     fab:menu_labels_style="@style/MenuLabelsStyle"
+                     fab:menu_labels_ellipsize="end"
+                     fab:menu_labels_singleLine="true"
+                     fab:menu_backgroundColor="#ccffffff"
+                     fab:menu_colorNormal="@color/colorPrimary"
+                     fab:menu_colorPressed="@color/colorPrimaryPressed"
+                     android:layout_alignEnd="@+id/radioGroup">
 
-                    <com.github.clans.fab.FloatingActionButton
-                        android:id="@+id/fabController"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/controller"
-                        fab:fab_size="mini"
-                        fab:fab_label="Controlador"
-                        fab:menu_labels_style="@style/MenuLabelsStyle"
-                        fab:menu_labels_textColor="@color/colorPrimary"
-                        fab:menu_labels_colorRipple="@color/grey"
-                        fab:menu_colorNormal="@color/colorPrimary"
-                        fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+                     <com.github.clans.fab.FloatingActionButton
+                         android:id="@+id/fabController"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:src="@drawable/controller"
+                         fab:fab_size="mini"
+                         fab:fab_label="Ganho dos Controladores"
+                         fab:menu_labels_style="@style/MenuLabelsStyle"
+                         fab:menu_labels_textColor="@color/colorPrimary"
+                         fab:menu_labels_colorRipple="@color/grey"
+                         fab:menu_colorNormal="@color/colorPrimary"
+                         fab:menu_colorPressed="@color/colorPrimaryPressed"/>
 
-                    <com.github.clans.fab.FloatingActionButton
-                        android:id="@+id/fabPosition"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/location"
-                        fab:fab_size="mini"
-                        fab:fab_label="Posição Inicial"
-                        fab:menu_labels_style="@style/MenuLabelsStyle"
-                        fab:menu_labels_textColor="@color/colorPrimary"
-                        fab:menu_labels_colorRipple="@color/grey"
-                        fab:menu_colorNormal="@color/colorPrimary"
-                        fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+                     <com.github.clans.fab.FloatingActionButton
+                         android:id="@+id/fabPosition"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:src="@drawable/location"
+                         fab:fab_size="mini"
+                         fab:fab_label="Posição Inicial"
+                         fab:menu_labels_style="@style/MenuLabelsStyle"
+                         fab:menu_labels_textColor="@color/colorPrimary"
+                         fab:menu_labels_colorRipple="@color/grey"
+                         fab:menu_colorNormal="@color/colorPrimary"
+                         fab:menu_colorPressed="@color/colorPrimaryPressed"/>
 
-                    <com.github.clans.fab.FloatingActionButton
-                        android:id="@+id/fabPositionAlvo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/final_location"
-                        fab:fab_size="mini"
-                        fab:fab_label="Posição Alvo"
-                        fab:menu_labels_style="@style/MenuLabelsStyle"
-                        fab:menu_labels_textColor="@color/colorPrimary"
-                        fab:menu_labels_colorRipple="@color/grey"
-                        fab:menu_colorNormal="@color/colorPrimary"
-                        fab:menu_colorPressed="@color/colorPrimaryPressed"/>
-                </com.github.clans.fab.FloatingActionMenu>
+                     <com.github.clans.fab.FloatingActionButton
+                         android:id="@+id/fabPositionAlvo"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:src="@drawable/final_location"
+                         fab:fab_size="mini"
+                         fab:fab_label="Posição Alvo"
+                         fab:menu_labels_style="@style/MenuLabelsStyle"
+                         fab:menu_labels_textColor="@color/colorPrimary"
+                         fab:menu_labels_colorRipple="@color/grey"
+                         fab:menu_colorNormal="@color/colorPrimary"
+                         fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+                 </com.github.clans.fab.FloatingActionMenu>
 
             </RelativeLayout>
     </android.support.v7.widget.CardView>

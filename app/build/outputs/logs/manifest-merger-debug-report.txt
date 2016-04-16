@@ -39,7 +39,7 @@ MERGED from [com.github.clans:fab:1.6.2] /home/guilherme/Documentos/Guilherme/CE
 	android:allowBackup
 		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:10:9-35
 	android:icon
-		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:11:9-43
+		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:11:9-44
 	android:theme
 		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:13:9-45
 activity#com.example.guilherme.tcc_1_4.Controller.MainActivity
@@ -58,12 +58,12 @@ category#android.intent.category.LAUNCHER
 ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:20:17-77
 	android:name
 		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:20:27-74
-activity#com.example.guilherme.tcc_1_4.Controller.MapActivity
+activity#com.example.guilherme.tcc_1_4.Controller.ProcessActivity
 ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:24:9-27:20
 	android:label
-		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:26:13-41
+		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:26:13-45
 	android:name
-		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:25:13-51
+		ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:25:13-55
 activity#com.example.guilherme.tcc_1_4.Controller.SelectDevice
 ADDED from /home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/AndroidManifest.xml:29:9-32:20
 	android:label

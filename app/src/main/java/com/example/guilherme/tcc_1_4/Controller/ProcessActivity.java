@@ -16,7 +16,7 @@ import com.example.guilherme.tcc_1_4.Utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity{
+public class ProcessActivity extends AppCompatActivity{
 
     private BluetoothDevice device;
     private Toolbar mToolbar;
@@ -39,7 +39,7 @@ public class MapActivity extends AppCompatActivity{
         }
 
         mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
-        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), MapActivity.this, device, moviments));
+        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), ProcessActivity.this, device, moviments));
 
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
@@ -60,7 +60,7 @@ public class MapActivity extends AppCompatActivity{
 
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle(Constants.PROCESS);
-        mToolbar.setLogo(R.drawable.ic_launcher);
+        mToolbar.setLogo(R.drawable.ic_robo);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

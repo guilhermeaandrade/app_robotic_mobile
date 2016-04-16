@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_disabled_bluetooth"
         android:orderInCategory="100"
-        android:title="Desativar Bluetooth"
+        android:title="Desabilitar Bluetooth"
         app:showAsAction="withText|never" />
 
     <item

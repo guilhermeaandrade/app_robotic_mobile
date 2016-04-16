@@ -42,7 +42,7 @@ public class SelectDevice extends AppCompatActivity{
 
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle("Dispositivos");
-        mToolbar.setLogo(R.drawable.ic_launcher);
+        mToolbar.setLogo(R.drawable.ic_robo);
         setSupportActionBar(mToolbar);
         mToolbar.dismissPopupMenus();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -85,7 +85,9 @@ public class SelectDevice extends AppCompatActivity{
         Set<BluetoothDevice> pairedDevices = adaptador.getBondedDevices();
         if (pairedDevices.size() > 0) {
             for (BluetoothDevice device : pairedDevices) {
-                dispositivos.add(device.getName() + "\n"+ device.getAddress());
+                if (device.getName().equalsIgnoreCase("NXT")) {
+                    dispositivos.add(device.getName() + "\n" + device.getAddress());
+                }
             }
         }
     }

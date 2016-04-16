@@ -866,7 +866,7 @@
     <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/res/values/strings.xml -->
     <eat-comment/>
     <string name="action_settings">Settings</string>
-    <string name="app_name">TCC_1_4</string>
+    <string name="app_name">CONTIC</string>
     <string name="avgAngTheta">Média Ângulo Theta: </string>
     <string name="avgCoordX">Média Coordenada X: </string>
     <string name="avgCoordY">Média Coordenada Y: </string>
@@ -875,7 +875,8 @@
     <string name="avgWl">Média Wl: </string>
     <string name="avgWr">Média Wr: </string>
     <string name="centimetro">Máximo de 100 cm</string>
-    <string name="controladorProporcional">Valor do Controlador: </string>
+    <string name="controladorIntegral">Ganho do Controlador I: </string>
+    <string name="controladorProporcional">Ganho do Controlador P: </string>
     <string name="coordenadaX">Coordenada X:  </string>
     <string name="coordenadaY">Coordenada Y:  </string>
     <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.mikepenz.iconics/library/0.9.1/res/values/values.xml -->

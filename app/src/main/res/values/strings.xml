@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TCC_1_4</string>
+    <string name="app_name">CONTIC</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -27,7 +27,8 @@
     <string name="lastError">Erro de posição atual:</string>
 
     <string name="graph_prompt">Selecione um gráfico:</string>
-    <string name="controladorProporcional">Valor do Controlador: </string>
+    <string name="controladorProporcional">Ganho do Controlador P: </string>
+    <string name="controladorIntegral">Ganho do Controlador I: </string>
 
     <string-array name="graph_types">
         <item>Percurso</item>

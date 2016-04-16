@@ -82,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView edtYInicial;
     private TextView edtXAlvo;
     private TextView edtYAlvo;
-    private TextView edtControlador;
+    private TextView edtControladorP;
+    private TextView edtControladorI;
 
     private TextView tvPosicaoInicial;
     private TextView tvXPosInicial;
@@ -90,7 +91,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvPosicaoAlvo;
     private TextView tvXPosAlvo;
     private TextView tvYPosAlvo;
-    private TextView tvController;
+    private TextView tvControllerP;
+    private TextView tvControllerI;
     private TextView tvVelocidade;
     private TextView tvMinSeekVelocidade;
     private TextView tvMaxSeekVelocidade;
@@ -110,7 +112,8 @@ public class MainActivity extends AppCompatActivity {
 
     private String address;
     private ConnectThread teste;
-    private Double controlValue;
+    private Double controlPValue;
+    private Double controlIValue;
     private Double xValue, yValue;
 
     public Semaphore sendSemaphore = new Semaphore(1);
@@ -183,7 +186,8 @@ public class MainActivity extends AppCompatActivity {
         tvPosicaoAlvo = (TextView) findViewById(R.id.tvPosAlvo);
         tvXPosAlvo = (TextView) findViewById(R.id.tvXAlvo);
         tvYPosAlvo = (TextView) findViewById(R.id.tvYAlvo);
-        tvController = (TextView) findViewById(R.id.tvControlador);
+        tvControllerP = (TextView) findViewById(R.id.tvControladorP);
+        tvControllerI = (TextView) findViewById(R.id.tvControladorI);
         tvVelocidade = (TextView) findViewById(R.id.tvVelocidade);
         tvMinSeekVelocidade = (TextView) findViewById(R.id.tvISeek);
         tvMaxSeekVelocidade = (TextView) findViewById(R.id.tvFSeek);
@@ -202,9 +206,11 @@ public class MainActivity extends AppCompatActivity {
         edtYAlvo = (TextView) findViewById(R.id.tvYAlvoValue);
         edtYAlvo.setText(String.valueOf(Constants.Y));
 
-        edtControlador = (TextView) findViewById(R.id.tvControladorValue);
-        edtControlador.setText(String.valueOf(Constants.KP_INITIAL));
+        edtControladorP = (TextView) findViewById(R.id.tvControladorPValue);
+        edtControladorP.setText(String.valueOf(Constants.KP_INITIAL));
 
+        edtControladorI = (TextView) findViewById(R.id.tvControladorIValue);
+        edtControladorI.setText(String.valueOf(Constants.KI_INITIAL));
         //botao para conectar
         btConectar = (Button) findViewById(R.id.btnConectar);
         btConectar.setOnClickListener(new View.OnClickListener() {
@@ -233,15 +239,15 @@ public class MainActivity extends AppCompatActivity {
                             disableManualControlComponents();
                             sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
                         }
-                        new Enviar(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
-                        new Receber().start();
+                        new SendThread(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
+                        new ReceiveThread().start();
                         break;
 
                     case R.id.radioButtonManul:
                         optionControl = 2;
                         enableAllComponents();
-                        new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
-                        new Receber().start();
+                        new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
+                        new ReceiveThread().start();
                         break;
                 }
             }
@@ -260,11 +266,11 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_FWD, Double.valueOf(velocidade)).start();
+                                new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_FWD, Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
+                            new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -286,12 +292,12 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_BWD, Double.valueOf(velocidade)).start();
+                                new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_BWD, Double.valueOf(velocidade)).start();
 
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
+                            new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -313,11 +319,11 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_LEFT, Double.valueOf(velocidade)).start();
+                                new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_LEFT, Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
+                            new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -339,11 +345,11 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
-                                new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_RIGTH, Double.valueOf(velocidade)).start();
+                                new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_RIGTH, Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
-                            new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
+                            new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
                     }
@@ -468,7 +474,8 @@ public class MainActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.tb_main);
         mToolbar.setTitle(Constants.APP_NAME);
         mToolbar.setSubtitle(Constants.APP_SUBTITLE);
-        mToolbar.setLogo(R.drawable.ic_launcher);
+        mToolbar.setLogo(R.drawable.ic_robo);
+        //mToolbar.setLogo(R.drawable.ic_launcher);
         setSupportActionBar(mToolbar);
 
         // ---------------------------- NAVIGATIONDRAWER --------------------------------------------------
@@ -546,8 +553,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (device != null) {
                                     if (optionControl == 1 || optionControl == 2) {
-                                        //if (!listOfPositions.isEmpty()) {
-                                        Intent i = new Intent(MainActivity.this, MapActivity.class);
+
+                                        Intent i = new Intent(MainActivity.this, ProcessActivity.class);
                                         Bundle bundle = new Bundle();
 
                                         bundle.putParcelable("device", device);
@@ -556,9 +563,7 @@ public class MainActivity extends AppCompatActivity {
                                         i.putExtras(bundle);
                                         startActivity(i);
                                         actionMenu.close(true);
-                                        //} else {
-                                        // Toast.makeText(MainActivity.this, "Nenhuma informação útil obtida até o momento.", Toast.LENGTH_LONG).show();
-                                        //}
+
                                     } else {
                                         Toast.makeText(MainActivity.this, "Nenhuma ação realizada para iniciar essa atividade.", Toast.LENGTH_LONG).show();
                                     }
@@ -613,18 +618,22 @@ public class MainActivity extends AppCompatActivity {
 
     //##############################################################################################################################
     private void showChangeControllerDialog(){
-        final EditText controllerValue;
+        final EditText controllerPValue;
+        final EditText controllerIValue;
 
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.custom_controller_dialog, null);
         dialogBuilder.setView(dialogView);
 
-        dialogBuilder.setTitle("Controlador Proporcional");
+        dialogBuilder.setTitle("Ganho dos Controladores");
         dialogBuilder.setIcon(R.drawable.controller);
 
-        controllerValue = (EditText) dialogView.findViewById(R.id.edtControllerValue);
-        controllerValue.addTextChangedListener(Mask.insert("#.###", controllerValue));
+        controllerPValue = (EditText) dialogView.findViewById(R.id.edtControllerPValue);
+        controllerPValue.addTextChangedListener(Mask.insert("#.###", controllerPValue));
+
+        controllerIValue = (EditText) dialogView.findViewById(R.id.edtControllerIValue);
+        controllerIValue.addTextChangedListener(Mask.insert("#.###", controllerIValue));
 
         dialogBuilder.setMessage("Digite, por favor, o novo valor desejado: ");
 
@@ -632,21 +641,41 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String valor = controllerValue.getText().toString().trim();
-                        if(!valor.isEmpty()){
-                            controlValue = Double.parseDouble(valor);
-                            edtControlador.setText(String.valueOf(controlValue));
+                        String valorP = controllerPValue.getText().toString().trim();
+                        String valorI = controllerIValue.getText().toString().trim();
+
+                        if(!valorP.isEmpty() && !valorI.isEmpty()){
+
+                            controlPValue = Double.parseDouble(valorP);
+                            controlIValue = Double.parseDouble(valorI);
+
+                        }else if(!valorP.isEmpty()){
+
+                            controlPValue = Double.parseDouble(valorP);
+                            controlIValue = Constants.KI_INITIAL;
+
+                        }else if(!valorI.isEmpty()){
+
+                            controlPValue = Constants.KP_INITIAL;
+                            controlIValue = Double.parseDouble(valorI);
+
                         }else{
-                            controlValue = Constants.KP_INITIAL;
+
+                            controlPValue = Constants.KP_INITIAL;
+                            controlIValue = Constants.KI_INITIAL;
                         }
-                        new Enviar(Constants.C_SETTINGS, Constants.I_CONTROLLER, controlValue).start();
+                        edtControladorP.setText(String.valueOf(controlPValue));
+                        edtControladorI.setText(String.valueOf(controlIValue));
+
+                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_CONTROLLER, controlPValue, controlIValue).start();
+                        //new SendThread(Constants.C_SETTINGS, Constants.I_CONTROLLER, controlPValue).start();
                     }
 
         }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplication(), "O valor padrão para o controlador proporcional será " + Constants.KP_INITIAL, Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplication(), "O valor padrão para o controlador proporcional será " + Constants.KP_INITIAL, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -705,12 +734,12 @@ public class MainActivity extends AppCompatActivity {
                     case 1:
                         edtXInicial.setText(String.valueOf((xValue / 100)));
                         edtYInicial.setText(String.valueOf((yValue/100)));
-                        new EnviarPosicoes(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (xValue/100), (yValue/100)).start();
+                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (xValue/100), (yValue/100)).start();
                         break;
                     case 2:
                         edtXAlvo.setText(String.valueOf((xValue / 100)));
                         edtYAlvo.setText(String.valueOf((yValue/100)));
-                        new EnviarPosicoes(Constants.C_SETTINGS, Constants.I_POS_FINAL, (xValue/100), (yValue/100)).start();
+                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_FINAL, (xValue/100), (yValue/100)).start();
                         break;
                 }
 
@@ -719,14 +748,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(getApplication(), "O valor padrão para as coordenadas " +
-                        "inicias será ( " + Constants.X + " , " + Constants.Y + " )", Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplication(), "O valor padrão para as coordenadas " +
+                  //      "inicias será ( " + Constants.X + " , " + Constants.Y + " )", Toast.LENGTH_LONG).show();
                 switch (option) {
                     case 1:
-                        new EnviarPosicoes(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (Constants.X/100), (Constants.Y/100)).start();
+                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (Constants.X/100), (Constants.Y/100)).start();
                         break;
                     case 2:
-                        new EnviarPosicoes(Constants.C_SETTINGS, Constants.I_POS_FINAL, (Constants.X/100), (Constants.Y/100)).start();
+                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_FINAL, (Constants.X/100), (Constants.Y/100)).start();
                         break;
                 }
             }
@@ -767,15 +796,15 @@ public class MainActivity extends AppCompatActivity {
                             sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
                         }
 
-                        new Enviar(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
-                        new Receber().start();
+                        new SendThread(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
+                        new ReceiveThread().start();
 
                     } else if (option == 2) {
 
                         //enableAllComponents();
                         enableAllButtons();
-                        new Enviar(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
-                        new Receber().start();
+                        new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
+                        new ReceiveThread().start();
                     }
                 }
             }
@@ -870,7 +899,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void enableAllComponents(){
-        tvController.setTextColor(getResources().getColor(R.color.black));
+        tvControllerP.setTextColor(getResources().getColor(R.color.black));
         tvMaxSeekVelocidade.setTextColor(getResources().getColor(R.color.black));
         tvMinSeekVelocidade.setTextColor(getResources().getColor(R.color.black));
         tvPosicaoAlvo.setTextColor(getResources().getColor(R.color.black));
@@ -888,7 +917,7 @@ public class MainActivity extends AppCompatActivity {
         radioButtonCA.setTextColor(getResources().getColor(R.color.black));
         radioButtonM.setTextColor(getResources().getColor(R.color.black));
 
-        edtControlador.setTextColor(getResources().getColor(R.color.black));
+        edtControladorP.setTextColor(getResources().getColor(R.color.black));
         edtXInicial.setTextColor(getResources().getColor(R.color.black));
         edtYInicial.setTextColor(getResources().getColor(R.color.black));
         edtXAlvo.setTextColor(getResources().getColor(R.color.black));
@@ -910,8 +939,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void disableAllComponents(){
-
-        tvController.setTextColor(getResources().getColor(R.color.colorDisableText));
+        tvControllerP.setTextColor(getResources().getColor(R.color.colorDisableText));
+        tvControllerI.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvMaxSeekVelocidade.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvMinSeekVelocidade.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvPosicaoAlvo.setTextColor(getResources().getColor(R.color.colorDisableText));
@@ -932,7 +961,8 @@ public class MainActivity extends AppCompatActivity {
         radioButtonM.setTextColor(getResources().getColor(R.color.colorDisableText));
         radioButtonM.setChecked(false);
 
-        edtControlador.setTextColor(getResources().getColor(R.color.colorDisableText));
+        edtControladorP.setTextColor(getResources().getColor(R.color.colorDisableText));
+        edtControladorI.setTextColor(getResources().getColor(R.color.colorDisableText));
         edtXInicial.setTextColor(getResources().getColor(R.color.colorDisableText));
         edtYInicial.setTextColor(getResources().getColor(R.color.colorDisableText));
         edtXAlvo.setTextColor(getResources().getColor(R.color.colorDisableText));
@@ -954,7 +984,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void enableChoiceControl(){
-        tvController.setTextColor(getResources().getColor(R.color.black));
+        tvControllerP.setTextColor(getResources().getColor(R.color.black));
+        tvControllerI.setTextColor(getResources().getColor(R.color.black));
         tvPosicaoAlvo.setTextColor(getResources().getColor(R.color.black));
         tvPosicaoInicial.setTextColor(getResources().getColor(R.color.black));
         tvXPosInicial.setTextColor(getResources().getColor(R.color.black));
@@ -962,7 +993,8 @@ public class MainActivity extends AppCompatActivity {
         tvXPosAlvo.setTextColor(getResources().getColor(R.color.black));
         tvYPosAlvo.setTextColor(getResources().getColor(R.color.black));
 
-        edtControlador.setTextColor(getResources().getColor(R.color.black));
+        edtControladorP.setTextColor(getResources().getColor(R.color.black));
+        edtControladorI.setTextColor(getResources().getColor(R.color.black));
         edtXInicial.setTextColor(getResources().getColor(R.color.black));
         edtYInicial.setTextColor(getResources().getColor(R.color.black));
         edtXAlvo.setTextColor(getResources().getColor(R.color.black));
@@ -1031,9 +1063,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class Receber extends Thread {
+    private class ReceiveThread extends Thread {
 
-        public Receber() {}
+        public ReceiveThread() {}
 
         public void run(){
             try {
@@ -1069,13 +1101,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class EnviarPosicoes extends Thread {
+    private class SendInformationsThread extends Thread {
         private Character comando;
         private Character identificador;
         private Double firstValue;
         private Double secondValue;
 
-        public EnviarPosicoes(Character c, Character i, Double v1, Double v2) {
+        public SendInformationsThread(Character c, Character i, Double v1, Double v2) {
             this.comando = c;
             this.identificador = i;
             this.firstValue = v1;
@@ -1106,12 +1138,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class Enviar extends Thread {
+    private class SendThread extends Thread {
         private Character comando;
         private Character identificador;
         private Double value;
 
-        public Enviar(Character c, Character i, Double v){
+        public SendThread(Character c, Character i, Double v){
             this.comando = c;
             this.identificador = i;
             this.value = v;
@@ -1226,7 +1258,7 @@ public class MainActivity extends AppCompatActivity {
                 teste.start();
 
             }else{
-                new Enviar(Constants.C_STOP_CONNECTION, Constants.I_STOP, 0d).start();
+                new SendThread(Constants.C_STOP_CONNECTION, Constants.I_STOP, 0d).start();
 
                 try {
                     if(input != null) input.close();

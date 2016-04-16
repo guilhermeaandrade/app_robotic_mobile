@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/edtControllerValue"
+        android:id="@+id/edtControllerPValue"
         android:layout_width="269dp"
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
@@ -17,18 +17,41 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_toEndOf="@+id/tvCoordX" />
+        android:layout_toEndOf="@+id/tvContrP" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/controladorProporcional"
-        android:id="@+id/tvCoordX"
+        android:id="@+id/tvContrP"
         android:paddingTop="15dp"
         android:padding="7dp"
         android:paddingBottom="10dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/controladorIntegral"
+        android:id="@+id/tvContrI"
+        android:padding="7dp"
+        android:paddingBottom="10dp"
+        android:layout_below="@+id/edtControllerPValue"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:ems="10"
+        android:hint="0.00"
+        android:paddingLeft="7dp"
+        android:padding="7dp"
+        android:id="@+id/edtControllerIValue"
+        android:layout_below="@+id/edtControllerPValue"
+        android:layout_toEndOf="@+id/tvContrI" />
 
 </RelativeLayout>
