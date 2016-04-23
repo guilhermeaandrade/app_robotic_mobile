@@ -38,4 +38,7 @@ public class Constants {
     public static final int COUNT_VALUES = 3;
     public static final int COUNT_POINTS = 20;
     public static final int NUMBER_SCALE = 15;
+
+    public static final String PREFS_NAME = "CONTIC_APP";
+    public static final String MOVIMENTS_KEY = "keyMoviments";
 }

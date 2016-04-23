@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
 import com.example.guilherme.tcc_1_4.Utils.Mask;
+import com.example.guilherme.tcc_1_4.Utils.Singleton;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.mikepenz.materialdrawer.Drawer;
@@ -97,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvMinSeekVelocidade;
     private TextView tvMaxSeekVelocidade;
     private TextView tvTypeController;
+    private TextView tvValueSeekVelocidade;
     private RadioButton radioButtonCA;
     private RadioButton radioButtonM;
 
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     private int optionControl = -1;
 
     private String address;
-    private ConnectThread teste;
+    private ConnectThread connectDeviceThread;
     private Double controlPValue;
     private Double controlIValue;
     private Double xValue, yValue;
@@ -191,6 +194,7 @@ public class MainActivity extends AppCompatActivity {
         tvVelocidade = (TextView) findViewById(R.id.tvVelocidade);
         tvMinSeekVelocidade = (TextView) findViewById(R.id.tvISeek);
         tvMaxSeekVelocidade = (TextView) findViewById(R.id.tvFSeek);
+        tvValueSeekVelocidade = (TextView) findViewById(R.id.tvValueSeekBar);
         radioButtonCA = (RadioButton) findViewById(R.id.radioButtonAutomatico);
         radioButtonM = (RadioButton) findViewById(R.id.radioButtonManul);
 
@@ -211,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
         edtControladorI = (TextView) findViewById(R.id.tvControladorIValue);
         edtControladorI.setText(String.valueOf(Constants.KI_INITIAL));
+
         //botao para conectar
         btConectar = (Button) findViewById(R.id.btnConectar);
         btConectar.setOnClickListener(new View.OnClickListener() {
@@ -246,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.radioButtonManul:
                         optionControl = 2;
                         enableAllComponents();
-                        new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
+                        new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                         new ReceiveThread().start();
                         break;
                 }
@@ -361,24 +366,26 @@ public class MainActivity extends AppCompatActivity {
         sbVelocidade = (SeekBar) findViewById(R.id.sbVelocidade);
         sbVelocidade.setProgress(velocidade);
         sbVelocidade.setMinimumWidth(1);
-        sbVelocidade.setMax(50);
+        sbVelocidade.setMax(100);
         sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
         sbVelocidade.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 velocidade = (byte) progress;
+                tvValueSeekVelocidade.setText(String.valueOf(progress));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
+                actionMenu.hideMenuButton(true);
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
+                actionMenu.showMenuButton(true);
             }
         });
 
-        //disableAllButtons();
         disableAllComponents();
 
         bluetoothIn = new Handler(){
@@ -475,7 +482,6 @@ public class MainActivity extends AppCompatActivity {
         mToolbar.setTitle(Constants.APP_NAME);
         mToolbar.setSubtitle(Constants.APP_SUBTITLE);
         mToolbar.setLogo(R.drawable.ic_robo);
-        //mToolbar.setLogo(R.drawable.ic_launcher);
         setSupportActionBar(mToolbar);
 
         // ---------------------------- NAVIGATIONDRAWER --------------------------------------------------
@@ -558,7 +564,6 @@ public class MainActivity extends AppCompatActivity {
                                         Bundle bundle = new Bundle();
 
                                         bundle.putParcelable("device", device);
-                                        bundle.putParcelableArrayList("moviments", (ArrayList<? extends Parcelable>) listOfPositions);
 
                                         i.putExtras(bundle);
                                         startActivity(i);
@@ -639,43 +644,42 @@ public class MainActivity extends AppCompatActivity {
 
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String valorP = controllerPValue.getText().toString().trim();
-                        String valorI = controllerIValue.getText().toString().trim();
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String valorP = controllerPValue.getText().toString().trim();
+                String valorI = controllerIValue.getText().toString().trim();
 
-                        if(!valorP.isEmpty() && !valorI.isEmpty()){
+                if (!valorP.isEmpty() && !valorI.isEmpty()) {
 
-                            controlPValue = Double.parseDouble(valorP);
-                            controlIValue = Double.parseDouble(valorI);
+                    controlPValue = Double.parseDouble(valorP);
+                    controlIValue = Double.parseDouble(valorI);
 
-                        }else if(!valorP.isEmpty()){
+                } else if (!valorP.isEmpty()) {
 
-                            controlPValue = Double.parseDouble(valorP);
-                            controlIValue = Constants.KI_INITIAL;
+                    controlPValue = Double.parseDouble(valorP);
+                    controlIValue = Constants.KI_INITIAL;
 
-                        }else if(!valorI.isEmpty()){
+                } else if (!valorI.isEmpty()) {
 
-                            controlPValue = Constants.KP_INITIAL;
-                            controlIValue = Double.parseDouble(valorI);
+                    controlPValue = Constants.KP_INITIAL;
+                    controlIValue = Double.parseDouble(valorI);
 
-                        }else{
+                } else {
 
-                            controlPValue = Constants.KP_INITIAL;
-                            controlIValue = Constants.KI_INITIAL;
-                        }
-                        edtControladorP.setText(String.valueOf(controlPValue));
-                        edtControladorI.setText(String.valueOf(controlIValue));
+                    controlPValue = Constants.KP_INITIAL;
+                    controlIValue = Constants.KI_INITIAL;
+                }
+                edtControladorP.setText(String.valueOf(controlPValue));
+                edtControladorI.setText(String.valueOf(controlIValue));
 
-                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_CONTROLLER, controlPValue, controlIValue).start();
-                        //new SendThread(Constants.C_SETTINGS, Constants.I_CONTROLLER, controlPValue).start();
-                    }
+                new SendInformationsThread(Constants.C_SETTINGS, Constants.I_CONTROLLER, controlPValue, controlIValue).start();
+            }
 
         }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Toast.makeText(getApplication(), "O valor padrão para o controlador proporcional será " + Constants.KP_INITIAL, Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -716,16 +720,16 @@ public class MainActivity extends AppCompatActivity {
                 String x = edtPosX.getText().toString().trim();
                 String y = edtPosY.getText().toString().trim();
 
-                if(!x.isEmpty() && !y.isEmpty()){
+                if (!x.isEmpty() && !y.isEmpty()) {
                     xValue = Double.valueOf(x);
                     yValue = Double.valueOf(y);
-                }else if(!x.isEmpty()){
+                } else if (!x.isEmpty()) {
                     xValue = Double.valueOf(x);
                     yValue = Constants.Y;
-                }else if(!y.isEmpty()){
+                } else if (!y.isEmpty()) {
                     xValue = Constants.X;
                     yValue = Double.valueOf(y);
-                }else{
+                } else {
                     xValue = Constants.X;
                     yValue = Constants.Y;
                 }
@@ -733,13 +737,13 @@ public class MainActivity extends AppCompatActivity {
                 switch (option) {
                     case 1:
                         edtXInicial.setText(String.valueOf((xValue / 100)));
-                        edtYInicial.setText(String.valueOf((yValue/100)));
-                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (xValue/100), (yValue/100)).start();
+                        edtYInicial.setText(String.valueOf((yValue / 100)));
+                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (xValue / 100), (yValue / 100)).start();
                         break;
                     case 2:
                         edtXAlvo.setText(String.valueOf((xValue / 100)));
-                        edtYAlvo.setText(String.valueOf((yValue/100)));
-                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_FINAL, (xValue/100), (yValue/100)).start();
+                        edtYAlvo.setText(String.valueOf((yValue / 100)));
+                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_FINAL, (xValue / 100), (yValue / 100)).start();
                         break;
                 }
 
@@ -748,8 +752,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                //Toast.makeText(getApplication(), "O valor padrão para as coordenadas " +
-                  //      "inicias será ( " + Constants.X + " , " + Constants.Y + " )", Toast.LENGTH_LONG).show();
                 switch (option) {
                     case 1:
                         new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (Constants.X/100), (Constants.Y/100)).start();
@@ -789,10 +791,8 @@ public class MainActivity extends AppCompatActivity {
                 if (option != -1) {
                     if (option == 1) {
 
-                        //disableAllComponents();
                         disableAllButtons();
                         if (device != null) {
-                            //btSelectType.setEnabled(true);
                             sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
                         }
 
@@ -801,7 +801,6 @@ public class MainActivity extends AppCompatActivity {
 
                     } else if (option == 2) {
 
-                        //enableAllComponents();
                         enableAllButtons();
                         new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
                         new ReceiveThread().start();
@@ -830,21 +829,14 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        if (adaptador.isEnabled()) {
-                            adaptador.disable();
-                        }
-                        disableAllButtons();
-                        device = null;
-                        actionMenu.hideMenuButton(true);
-
+                        finalizeConnection();
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-                    }
+            }
         });
 
         final AlertDialog b = dialogBuilder.create();
@@ -862,22 +854,48 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (adaptador.isEnabled()) {
-                            adaptador.disable();
-                        }
+                        finalizeConnection();
                         finish();
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
 
-                    }
-                });
+            }
+        });
 
         final AlertDialog b = dialogBuilder.create();
         b.setCancelable(false);
         b.show();
+    }
+
+    private void finalizeConnection(){
+        disableAllComponents();
+
+        if(radioButtonCA.isChecked()){
+            radioButtonCA.setChecked(false);
+            radioButtonM.setChecked(false);
+        }
+
+        if (adaptador.isEnabled()) {
+            adaptador.disable();
+        }
+
+        try {
+            if(socket != null) socket.close();
+            device = null;
+            address = null;
+            input = null;
+            output = null;
+            socket = null;
+
+        } catch(IOException e) {
+            Log.e(Constants.TAG, e.getMessage().toString());
+        }
+
+        device = null;
+        actionMenu.hideMenuButton(true);
     }
 
     private void enableAllButtons(){
@@ -902,6 +920,7 @@ public class MainActivity extends AppCompatActivity {
         tvControllerP.setTextColor(getResources().getColor(R.color.black));
         tvMaxSeekVelocidade.setTextColor(getResources().getColor(R.color.black));
         tvMinSeekVelocidade.setTextColor(getResources().getColor(R.color.black));
+        tvValueSeekVelocidade.setTextColor(getResources().getColor(R.color.black));
         tvPosicaoAlvo.setTextColor(getResources().getColor(R.color.black));
         tvPosicaoInicial.setTextColor(getResources().getColor(R.color.black));
         tvVelocidade.setTextColor(getResources().getColor(R.color.black));
@@ -943,6 +962,7 @@ public class MainActivity extends AppCompatActivity {
         tvControllerI.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvMaxSeekVelocidade.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvMinSeekVelocidade.setTextColor(getResources().getColor(R.color.colorDisableText));
+        tvValueSeekVelocidade.setTextColor(getResources().getColor(R.color.grey));
         tvPosicaoAlvo.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvPosicaoInicial.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvVelocidade.setTextColor(getResources().getColor(R.color.colorDisableText));
@@ -980,6 +1000,7 @@ public class MainActivity extends AppCompatActivity {
         btRight.setEnabled(false);
         btRight.setBackgroundColor(getResources().getColor(R.color.colorDisableText));
 
+        sbVelocidade.setProgress(sbVelocidade.getMax()/2);
         sbVelocidade.setEnabled(false);
     }
 
@@ -1013,6 +1034,7 @@ public class MainActivity extends AppCompatActivity {
         tvMaxSeekVelocidade.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvMinSeekVelocidade.setTextColor(getResources().getColor(R.color.colorDisableText));
         tvVelocidade.setTextColor(getResources().getColor(R.color.colorDisableText));
+        tvValueSeekVelocidade.setTextColor(getResources().getColor(R.color.grey));
 
         btBackward.setEnabled(false);
         btBackward.setBackgroundColor(getResources().getColor(R.color.colorDisableText));
@@ -1077,10 +1099,14 @@ public class MainActivity extends AppCompatActivity {
                         byte[] buffer = new byte[1024];
                         int bytes = 0;
                         while (true) {
-                            bytes = input.read(buffer);
+                            try {
+                                bytes = input.read(buffer);
+                            }catch (IOException e){
+                                break;
+                            }
                             Log.i("TAG", "-----> bytes: "+bytes);
                             String readMessage = new String(buffer, 0, bytes);
-                                if(readMessage.equalsIgnoreCase(Constants.FIM_TRANSFER)) break;
+                            if(readMessage.contains(Constants.FIM_TRANSFER)) break;
                             Log.i("TAG", "-----> readMessage: " + readMessage);
                             splitMessage(readMessage);
                             bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
@@ -1155,6 +1181,8 @@ public class MainActivity extends AppCompatActivity {
                     output = new DataOutputStream(socket.getOutputStream());
                     sendSemaphore.acquire();
 
+                    Log.i(Constants.TAG, "ENVIANDO OPTIONCONTROL = "+optionControl);
+
                     if(socket.isConnected()){
                         if(comando != null) output.writeChar(comando);
                         if(identificador != null && value != null) {
@@ -1184,6 +1212,7 @@ public class MainActivity extends AppCompatActivity {
         for(int i = 0; i < splits.length; i++){
             Log.i("TAG", "splitMessage: "+splits[i]);
         }
+        Log.d(Constants.TAG, "Broadcasting message");
         try {
             Position position = new Position(
                     Double.parseDouble(splits[0]),
@@ -1195,6 +1224,12 @@ public class MainActivity extends AppCompatActivity {
                     Float.parseFloat(splits[6]),
                     Integer.parseInt(splits[7]));
             listOfPositions.add(position);
+
+            Intent intent = new Intent("data-event");
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList("moviments", (ArrayList<? extends Parcelable>) listOfPositions);
+            intent.putExtras(bundle);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
         }catch (NumberFormatException ex){
             Log.e(Constants.TAG, ex.getMessage().toString());
@@ -1243,37 +1278,18 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == TELA2){
-            if(device == null){
-                if(data == null) return;
+            if(data == null) return;
 
-                Toast.makeText(this, "Esolha o controle desejado.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Esolha o controle desejado.", Toast.LENGTH_LONG).show();
 
-                actionMenu.showMenuButton(true);
-                enableChoiceControl();
+            actionMenu.showMenuButton(true);
+            enableChoiceControl();
 
-                address = data.getExtras().getString("msg");
+            address = data.getExtras().getString("msg");
 
-                device = adaptador.getRemoteDevice(address);
-                teste = new ConnectThread(device);
-                teste.start();
-
-            }else{
-                new SendThread(Constants.C_STOP_CONNECTION, Constants.I_STOP, 0d).start();
-
-                try {
-                    if(input != null) input.close();
-                    if(output != null) output.close();
-                    if(socket != null) socket.close();
-
-                    device = null;
-                    address = null;
-                    input = null;
-                    output = null;
-                    socket = null;
-                } catch(IOException e){
-                    e.printStackTrace();
-                }
-            }
+            device = adaptador.getRemoteDevice(address);
+            connectDeviceThread = new ConnectThread(device);
+            connectDeviceThread.start();
         }
 
         if(requestCode == REQUEST_ENABLE_BT){

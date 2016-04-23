@@ -3,8 +3,15 @@ package com.example.guilherme.tcc_1_4.Fragments;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +20,15 @@ import android.widget.TextView;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
+import com.example.guilherme.tcc_1_4.Utils.SharedPreference;
+import com.example.guilherme.tcc_1_4.Utils.Singleton;
 
 import java.util.List;
 
 public class InformationFragment extends Fragment {
 
     private BluetoothDevice mDevice;
-    private List<Position> moviments;
+    private static List<Position> moviments;
 
     private TextView tvName;
     private TextView tvAddress;
@@ -33,9 +42,24 @@ public class InformationFragment extends Fragment {
     private TextView tvErrorText;
     private TextView tvVelWText;
 
+    private static SharedPreference sharedP;
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if(!bundle.isEmpty()){
+                moviments = bundle.getParcelableArrayList("moviments");
+            }
+            Singleton.getInstance().setMoviments(moviments);
+            fillAllVariables();
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(Constants.TAG, "INFORMATIONFRAGMENT -> onCreate()");
     }
 
     @Override
@@ -44,11 +68,13 @@ public class InformationFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.information_fragment_layout, container, false);
 
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
+                new IntentFilter("data-event"));
+
         mDevice = this.getArguments().getParcelable("device");
-        moviments = this.getArguments().getParcelableArrayList("moviments");
 
         init(view);
-        fillAllVariables();
+
         return view;
     }
 
@@ -73,21 +99,31 @@ public class InformationFragment extends Fragment {
         tvName.setText(mDevice.getName());
         tvAddress.setText(mDevice.getAddress());
 
-        //##############################################################################################################
-        if(moviments.size() > 0){
-            tvLastCoordX.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getX())));
-            tvLastCoordY.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getY())));
-            tvLastTheta.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getTheta())));
-            tvLastVelV.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getV())));
-            tvLastVelW.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getW())));
-            tvError.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getE())));
+        if(Singleton.getInstance().getMoviments().size() > 0){
+            tvLastCoordX.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getX())));
+            tvLastCoordY.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getY())));
+            tvLastTheta.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getTheta())));
+            tvLastVelV.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getV())));
+            tvLastVelW.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getW())));
+            tvError.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getE())));
+
         }else {
-            tvLastCoordX.setText("0");
-            tvLastCoordY.setText("0");
-            tvLastTheta.setText("0");
-            tvLastVelV.setText("0");
-            tvLastVelW.setText("0");
-            tvError.setText("0");
+            if(moviments != null && moviments.size() > 0){
+                tvLastCoordX.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getX())));
+                tvLastCoordY.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getY())));
+                tvLastTheta.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getTheta())));
+                tvLastVelV.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getV())));
+                tvLastVelW.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getW())));
+                tvError.setText(String.valueOf(round(moviments.get(moviments.size() - 1).getE())));
+            }else {
+                tvLastCoordX.setText("0");
+                tvLastCoordY.setText("0");
+                tvLastTheta.setText("0");
+                tvLastVelV.setText("0");
+                tvLastVelW.setText("0");
+                tvError.setText("0");
+            }
+
         }
     }
 
@@ -106,10 +142,26 @@ public class InformationFragment extends Fragment {
             public void run() {
                 try {
                     Thread.sleep(2000);
-                    //finish();
                 } catch (Exception e) {}
                 ringProgressDialog.dismiss();
             }
         }).start();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fillAllVariables();
+    }
+
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
     }
 }

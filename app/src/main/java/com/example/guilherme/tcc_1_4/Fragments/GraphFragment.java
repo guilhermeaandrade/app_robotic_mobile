@@ -2,6 +2,10 @@ package com.example.guilherme.tcc_1_4.Fragments;
 
 
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
@@ -9,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +33,8 @@ import com.androidplot.xy.XYStepMode;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
+import com.example.guilherme.tcc_1_4.Utils.SharedPreference;
+import com.example.guilherme.tcc_1_4.Utils.Singleton;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -47,7 +54,8 @@ public class GraphFragment extends Fragment{
     float distBetweenFingers;
     float lastZooming;
 
-    private List<Position> moviments;
+    private static List<Position> moviments;
+    private static SharedPreference sharedP;
 
     private Spinner spGraphType;
 
@@ -61,6 +69,17 @@ public class GraphFragment extends Fragment{
     private PointF minXY;
     private PointF maxXY;
 
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if(!bundle.isEmpty()){
+                moviments = bundle.getParcelableArrayList("moviments");
+            }
+            Singleton.getInstance().setMoviments(moviments);
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +91,8 @@ public class GraphFragment extends Fragment{
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.graph_fragment_layout, container, false);
 
-        moviments = this.getArguments().getParcelableArrayList("moviments");
-        Log.i(Constants.TAG, "Moviments size: "+moviments.size());
+        LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
+                new IntentFilter("data-event"));
 
         spGraphType = (Spinner) view.findViewById(R.id.spGraphs);
         spGraphType.setVisibility(View.VISIBLE);
@@ -90,6 +109,8 @@ public class GraphFragment extends Fragment{
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                 init = 1;
+                Log.i(Constants.TAG, "TAMANHO DO VETOR DE POSIÇÕES: "+moviments.size());
+          /*
                 switch (position) {
                     case 0:
                         scriptUpdatePlot(0);
@@ -188,7 +209,7 @@ public class GraphFragment extends Fragment{
 
                         xyPlot.redraw();
                         break;
-                }
+                } */
             }
 
             @Override
@@ -494,7 +515,7 @@ public class GraphFragment extends Fragment{
             buckets[i] =  new ArrayList<>();
         }
 
-        Log.i(Constants.TAG, "---> Moviments size: "+moviments.size());
+        Log.i(Constants.TAG, "---> Moviments size: " + moviments.size());
         for (int i = 0; i < moviments.size(); i++) {
             Log.i(Constants.TAG, "-------> POSICIONAMENTO DO BUCKET: " +(int)((moviments.get(i).getT() - low)/interval));
             buckets[(int)((moviments.get(i).getT() - low)/interval)].add(moviments.get(i));
@@ -509,7 +530,7 @@ public class GraphFragment extends Fragment{
         }
 
         Log.i(Constants.TAG, "AdataX size: "+AdataX.length);
-        Log.i(Constants.TAG, "AdataY size: "+AdataY.length);
+        Log.i(Constants.TAG, "AdataY size: " + AdataY.length);
         for (int i = 0; i < AdataX.length; i++){
             Log.i(Constants.TAG, "AdataX: "+AdataX[i]);
             Log.i(Constants.TAG, "AdataY: "+AdataY[i]);
@@ -1068,5 +1089,21 @@ public class GraphFragment extends Fragment{
         float x = event.getX(0) - event.getX(1);
         float y = event.getY(0) - event.getY(1);
         return (float)Math.sqrt(x * x + y * y);
+    }
+
+    @Override
+    public void onDestroy() {
+        LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mMessageReceiver);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }
