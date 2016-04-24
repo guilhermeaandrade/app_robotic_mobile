@@ -895,7 +895,7 @@
     <string name="lastAngTheta">Ângulo Theta atual: </string>
     <string name="lastCoordX">Coordenada X atual: </string>
     <string name="lastCoordY">Coordenada Y atual: </string>
-    <string name="lastError">Erro de posição atual:</string>
+    <string name="lastError">Erro posição atual:</string>
     <string name="lastVelV">Velocidade Linear atual: </string>
     <string name="lastVelW">Velocidade Angular atual: </string>
     <string name="lastWl">Wl atual: </string>
@@ -936,12 +936,14 @@
     <string name="library_materialdrawer_owner">Mike Penz</string>
     <string name="library_materialdrawer_repositoryLink">https://github.com/mikepenz/MaterialDrawer</string>
     <string name="library_materialdrawer_year">2015</string>
-    <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/res/values/strings.xml -->
-    <eat-comment/>
-    <string name="position">Variáveis do Processo</string>
     <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/res/values/values.xml -->
     <eat-comment/>
     <string name="status_bar_notification_info_overflow">999+</string>
+    <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="variableProcess">Variáveis do Processo</string>
+    <!-- From: file:/home/guilherme/Documentos/Guilherme/CEFET/SEM-1_2016/TCC/PROJECT/TCC_1_4/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.0/res/values/values.xml -->
+    <eat-comment/>
     <style name="AlertDialog.AppCompat" parent="Base.AlertDialog.AppCompat"/>
     <style name="AlertDialog.AppCompat.Light" parent="Base.AlertDialog.AppCompat.Light"/>
     <style name="Animation.AppCompat.Dialog" parent="Base.Animation.AppCompat.Dialog"/>

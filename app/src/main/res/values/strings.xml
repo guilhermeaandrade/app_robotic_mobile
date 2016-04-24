@@ -8,7 +8,7 @@
     <string name="coordenadaX">Coordenada X:  </string>
     <string name="coordenadaY">Coordenada Y:  </string>
 
-    <string name="position">Variáveis do Processo</string>
+    <string name="variableProcess">Variáveis do Processo</string>
     <string name="avgCoordX">Média Coordenada X: </string>
     <string name="avgCoordY">Média Coordenada Y: </string>
     <string name="avgAngTheta">Média Ângulo Theta: </string>
@@ -24,7 +24,7 @@
     <string name="lastVelW">Velocidade Angular atual: </string>
     <string name="lastWr">Wr atual: </string>
     <string name="lastWl">Wl atual: </string>
-    <string name="lastError">Erro de posição atual:</string>
+    <string name="lastError">Erro posição atual:</string>
 
     <string name="graph_prompt">Selecione um gráfico:</string>
     <string name="controladorProporcional">Ganho do Controlador P: </string>

@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:inputType="numberDecimal"
         android:paddingBottom="15dp"
-        android:hint="1.35"
+        android:hint="0.00"
         android:paddingLeft="7dp"
         android:padding="7dp"
         android:layout_alignParentTop="true"

@@ -42,6 +42,7 @@ import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
 import com.example.guilherme.tcc_1_4.Utils.Mask;
 import com.example.guilherme.tcc_1_4.Utils.Singleton;
+import com.example.guilherme.tcc_1_4.Utils.SingletonInformation;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.mikepenz.materialdrawer.Drawer;
@@ -167,6 +168,10 @@ public class MainActivity extends AppCompatActivity {
 
         init(savedInstanceState);
 
+        Log.i(Constants.TAG, "Entrei no onCreate() MainActivity");
+
+        SingletonInformation.getInstance();
+
         device = null;
         it = new Intent(this, SelectDevice.class);
 
@@ -182,6 +187,12 @@ public class MainActivity extends AppCompatActivity {
     //##############################################################################################################################
 
     private void initVariables(){
+        Log.i(Constants.TAG, "Entrei no initVariables");
+        Log.i(Constants.TAG, "Controlador i: "+SingletonInformation.getInstance().getControlIValue());
+        Log.i(Constants.TAG, "Controlador p: "+SingletonInformation.getInstance().getControlPValue());
+        Log.i(Constants.TAG, "INICIAL: (" + SingletonInformation.getInstance().getxValueInitial() + "," + SingletonInformation.getInstance().getyValueInitial());
+        Log.i(Constants.TAG, "ALVO: ("+SingletonInformation.getInstance().getxValueAlvo()+","+SingletonInformation.getInstance().getyValueAlvo());
+
         tvTypeController = (TextView) findViewById(R.id.tvControle);
         tvPosicaoInicial = (TextView) findViewById(R.id.tvPosInicial);
         tvXPosInicial= (TextView) findViewById(R.id.tvXInicial);
@@ -199,22 +210,22 @@ public class MainActivity extends AppCompatActivity {
         radioButtonM = (RadioButton) findViewById(R.id.radioButtonManul);
 
         edtXInicial = (TextView) findViewById(R.id.tvXInicialValue);
-        edtXInicial.setText(String.valueOf(Constants.X));
+        edtXInicial.setText(String.valueOf(SingletonInformation.getInstance().getxValueInitial()));
 
         edtYInicial = (TextView) findViewById(R.id.tvYInicialValue);
-        edtYInicial.setText(String.valueOf(Constants.Y));
+        edtYInicial.setText(String.valueOf(SingletonInformation.getInstance().getyValueInitial()));
 
         edtXAlvo = (TextView) findViewById(R.id.tvXAlvoValue);
-        edtXAlvo.setText(String.valueOf(Constants.X));
+        edtXAlvo.setText(String.valueOf(SingletonInformation.getInstance().getxValueAlvo()));
 
         edtYAlvo = (TextView) findViewById(R.id.tvYAlvoValue);
-        edtYAlvo.setText(String.valueOf(Constants.Y));
+        edtYAlvo.setText(String.valueOf(SingletonInformation.getInstance().getyValueAlvo()));
 
         edtControladorP = (TextView) findViewById(R.id.tvControladorPValue);
-        edtControladorP.setText(String.valueOf(Constants.KP_INITIAL));
+        edtControladorP.setText(String.valueOf(SingletonInformation.getInstance().getControlPValue()));
 
         edtControladorI = (TextView) findViewById(R.id.tvControladorIValue);
-        edtControladorI.setText(String.valueOf(Constants.KI_INITIAL));
+        edtControladorI.setText(String.valueOf(SingletonInformation.getInstance().getControlIValue()));
 
         //botao para conectar
         btConectar = (Button) findViewById(R.id.btnConectar);
@@ -669,8 +680,12 @@ public class MainActivity extends AppCompatActivity {
                     controlPValue = Constants.KP_INITIAL;
                     controlIValue = Constants.KI_INITIAL;
                 }
-                edtControladorP.setText(String.valueOf(controlPValue));
-                edtControladorI.setText(String.valueOf(controlIValue));
+
+                SingletonInformation.getInstance().setControlIValue(controlIValue);
+                SingletonInformation.getInstance().setControlPValue(controlPValue);
+
+                edtControladorP.setText(String.valueOf(SingletonInformation.getInstance().getControlPValue()));
+                edtControladorI.setText(String.valueOf(SingletonInformation.getInstance().getControlIValue()));
 
                 new SendInformationsThread(Constants.C_SETTINGS, Constants.I_CONTROLLER, controlPValue, controlIValue).start();
             }
@@ -736,13 +751,21 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (option) {
                     case 1:
-                        edtXInicial.setText(String.valueOf((xValue / 100)));
-                        edtYInicial.setText(String.valueOf((yValue / 100)));
+                        SingletonInformation.getInstance().setxValueInitial((xValue / 100));
+                        SingletonInformation.getInstance().setyValueInitial((yValue / 100));
+
+                        edtXInicial.setText(String.valueOf((SingletonInformation.getInstance().getxValueInitial())));
+                        edtYInicial.setText(String.valueOf((SingletonInformation.getInstance().getyValueInitial())));
+
                         new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (xValue / 100), (yValue / 100)).start();
                         break;
                     case 2:
-                        edtXAlvo.setText(String.valueOf((xValue / 100)));
-                        edtYAlvo.setText(String.valueOf((yValue / 100)));
+                        SingletonInformation.getInstance().setxValueAlvo((xValue / 100));
+                        SingletonInformation.getInstance().setyValueAlvo((yValue / 100));
+
+                        edtXAlvo.setText(String.valueOf((SingletonInformation.getInstance().getxValueAlvo())));
+                        edtYAlvo.setText(String.valueOf((SingletonInformation.getInstance().getyValueAlvo())));
+
                         new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_FINAL, (xValue / 100), (yValue / 100)).start();
                         break;
                 }
@@ -1070,6 +1093,7 @@ public class MainActivity extends AppCompatActivity {
             adaptador.cancelDiscovery();
             try {
                 socket.connect();
+                Singleton.getInstance().setSocket(socket);
             }catch (IOException e){
                 e.printStackTrace();
             }
@@ -1093,6 +1117,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null) {
                     input = new DataInputStream(socket.getInputStream());
+                    Singleton.getInstance().setInput(input);
                     receiveSemaphore.acquire();
 
                     if (socket.isConnected()) {
@@ -1144,6 +1169,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null){
                     output = new DataOutputStream(socket.getOutputStream());
+                    Singleton.getInstance().setOutput(output);
                     sendSemaphore.acquire();
 
                     if(socket.isConnected()){
@@ -1179,6 +1205,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null){
                     output = new DataOutputStream(socket.getOutputStream());
+                    Singleton.getInstance().setOutput(output);
                     sendSemaphore.acquire();
 
                     Log.i(Constants.TAG, "ENVIANDO OPTIONCONTROL = "+optionControl);
@@ -1250,6 +1277,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        edtXInicial.setText(String.valueOf(SingletonInformation.getInstance().getxValueInitial()));
+        edtYInicial.setText(String.valueOf(SingletonInformation.getInstance().getyValueInitial()));
+        edtXAlvo.setText(String.valueOf(SingletonInformation.getInstance().getxValueAlvo()));
+        edtYAlvo.setText(String.valueOf(SingletonInformation.getInstance().getyValueAlvo()));
+        edtControladorP.setText(String.valueOf(SingletonInformation.getInstance().getControlPValue()));
+        edtControladorI.setText(String.valueOf(SingletonInformation.getInstance().getControlIValue()));
+
     }
 
     @Override
@@ -1288,6 +1323,8 @@ public class MainActivity extends AppCompatActivity {
             address = data.getExtras().getString("msg");
 
             device = adaptador.getRemoteDevice(address);
+            Singleton.getInstance().setDevice(device);
+
             connectDeviceThread = new ConnectThread(device);
             connectDeviceThread.start();
         }

@@ -1412,8 +1412,8 @@ int string library_materialdrawer_licenseId 0x7f070041
 int string library_materialdrawer_owner 0x7f070042
 int string library_materialdrawer_repositoryLink 0x7f070043
 int string library_materialdrawer_year 0x7f070044
-int string position 0x7f070045
 int string status_bar_notification_info_overflow 0x7f070011
+int string variableProcess 0x7f070045
 int style AlertDialog_AppCompat 0x7f09008b
 int style AlertDialog_AppCompat_Light 0x7f09008c
 int style Animation_AppCompat_Dialog 0x7f09008d

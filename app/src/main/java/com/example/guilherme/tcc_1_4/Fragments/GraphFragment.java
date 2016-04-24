@@ -47,7 +47,10 @@ public class GraphFragment extends Fragment{
     private static final int NONE = 0;
     private  static final int ONE_FINGER_DRAG = 1;
     private static final int TWO_FINGERS_DRAG = 2;
-    int mode = NONE;
+    private int mode = NONE;
+    private int optionGraphic = 0;
+    private boolean updateGraphicControl = true;
+    private DrawGraphic draw;
 
     PointF firstFinger;
     float lastScrolling;
@@ -55,7 +58,6 @@ public class GraphFragment extends Fragment{
     float lastZooming;
 
     private static List<Position> moviments;
-    private static SharedPreference sharedP;
 
     private Spinner spGraphType;
 
@@ -89,10 +91,16 @@ public class GraphFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.i(Constants.TAG, "GRAPHFRAGMENT -> onCreateView()");
+
         View view = inflater.inflate(R.layout.graph_fragment_layout, container, false);
+
+        Log.i(Constants.TAG, "Criei a thread para desenhar");
 
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
                 new IntentFilter("data-event"));
+
+        Log.i(Constants.TAG, "GRAPHFRAGMENT -> onCreateView() -> size: " + Singleton.getInstance().getMoviments().size());
 
         spGraphType = (Spinner) view.findViewById(R.id.spGraphs);
         spGraphType.setVisibility(View.VISIBLE);
@@ -108,12 +116,13 @@ public class GraphFragment extends Fragment{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                optionGraphic = position;
                 init = 1;
-                Log.i(Constants.TAG, "TAMANHO DO VETOR DE POSIÇÕES: "+moviments.size());
-          /*
-                switch (position) {
+                if(moviments != null) Log.i(Constants.TAG, "ENTREI NA ESCOLHA -> TAMANHO DO VETOR DE POSIÇÕES: " + moviments.size());
+
+                switch (optionGraphic) {
                     case 0:
-                        scriptUpdatePlot(0);
+                        //scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("x (m)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 0.025);
@@ -127,7 +136,7 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 1:
-                        scriptUpdatePlot(1);
+                        //scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -141,7 +150,7 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 2:
-                        scriptUpdatePlot(2);
+                        //scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -155,7 +164,7 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 3:
-                        scriptUpdatePlot(3);
+//                        scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -169,7 +178,7 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 4:
-                        scriptUpdatePlot(4);
+  //                      scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -183,7 +192,7 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 5:
-                        scriptUpdatePlot(5);
+//                        scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -197,7 +206,7 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 6:
-                        scriptUpdatePlot(6);
+  //                      scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -209,7 +218,7 @@ public class GraphFragment extends Fragment{
 
                         xyPlot.redraw();
                         break;
-                } */
+                }
             }
 
             @Override
@@ -236,33 +245,52 @@ public class GraphFragment extends Fragment{
 
         xyPlot.getGraphWidget().setDomainLabelOrientation(-45);
 
-        xyPlot.calculateMinMaxVals();
-        minXY=new PointF(xyPlot.getCalculatedMinX().floatValue(), xyPlot.getCalculatedMinY().floatValue());
-        maxXY=new PointF(xyPlot.getCalculatedMaxX().floatValue(), xyPlot.getCalculatedMaxY().floatValue());
+        draw = new DrawGraphic();
+        draw.start();
 
-
-        /*view.setOnTouchListener(new View.OnTouchListener() {
-        });*/
         return view;
     }
 
-    private void scriptUpdatePlot(int option){
+    private void scriptUpdatePlot(){
+        if(moviments.size() == 0 || moviments == null) return;
+        int tamVector;
+
         xyPlot.removeSeries(series);
         xyPlot.clear();
 
         ALdataX.clear();
         ALdataY.clear();
 
-        AdataX = new float[Constants.COUNT_POINTS];
-        AdataY = new float[Constants.COUNT_POINTS];
-        getDataSource(option);
+        tamVector = moviments.size();
+        Log.i(Constants.TAG, "Size: "+tamVector);
 
-        bounderies = getBoundaries(option);
-        Log.i(Constants.TAG, "BOUNDERIES: " + bounderies[0] + " - " + bounderies[1] + " - " + bounderies[2] + " - " + bounderies[3]);
-        xyPlot.setDomainBoundaries(bounderies[0], bounderies[1], BoundaryMode.AUTO);
-        xyPlot.setRangeBoundaries(bounderies[2], bounderies[3], BoundaryMode.AUTO);
+        if(tamVector >= 1 && tamVector < 20) {
+            Log.i(Constants.TAG, "Entrei no IF -> scriptUpdatePlot()");
+            AdataX = new float[tamVector];
+            AdataY = new float[tamVector];
+        }else {
+            Log.i(Constants.TAG, "Entrei no ELSE -> scriptUpdatePlot()");
+            AdataX = new float[Constants.COUNT_POINTS];
+            AdataY = new float[Constants.COUNT_POINTS];
+        }
+        Log.i(Constants.TAG, "Size vetor: "+AdataX.length);
+        Log.i(Constants.TAG, "Size vetor: "+AdataY.length);
 
-        switch (option){
+        getDataSource();
+
+        //AdataX = new float[]{1f, 2f, 3f, 4f, 5f, 6f, 7f, 8f, 9f, 10f};
+        //AdataY = new float[]{10f, 20f, 30f, 40f, 50f, 60f, 70f, 80f, 90f, 100f};
+
+        //AdataX = new float[Constants.COUNT_POINTS];
+        //AdataY = new float[Constants.COUNT_POINTS];
+        //getDataSource();
+
+        //bounderies = getBoundaries();
+        //Log.i(Constants.TAG, "BOUNDERIES: " + bounderies[0] + " - " + bounderies[1] + " - " + bounderies[2] + " - " + bounderies[3]);
+        //xyPlot.setDomainBoundaries(bounderies[0], bounderies[1], BoundaryMode.AUTO);
+        //xyPlot.setRangeBoundaries(bounderies[2], bounderies[3], BoundaryMode.AUTO);
+
+        switch (optionGraphic){
             case 0:
                 series = new XYSeriesShimmer(ALdataX, ALdataY, 0, "Percurso");
                 break;
@@ -286,19 +314,103 @@ public class GraphFragment extends Fragment{
                 break;
         }
 
-        xyPlot.addSeries(series, series1Format);
+        //xyPlot.addSeries(series, series1Format);
 
-        for(int i=0; i< AdataX.length; i++){
+        /*for(int i=0; i< AdataX.length; i++){
             ALdataX.add(AdataX[i]);
             ALdataY.add(AdataY[i]);
 
             series.updateData(ALdataX, ALdataY);
             xyPlot.redraw();
-        }
+        }*/
         xyPlot.redraw();
     }
 
-    private float[] getBoundaries(int option) {
+    private void getDataSource(){
+        if(moviments.size() <= 0) return;
+
+        if(moviments.size() >= 1 && moviments.size() < 20){
+            Log.i(Constants.TAG, "Entrei no IF -> getDataSource()");
+            switch (optionGraphic){
+                case 0:
+                    for(int i = 0; i < moviments.size(); i++){
+                        AdataX[i] = moviments.get(i).getX().floatValue();
+                        AdataY[i] = moviments.get(i).getY().floatValue();
+                    }
+                    break;
+                case 1:
+                    for(int i = 0; i < moviments.size(); i++){
+                        AdataX[i] = moviments.get(i).getT().floatValue();
+                        AdataY[i] = moviments.get(i).getX().floatValue();
+                    }
+                    break;
+                case 2:
+                    for(int i = 0; i < moviments.size(); i++){
+                        AdataX[i] = moviments.get(i).getT().floatValue();
+                        AdataY[i] = moviments.get(i).getY().floatValue();
+                    }
+                    break;
+                case 3:
+                    for(int i = 0; i < moviments.size(); i++){
+                        AdataX[i] = moviments.get(i).getT().floatValue();
+                        AdataY[i] = moviments.get(i).getTheta().floatValue();
+                    }
+                    break;
+                case 4:
+                    for(int i = 0; i < moviments.size(); i++){
+                        AdataX[i] = moviments.get(i).getT().floatValue();
+                        AdataY[i] = moviments.get(i).getV().floatValue();
+                    }
+                    break;
+                case 5:
+                    for(int i = 0; i < moviments.size(); i++){
+                        AdataX[i] = moviments.get(i).getT().floatValue();
+                        AdataY[i] = moviments.get(i).getW().floatValue();
+                    }
+                    break;
+                case 6:
+                    for(int i = 0; i < moviments.size(); i++){
+                        AdataX[i] = moviments.get(i).getT().floatValue();
+                        AdataY[i] = moviments.get(i).getE().floatValue();
+                    }
+                    break;
+            }
+        }else {
+            Log.i(Constants.TAG, "Entrei no ELSE -> getDataSource()");
+            float high = moviments.get(moviments.size() - 1).getT();
+            float low = moviments.get(0).getT();
+
+            double interval = (double) ((high - low + 1)/Constants.BUCKET_COUNT);
+            ArrayList<Position> buckets[] = new ArrayList[Constants.BUCKET_COUNT];
+
+            for(int i = 0; i < Constants.BUCKET_COUNT; i++){
+                buckets[i] =  new ArrayList<>();
+            }
+
+            Log.i(Constants.TAG, "---> Moviments size: " + moviments.size());
+            for (int i = 0; i < moviments.size(); i++) {
+                Log.i(Constants.TAG, "-------> POSICIONAMENTO DO BUCKET: " +(int)((moviments.get(i).getT() - low)/interval));
+                buckets[(int)((moviments.get(i).getT() - low)/interval)].add(moviments.get(i));
+            }
+
+            fillFirsAndLastValue();
+
+            for(int i = 0; i < buckets.length; i++){
+                Log.i(Constants.TAG, "BUCKET: " + i);
+                Log.i(Constants.TAG, "BUCKET SIZE: " + buckets[i].size());
+                getValuesXY(buckets[i]);
+            }
+
+            Log.i(Constants.TAG, "AdataX size: "+AdataX.length);
+            Log.i(Constants.TAG, "AdataY size: " + AdataY.length);
+            for (int i = 0; i < AdataX.length; i++){
+                Log.i(Constants.TAG, "AdataX: "+AdataX[i]);
+                Log.i(Constants.TAG, "AdataY: "+AdataY[i]);
+            }
+        }
+    }
+
+    private float[] getBoundaries() {
         float[] bound = new float[4];
 
         Float minValueX;
@@ -307,7 +419,7 @@ public class GraphFragment extends Fragment{
         Float maxValueY;
 
         if(moviments.size() > 0){
-            switch (option){
+            switch (optionGraphic){
                 case 0:
                     minValueX = (moviments.get(0).getX()).floatValue();
                     maxValueX = (moviments.get(0).getX()).floatValue();
@@ -502,42 +614,7 @@ public class GraphFragment extends Fragment{
         return  interval;
     }
 
-    private void getDataSource(int option){
-        if(moviments.size() <= 1) return;
-
-        float high = moviments.get(moviments.size() - 1).getT();
-        float low = moviments.get(0).getT();
-
-        double interval = (double) ((high - low + 1)/Constants.BUCKET_COUNT);
-        ArrayList<Position> buckets[] = new ArrayList[Constants.BUCKET_COUNT];
-
-        for(int i = 0; i < Constants.BUCKET_COUNT; i++){
-            buckets[i] =  new ArrayList<>();
-        }
-
-        Log.i(Constants.TAG, "---> Moviments size: " + moviments.size());
-        for (int i = 0; i < moviments.size(); i++) {
-            Log.i(Constants.TAG, "-------> POSICIONAMENTO DO BUCKET: " +(int)((moviments.get(i).getT() - low)/interval));
-            buckets[(int)((moviments.get(i).getT() - low)/interval)].add(moviments.get(i));
-        }
-
-        fillFirsAndLastValue(option);
-
-        for(int i = 0; i < buckets.length; i++){
-            Log.i(Constants.TAG, "BUCKET: " + i);
-            Log.i(Constants.TAG, "BUCKET SIZE: " + buckets[i].size());
-            getValuesXY(buckets[i], option);
-        }
-
-        Log.i(Constants.TAG, "AdataX size: "+AdataX.length);
-        Log.i(Constants.TAG, "AdataY size: " + AdataY.length);
-        for (int i = 0; i < AdataX.length; i++){
-            Log.i(Constants.TAG, "AdataX: "+AdataX[i]);
-            Log.i(Constants.TAG, "AdataY: "+AdataY[i]);
-        }
-    }
-
-    private void fillFirsAndLastValue(int option) {
+    private void fillFirsAndLastValue() {
         Log.i(Constants.TAG, "Primeiro e ultimo");
         Log.i(Constants.TAG, "x: "+moviments.get(0).getX());
         Log.i(Constants.TAG, "lx: "+moviments.get(moviments.size() - 1).getX());
@@ -551,7 +628,7 @@ public class GraphFragment extends Fragment{
         Log.i(Constants.TAG, "t: "+moviments.get(0).getT());
         Log.i(Constants.TAG, "lt: "+moviments.get(moviments.size() - 1).getT());
 
-        switch (option){
+        switch (optionGraphic){
             case 0:
                 AdataX[0] = (moviments.get(0).getX().floatValue());
                 AdataY[0] = (moviments.get(0).getY().floatValue());
@@ -610,14 +687,14 @@ public class GraphFragment extends Fragment{
         }
     }
 
-    private void getValuesXY(ArrayList<Position> bucket, int option) {
+    private void getValuesXY(ArrayList<Position> bucket) {
         Log.i(Constants.TAG, "getValuesXY ----> BUCKET SIZE: " + bucket.size());
 
         //int interval = (int) ((bucket.size()-1) - 0 + 1)/Constants.COUNT_VALUES;
         int interval = (int) (bucket.size() - 0 + 1)/Constants.COUNT_VALUES;
         Log.i(Constants.TAG, "getValuesXY ----> interval: "+interval);
-        Log.i(Constants.TAG, "AdataX[init] = "+AdataX[init] + " | AdataY[init] = " +AdataY[init]);
-        Log.i(Constants.TAG, "AdataX[init] = "+AdataX[Constants.COUNT_POINTS - 1] + " | AdataY[init] = " +AdataY[Constants.COUNT_POINTS - 1]);
+        //Log.i(Constants.TAG, "AdataX[init] = "+AdataX[init] + " | AdataY[init] = " +AdataY[init]);
+        //Log.i(Constants.TAG, "AdataX[init] = "+AdataX[Constants.COUNT_POINTS - 1] + " | AdataY[init] = " +AdataY[Constants.COUNT_POINTS - 1]);
 
         if(bucket.size() == 0){
             Log.i(Constants.TAG, "BUCKET VAZIO");
@@ -627,8 +704,8 @@ public class GraphFragment extends Fragment{
             }
         }
 
-
-        switch (option){
+        Log.i(Constants.TAG, "Initial Value: "+init);
+        switch (optionGraphic){
             case 0:
                 switch(bucket.size()){
                     case 0:
@@ -1091,19 +1168,41 @@ public class GraphFragment extends Fragment{
         return (float)Math.sqrt(x * x + y * y);
     }
 
+    private class DrawGraphic extends Thread {
+
+        public DrawGraphic(){}
+
+        public void run(){
+            while(updateGraphicControl){
+                try {
+                    //Log.i(Constants.TAG, "Antes sleep 10s -> "+System.currentTimeMillis());
+                    Thread.sleep(2500);
+                    //scriptUpdatePlot();
+                    //Log.i(Constants.TAG, "Depois sleep 10s -> "+System.currentTimeMillis());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     @Override
     public void onDestroy() {
+        Log.i(Constants.TAG, "GRAPHFRAGMENT -> onDestroy()");
         LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(mMessageReceiver);
+        updateGraphicControl = false;
         super.onDestroy();
     }
 
     @Override
     public void onStart() {
+        Log.i(Constants.TAG, "GRAPHFRAGMENT -> onStart()");
         super.onStart();
     }
 
     @Override
     public void onResume() {
+        Log.i(Constants.TAG, "GRAPHFRAGMENT -> onResume()");
         super.onResume();
     }
 }

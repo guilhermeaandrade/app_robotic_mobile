@@ -4181,8 +4181,8 @@ containing a value of this type.
         public static final int library_materialdrawer_owner=0x7f070042;
         public static final int library_materialdrawer_repositoryLink=0x7f070043;
         public static final int library_materialdrawer_year=0x7f070044;
-        public static final int position=0x7f070045;
         public static final int status_bar_notification_info_overflow=0x7f070011;
+        public static final int variableProcess=0x7f070045;
     }
     public static final class style {
         public static final int AlertDialog_AppCompat=0x7f09008b;

@@ -90,17 +90,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/position"
+                android:text="@string/variableProcess"
                 android:id="@+id/position"
                 android:textColor="@color/colorSelectedTab"
                 android:layout_alignParentStart="true"
                 android:layout_below="@+id/robo_photo"
                 android:layout_alignParentEnd="true"
                 android:gravity="center_horizontal"
-                android:paddingTop="33dp"
+                android:paddingTop="15dp"
                 android:textSize="25sp"
                 android:textStyle="bold"
-                android:paddingBottom="15dp"/>
+                android:paddingBottom="5dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -141,10 +141,12 @@
                 android:layout_below="@+id/position"
                 android:layout_toEndOf="@+id/coordX"
                 android:text=" 0.490"
-                android:paddingLeft="5dp"
                 android:textSize="19sp"
                 android:textColor="@color/black"
-                android:padding="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
                 android:layout_alignBottom="@+id/coordX" />
 
             <TextView
@@ -156,8 +158,10 @@
                 android:layout_below="@+id/edtCoordX"
                 android:text=" 0.929"
                 android:textSize="19sp"
-                android:paddingLeft="5dp"
-                android:padding="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
                 android:textColor="@color/black" />
 
             <TextView
@@ -168,8 +172,10 @@
                 android:layout_toEndOf="@+id/theta"
                 android:text=" 12.83"
                 android:textSize="19sp"
-                android:padding="8dp"
-                android:paddingLeft="5dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
                 android:textColor="@color/black" />
 
             <TextView
@@ -178,8 +184,10 @@
                 android:id="@+id/edtVelV"
                 android:text=" 38.82"
                 android:textSize="19sp"
-                android:padding="8dp"
-                android:paddingLeft="5dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
                 android:textColor="@color/black"
                 android:layout_alignTop="@+id/velV"
                 android:layout_toEndOf="@+id/velV" />
@@ -190,9 +198,11 @@
                 android:id="@+id/edtVelW"
                 android:layout_alignBottom="@+id/velW"
                 android:text=" 62.89"
-                android:padding="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="8dp"
                 android:textSize="19sp"
-                android:paddingLeft="5dp"
                 android:textColor="@color/black"
                 android:layout_alignTop="@+id/velW"
                 android:layout_toEndOf="@+id/velW" />
@@ -205,13 +215,12 @@
                 android:id="@+id/erroPosicao"
                 android:layout_alignParentStart="true"
                 android:textColor="@color/black"
-                android:paddingBottom="7dp"
-                android:paddingTop="7dp"
-                android:paddingLeft="7dp"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:paddingLeft="8dp"
                 android:paddingRight="0dp"
                 android:layout_toStartOf="@+id/edtCoordX"
-                android:layout_below="@+id/velW"
-                android:layout_alignEnd="@+id/velV" />
+                android:layout_below="@+id/velW" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -219,13 +228,74 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:id="@+id/edtError"
                 android:text="62.89"
-                android:padding="8dp"
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:paddingRight="8dp"
+                android:paddingLeft="0dp"
                 android:textSize="19sp"
-                android:paddingLeft="1dp"
                 android:textColor="@color/black"
                 android:layout_below="@+id/velW"
                 android:layout_alignParentEnd="true"
-                android:layout_toEndOf="@+id/erroPosicao" />
+                android:layout_toEndOf="@+id/theta" />
+
+            <com.github.clans.fab.FloatingActionMenu
+                xmlns:fab="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/actionMenu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:src="@drawable/ic_pencil"
+                fab:menu_labels_style="@style/MenuLabelsStyle"
+                fab:menu_labels_ellipsize="end"
+                fab:menu_labels_singleLine="true"
+                fab:menu_backgroundColor="#ccffffff"
+                fab:menu_colorNormal="@color/colorPrimary"
+                fab:menu_colorPressed="@color/colorPrimaryPressed"
+                android:layout_alignEnd="@+id/radioGroup">
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/fabController"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/controller"
+                    fab:fab_size="mini"
+                    fab:fab_label="Ganho dos Controladores"
+                    fab:menu_labels_style="@style/MenuLabelsStyle"
+                    fab:menu_labels_textColor="@color/colorPrimary"
+                    fab:menu_labels_colorRipple="@color/grey"
+                    fab:menu_colorNormal="@color/colorPrimary"
+                    fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/fabPosition"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/location"
+                    fab:fab_size="mini"
+                    fab:fab_label="Posição Inicial"
+                    fab:menu_labels_style="@style/MenuLabelsStyle"
+                    fab:menu_labels_textColor="@color/colorPrimary"
+                    fab:menu_labels_colorRipple="@color/grey"
+                    fab:menu_colorNormal="@color/colorPrimary"
+                    fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+
+                <com.github.clans.fab.FloatingActionButton
+                    android:id="@+id/fabPositionAlvo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/final_location"
+                    fab:fab_size="mini"
+                    fab:fab_label="Posição Alvo"
+                    fab:menu_labels_style="@style/MenuLabelsStyle"
+                    fab:menu_labels_textColor="@color/colorPrimary"
+                    fab:menu_labels_colorRipple="@color/grey"
+                    fab:menu_colorNormal="@color/colorPrimary"
+                    fab:menu_colorPressed="@color/colorPrimaryPressed"/>
+            </com.github.clans.fab.FloatingActionMenu>
+
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>
