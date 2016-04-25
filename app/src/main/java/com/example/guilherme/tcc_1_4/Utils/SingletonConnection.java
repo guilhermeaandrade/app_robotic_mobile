@@ -11,21 +11,21 @@ import java.io.DataOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Singleton {
+public class SingletonConnection {
 
-    private static Singleton mInstance = null;
+    private static SingletonConnection mInstance = null;
     private List<Position> moviments;
     private BluetoothDevice device;
     private BluetoothSocket socket;
     private DataOutputStream output;
     private DataInputStream input;
 
-    private Singleton(){
+    private SingletonConnection(){
         moviments = new ArrayList<Position>();
     }
 
-    public synchronized static Singleton getInstance(){
-        if(mInstance == null) mInstance = new Singleton();
+    public synchronized static SingletonConnection getInstance(){
+        if(mInstance == null) mInstance = new SingletonConnection();
         return mInstance;
     }
 

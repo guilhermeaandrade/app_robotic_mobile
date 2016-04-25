@@ -41,7 +41,7 @@ import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
 import com.example.guilherme.tcc_1_4.Utils.Mask;
-import com.example.guilherme.tcc_1_4.Utils.Singleton;
+import com.example.guilherme.tcc_1_4.Utils.SingletonConnection;
 import com.example.guilherme.tcc_1_4.Utils.SingletonInformation;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
@@ -1093,7 +1093,7 @@ public class MainActivity extends AppCompatActivity {
             adaptador.cancelDiscovery();
             try {
                 socket.connect();
-                Singleton.getInstance().setSocket(socket);
+                SingletonConnection.getInstance().setSocket(socket);
             }catch (IOException e){
                 e.printStackTrace();
             }
@@ -1117,7 +1117,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null) {
                     input = new DataInputStream(socket.getInputStream());
-                    Singleton.getInstance().setInput(input);
+                    SingletonConnection.getInstance().setInput(input);
                     receiveSemaphore.acquire();
 
                     if (socket.isConnected()) {
@@ -1169,7 +1169,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null){
                     output = new DataOutputStream(socket.getOutputStream());
-                    Singleton.getInstance().setOutput(output);
+                    SingletonConnection.getInstance().setOutput(output);
                     sendSemaphore.acquire();
 
                     if(socket.isConnected()){
@@ -1205,7 +1205,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if(socket != null){
                     output = new DataOutputStream(socket.getOutputStream());
-                    Singleton.getInstance().setOutput(output);
+                    SingletonConnection.getInstance().setOutput(output);
                     sendSemaphore.acquire();
 
                     Log.i(Constants.TAG, "ENVIANDO OPTIONCONTROL = "+optionControl);
@@ -1323,7 +1323,7 @@ public class MainActivity extends AppCompatActivity {
             address = data.getExtras().getString("msg");
 
             device = adaptador.getRemoteDevice(address);
-            Singleton.getInstance().setDevice(device);
+            SingletonConnection.getInstance().setDevice(device);
 
             connectDeviceThread = new ConnectThread(device);
             connectDeviceThread.start();

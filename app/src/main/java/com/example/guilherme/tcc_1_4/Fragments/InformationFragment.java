@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -24,15 +23,11 @@ import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
 import com.example.guilherme.tcc_1_4.Utils.Mask;
-import com.example.guilherme.tcc_1_4.Utils.SharedPreference;
-import com.example.guilherme.tcc_1_4.Utils.Singleton;
+import com.example.guilherme.tcc_1_4.Utils.SingletonConnection;
 import com.example.guilherme.tcc_1_4.Utils.SingletonInformation;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
-import org.w3c.dom.Text;
-
-import java.io.DataOutputStream;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -71,7 +66,7 @@ public class InformationFragment extends Fragment {
             if(!bundle.isEmpty()){
                 moviments = bundle.getParcelableArrayList("moviments");
             }
-            Singleton.getInstance().setMoviments(moviments);
+            SingletonConnection.getInstance().setMoviments(moviments);
             fillAllVariables();
         }
     };
@@ -93,10 +88,10 @@ public class InformationFragment extends Fragment {
 
         mDevice = this.getArguments().getParcelable("device");
 
-        Log.i(Constants.TAG, "Device: "+Singleton.getInstance().getDevice().getName()+"-"+Singleton.getInstance().getDevice().getAddress());
-        Log.i(Constants.TAG, "Socket: "+Singleton.getInstance().getSocket().getRemoteDevice().getAddress());
-        Log.i(Constants.TAG, "DataOutputStream: "+Singleton.getInstance().getOutput().toString());
-        Log.i(Constants.TAG, "DataInputStream: "+Singleton.getInstance().getInput().toString());
+        Log.i(Constants.TAG, "Device: "+ SingletonConnection.getInstance().getDevice().getName()+"-"+ SingletonConnection.getInstance().getDevice().getAddress());
+        Log.i(Constants.TAG, "Socket: "+ SingletonConnection.getInstance().getSocket().getRemoteDevice().getAddress());
+        Log.i(Constants.TAG, "DataOutputStream: "+ SingletonConnection.getInstance().getOutput().toString());
+        Log.i(Constants.TAG, "DataInputStream: "+ SingletonConnection.getInstance().getInput().toString());
 
         init(view);
 
@@ -180,13 +175,13 @@ public class InformationFragment extends Fragment {
         tvName.setText(mDevice.getName());
         tvAddress.setText(mDevice.getAddress());
 
-        if(Singleton.getInstance().getMoviments().size() > 0){
-            tvLastCoordX.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getX())));
-            tvLastCoordY.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getY())));
-            tvLastTheta.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getTheta())));
-            tvLastVelV.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getV())));
-            tvLastVelW.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getW())));
-            tvError.setText(String.valueOf(round(Singleton.getInstance().getMoviments().get(Singleton.getInstance().getMoviments().size() - 1).getE())));
+        if(SingletonConnection.getInstance().getMoviments().size() > 0){
+            tvLastCoordX.setText(String.valueOf(round(SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getX())));
+            tvLastCoordY.setText(String.valueOf(round(SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getY())));
+            tvLastTheta.setText(String.valueOf(round(SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getTheta())));
+            tvLastVelV.setText(String.valueOf(round(SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getV())));
+            tvLastVelW.setText(String.valueOf(round(SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getW())));
+            tvError.setText(String.valueOf(round(SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getE())));
 
         }else {
             if(moviments != null && moviments.size() > 0){
@@ -223,17 +218,17 @@ public class InformationFragment extends Fragment {
 
         public void run(){
             try {
-                if(Singleton.getInstance().getSocket() != null){
+                if(SingletonConnection.getInstance().getSocket() != null){
                     sendSemaphore.acquire();
 
-                    if(Singleton.getInstance().getSocket().isConnected()){
-                        if(comando != null) Singleton.getInstance().getOutput().writeChar(comando);
+                    if(SingletonConnection.getInstance().getSocket().isConnected()){
+                        if(comando != null) SingletonConnection.getInstance().getOutput().writeChar(comando);
                         if(identificador != null && firstValue != null && secondValue != null) {
-                            Singleton.getInstance().getOutput().writeChar(identificador);
-                            Singleton.getInstance().getOutput().writeDouble(firstValue);
-                            Singleton.getInstance().getOutput().writeDouble(secondValue);
+                            SingletonConnection.getInstance().getOutput().writeChar(identificador);
+                            SingletonConnection.getInstance().getOutput().writeDouble(firstValue);
+                            SingletonConnection.getInstance().getOutput().writeDouble(secondValue);
                         }
-                        Singleton.getInstance().getOutput().flush();
+                        SingletonConnection.getInstance().getOutput().flush();
                     }
 
                     sendSemaphore.release();

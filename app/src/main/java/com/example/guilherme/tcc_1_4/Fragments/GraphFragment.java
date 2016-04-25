@@ -1,7 +1,6 @@
 package com.example.guilherme.tcc_1_4.Fragments;
 
 
-import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +13,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.FloatMath;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -33,8 +31,7 @@ import com.androidplot.xy.XYStepMode;
 import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
-import com.example.guilherme.tcc_1_4.Utils.SharedPreference;
-import com.example.guilherme.tcc_1_4.Utils.Singleton;
+import com.example.guilherme.tcc_1_4.Utils.SingletonConnection;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -78,7 +75,7 @@ public class GraphFragment extends Fragment{
             if(!bundle.isEmpty()){
                 moviments = bundle.getParcelableArrayList("moviments");
             }
-            Singleton.getInstance().setMoviments(moviments);
+            SingletonConnection.getInstance().setMoviments(moviments);
         }
     };
 
@@ -100,7 +97,7 @@ public class GraphFragment extends Fragment{
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
                 new IntentFilter("data-event"));
 
-        Log.i(Constants.TAG, "GRAPHFRAGMENT -> onCreateView() -> size: " + Singleton.getInstance().getMoviments().size());
+        Log.i(Constants.TAG, "GRAPHFRAGMENT -> onCreateView() -> size: " + SingletonConnection.getInstance().getMoviments().size());
 
         spGraphType = (Spinner) view.findViewById(R.id.spGraphs);
         spGraphType.setVisibility(View.VISIBLE);
