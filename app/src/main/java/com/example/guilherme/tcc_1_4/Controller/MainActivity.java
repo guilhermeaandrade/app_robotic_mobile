@@ -256,6 +256,7 @@ public class MainActivity extends AppCompatActivity {
                         if (device != null) {
                             disableManualControlComponents();
                             sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
+                            velocidade = (byte) sbVelocidade.getProgress();
                         }
                         new SendThread(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
                         new ReceiveThread().start();
@@ -264,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.radioButtonManul:
                         optionControl = 2;
                         enableAllComponents();
+                        velocidade = (byte) sbVelocidade.getProgress();
                         new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                         new ReceiveThread().start();
                         break;
