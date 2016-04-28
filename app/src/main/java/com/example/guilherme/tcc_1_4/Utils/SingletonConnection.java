@@ -68,4 +68,8 @@ public class SingletonConnection {
     public void setInput(DataInputStream input) {
         this.input = input;
     }
+
+    public void clearMovimentsList(){
+        this.moviments.clear();
+    }
 }

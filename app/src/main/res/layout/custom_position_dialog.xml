@@ -9,24 +9,26 @@
         android:id="@+id/coordX"
         android:layout_width="269dp"
         android:layout_height="wrap_content"
-        android:inputType="numberSigned|number"
+        android:inputType="numberSigned|numberDecimal"
         android:paddingBottom="15dp"
         android:hint="00.00"
         android:layout_alignParentTop="true"
+        android:digits="0123456789-."
         android:layout_alignStart="@+id/coordY"
-        android:maxLength="5"
+        android:maxLength="6"
         android:paddingLeft="7dp"/>
 
     <EditText
         android:id="@+id/coordY"
         android:layout_width="266dp"
         android:layout_height="wrap_content"
-        android:inputType="numberSigned|number"
+        android:inputType="numberSigned|numberDecimal"
         android:paddingTop="16dp"
         android:hint="00.00"
         android:layout_below="@+id/coordX"
         android:layout_toEndOf="@+id/tvContrP"
-        android:maxLength="5"
+        android:digits="0123456789-."
+        android:maxLength="6"
         android:paddingLeft="7dp"/>
 
     <TextView

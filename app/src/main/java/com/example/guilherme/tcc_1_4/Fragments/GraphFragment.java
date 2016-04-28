@@ -47,7 +47,7 @@ public class GraphFragment extends Fragment{
     private int mode = NONE;
     private int optionGraphic = 0;
     private boolean updateGraphicControl = true;
-    private DrawGraphic draw;
+    private static DrawGraphic draw;
 
     PointF firstFinger;
     float lastScrolling;
@@ -92,8 +92,6 @@ public class GraphFragment extends Fragment{
 
         View view = inflater.inflate(R.layout.graph_fragment_layout, container, false);
 
-        Log.i(Constants.TAG, "Criei a thread para desenhar");
-
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
                 new IntentFilter("data-event"));
 
@@ -113,13 +111,22 @@ public class GraphFragment extends Fragment{
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                Log.i(Constants.TAG, "VERIFICAR A THREAD: "+draw.getName()+" - "+draw.getId()+" - "+draw.isAlive());
                 optionGraphic = position;
                 init = 1;
-                if(moviments != null) Log.i(Constants.TAG, "ENTREI NA ESCOLHA -> TAMANHO DO VETOR DE POSIÇÕES: " + moviments.size());
+
+                if(SingletonConnection.getInstance().getMoviments() != null && SingletonConnection.getInstance().getMoviments().size() > 0)
+                    Log.i(Constants.TAG, "ENTREI NA ESCOLHA -> TAMANHO DO VETOR DE POSIÇÕES SINGLETON: " + SingletonConnection.getInstance().getMoviments().size());
+
+                //if (moviments != null)
+                  //  Log.i(Constants.TAG, "ENTREI NA ESCOLHA -> TAMANHO DO VETOR DE POSIÇÕES: " + moviments.size());
 
                 switch (optionGraphic) {
                     case 0:
-                        //scriptUpdatePlot();
+                        xyPlot.removeSeries(series);
+                        xyPlot.clear();
+
+                        scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("x (m)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 0.025);
@@ -133,7 +140,10 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 1:
-                        //scriptUpdatePlot();
+                        xyPlot.removeSeries(series);
+                        xyPlot.clear();
+
+                        scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -147,7 +157,10 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 2:
-                        //scriptUpdatePlot();
+                        xyPlot.removeSeries(series);
+                        xyPlot.clear();
+
+                        scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -161,7 +174,10 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 3:
-//                        scriptUpdatePlot();
+                        xyPlot.removeSeries(series);
+                        xyPlot.clear();
+
+                        scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -175,7 +191,10 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 4:
-  //                      scriptUpdatePlot();
+                        xyPlot.removeSeries(series);
+                        xyPlot.clear();
+
+                        scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -189,7 +208,10 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 5:
-//                        scriptUpdatePlot();
+                        xyPlot.removeSeries(series);
+                        xyPlot.clear();
+
+                        scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -203,7 +225,10 @@ public class GraphFragment extends Fragment{
                         break;
 
                     case 6:
-  //                      scriptUpdatePlot();
+                        xyPlot.removeSeries(series);
+                        xyPlot.clear();
+
+                        scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
                         xyPlot.setDomainStep(XYStepMode.INCREMENT_BY_VAL, 4.0);
@@ -242,14 +267,17 @@ public class GraphFragment extends Fragment{
 
         xyPlot.getGraphWidget().setDomainLabelOrientation(-45);
 
+        Log.i(Constants.TAG, "CRIEI A THREAD");
         draw = new DrawGraphic();
+        Log.i(Constants.TAG, "INICIEI A THREAD");
         draw.start();
 
         return view;
     }
 
     private void scriptUpdatePlot(){
-        if(moviments.size() == 0 || moviments == null) return;
+        if(SingletonConnection.getInstance().getMoviments().size() == 0 || SingletonConnection.getInstance().getMoviments() == null) return;
+        // if(moviments.size() == 0 || moviments == null) return;
         int tamVector;
 
         xyPlot.removeSeries(series);
@@ -258,7 +286,8 @@ public class GraphFragment extends Fragment{
         ALdataX.clear();
         ALdataY.clear();
 
-        tamVector = moviments.size();
+        tamVector = SingletonConnection.getInstance().getMoviments().size();
+        //tamVector = moviments.size();
         Log.i(Constants.TAG, "Size: "+tamVector);
 
         if(tamVector >= 1 && tamVector < 20) {
@@ -282,10 +311,10 @@ public class GraphFragment extends Fragment{
         //AdataY = new float[Constants.COUNT_POINTS];
         //getDataSource();
 
-        //bounderies = getBoundaries();
-        //Log.i(Constants.TAG, "BOUNDERIES: " + bounderies[0] + " - " + bounderies[1] + " - " + bounderies[2] + " - " + bounderies[3]);
-        //xyPlot.setDomainBoundaries(bounderies[0], bounderies[1], BoundaryMode.AUTO);
-        //xyPlot.setRangeBoundaries(bounderies[2], bounderies[3], BoundaryMode.AUTO);
+        bounderies = getBoundaries();
+        Log.i(Constants.TAG, "BOUNDERIES: " + bounderies[0] + " - " + bounderies[1] + " - " + bounderies[2] + " - " + bounderies[3]);
+        xyPlot.setDomainBoundaries(bounderies[0], bounderies[1], BoundaryMode.AUTO);
+        xyPlot.setRangeBoundaries(bounderies[2], bounderies[3], BoundaryMode.AUTO);
 
         switch (optionGraphic){
             case 0:
@@ -311,71 +340,71 @@ public class GraphFragment extends Fragment{
                 break;
         }
 
-        //xyPlot.addSeries(series, series1Format);
+        xyPlot.addSeries(series, series1Format);
 
-        /*for(int i=0; i< AdataX.length; i++){
+        for(int i=0; i< AdataX.length; i++){
             ALdataX.add(AdataX[i]);
             ALdataY.add(AdataY[i]);
 
             series.updateData(ALdataX, ALdataY);
             xyPlot.redraw();
-        }*/
+        }
         xyPlot.redraw();
     }
 
     private void getDataSource(){
-        if(moviments.size() <= 0) return;
+        if(SingletonConnection.getInstance().getMoviments().size() <= 0) return;
 
-        if(moviments.size() >= 1 && moviments.size() < 20){
+        if(SingletonConnection.getInstance().getMoviments().size() >= 1 && SingletonConnection.getInstance().getMoviments().size() < 20){
             Log.i(Constants.TAG, "Entrei no IF -> getDataSource()");
             switch (optionGraphic){
                 case 0:
-                    for(int i = 0; i < moviments.size(); i++){
-                        AdataX[i] = moviments.get(i).getX().floatValue();
-                        AdataY[i] = moviments.get(i).getY().floatValue();
+                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getX().floatValue();
+                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getY().floatValue();
                     }
                     break;
                 case 1:
-                    for(int i = 0; i < moviments.size(); i++){
-                        AdataX[i] = moviments.get(i).getT().floatValue();
-                        AdataY[i] = moviments.get(i).getX().floatValue();
+                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getX().floatValue();
                     }
                     break;
                 case 2:
-                    for(int i = 0; i < moviments.size(); i++){
-                        AdataX[i] = moviments.get(i).getT().floatValue();
-                        AdataY[i] = moviments.get(i).getY().floatValue();
+                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getY().floatValue();
                     }
                     break;
                 case 3:
-                    for(int i = 0; i < moviments.size(); i++){
-                        AdataX[i] = moviments.get(i).getT().floatValue();
-                        AdataY[i] = moviments.get(i).getTheta().floatValue();
+                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getTheta().floatValue();
                     }
                     break;
                 case 4:
-                    for(int i = 0; i < moviments.size(); i++){
-                        AdataX[i] = moviments.get(i).getT().floatValue();
-                        AdataY[i] = moviments.get(i).getV().floatValue();
+                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getV().floatValue();
                     }
                     break;
                 case 5:
-                    for(int i = 0; i < moviments.size(); i++){
-                        AdataX[i] = moviments.get(i).getT().floatValue();
-                        AdataY[i] = moviments.get(i).getW().floatValue();
+                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getW().floatValue();
                     }
                     break;
                 case 6:
-                    for(int i = 0; i < moviments.size(); i++){
-                        AdataX[i] = moviments.get(i).getT().floatValue();
-                        AdataY[i] = moviments.get(i).getE().floatValue();
+                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getE().floatValue();
                     }
                     break;
             }
         }else {
             Log.i(Constants.TAG, "Entrei no ELSE -> getDataSource()");
-            float high = moviments.get(moviments.size() - 1).getT();
-            float low = moviments.get(0).getT();
+            float high = SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT();
+            float low = SingletonConnection.getInstance().getMoviments().get(0).getT();
 
             double interval = (double) ((high - low + 1)/Constants.BUCKET_COUNT);
             ArrayList<Position> buckets[] = new ArrayList[Constants.BUCKET_COUNT];
@@ -384,10 +413,10 @@ public class GraphFragment extends Fragment{
                 buckets[i] =  new ArrayList<>();
             }
 
-            Log.i(Constants.TAG, "---> Moviments size: " + moviments.size());
-            for (int i = 0; i < moviments.size(); i++) {
-                Log.i(Constants.TAG, "-------> POSICIONAMENTO DO BUCKET: " +(int)((moviments.get(i).getT() - low)/interval));
-                buckets[(int)((moviments.get(i).getT() - low)/interval)].add(moviments.get(i));
+            Log.i(Constants.TAG, "---> Moviments size: " + SingletonConnection.getInstance().getMoviments().size());
+            for (int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                Log.i(Constants.TAG, "-------> POSICIONAMENTO DO BUCKET: " +(int)((SingletonConnection.getInstance().getMoviments().get(i).getT() - low)/interval));
+                buckets[(int)((SingletonConnection.getInstance().getMoviments().get(i).getT() - low)/interval)].add(SingletonConnection.getInstance().getMoviments().get(i));
             }
 
             fillFirsAndLastValue();
@@ -415,28 +444,28 @@ public class GraphFragment extends Fragment{
         Float minValueY;
         Float maxValueY;
 
-        if(moviments.size() > 0){
+        if(SingletonConnection.getInstance().getMoviments().size() > 0){
             switch (optionGraphic){
                 case 0:
-                    minValueX = (moviments.get(0).getX()).floatValue();
-                    maxValueX = (moviments.get(0).getX()).floatValue();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getX() < minValueX) {
-                            minValueX = (moviments.get(i).getX()).floatValue();
-                        } else if (moviments.get(i).getX() > maxValueX) {
-                            maxValueX = (moviments.get(i).getX()).floatValue();
+                    minValueX = (SingletonConnection.getInstance().getMoviments().get(0).getX()).floatValue();
+                    maxValueX = (SingletonConnection.getInstance().getMoviments().get(0).getX()).floatValue();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getX() < minValueX) {
+                            minValueX = (SingletonConnection.getInstance().getMoviments().get(i).getX()).floatValue();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getX() > maxValueX) {
+                            maxValueX = (SingletonConnection.getInstance().getMoviments().get(i).getX()).floatValue();
                         }
                     }
                     bound[0] = minValueX;
                     bound[1] = maxValueX;
 
-                    minValueY = (moviments.get(0).getY()).floatValue();
-                    maxValueY = (moviments.get(0).getY()).floatValue();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getY() < minValueY) {
-                            minValueY = (moviments.get(i).getY()).floatValue();
-                        } else if (moviments.get(i).getY() > maxValueY) {
-                            maxValueY = (moviments.get(i).getY()).floatValue();
+                    minValueY = (SingletonConnection.getInstance().getMoviments().get(0).getY()).floatValue();
+                    maxValueY = (SingletonConnection.getInstance().getMoviments().get(0).getY()).floatValue();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getY() < minValueY) {
+                            minValueY = (SingletonConnection.getInstance().getMoviments().get(i).getY()).floatValue();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getY() > maxValueY) {
+                            maxValueY = (SingletonConnection.getInstance().getMoviments().get(i).getY()).floatValue();
                         }
                     }
                     bound[2] = minValueY;
@@ -445,25 +474,25 @@ public class GraphFragment extends Fragment{
                     break;
 
                 case 1:
-                    minValueX = moviments.get(0).getT();
-                    maxValueX = moviments.get(0).getT();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getT() < minValueX) {
-                            minValueX = moviments.get(i).getT();
-                        } else if (moviments.get(i).getT() > maxValueX) {
-                            maxValueX = moviments.get(i).getT();
+                    minValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    maxValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getT() < minValueX) {
+                            minValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getT() > maxValueX) {
+                            maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
                     bound[0] = minValueX;
                     bound[1] = maxValueX;
 
-                    minValueY = moviments.get(0).getX().floatValue();
-                    maxValueY = moviments.get(0).getX().floatValue();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getX() < minValueY) {
-                            minValueY = moviments.get(i).getX().floatValue();
-                        } else if (moviments.get(i).getX() > maxValueY) {
-                            maxValueY = moviments.get(i).getX().floatValue();
+                    minValueY = SingletonConnection.getInstance().getMoviments().get(0).getX().floatValue();
+                    maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getX().floatValue();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getX() < minValueY) {
+                            minValueY = SingletonConnection.getInstance().getMoviments().get(i).getX().floatValue();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getX() > maxValueY) {
+                            maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getX().floatValue();
                         }
                     }
                     bound[2] = minValueY;
@@ -471,25 +500,25 @@ public class GraphFragment extends Fragment{
 
                     break;
                 case 2:
-                    minValueX = moviments.get(0).getT();
-                    maxValueX = moviments.get(0).getT();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getT() < minValueX) {
-                            minValueY = moviments.get(i).getT();
-                        } else if (moviments.get(i).getT() > maxValueX) {
-                            maxValueY = moviments.get(i).getT();
+                    minValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    maxValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getT() < minValueX) {
+                            minValueY = SingletonConnection.getInstance().getMoviments().get(i).getT();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getT() > maxValueX) {
+                            maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
                     bound[0] = minValueX;
                     bound[1] = maxValueX;
 
-                    minValueY = moviments.get(0).getY().floatValue();
-                    maxValueY = moviments.get(0).getY().floatValue();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getY() < minValueY) {
-                            minValueY = moviments.get(i).getY().floatValue();
-                        } else if (moviments.get(i).getY() > maxValueY) {
-                            maxValueY = moviments.get(i).getY().floatValue();
+                    minValueY = SingletonConnection.getInstance().getMoviments().get(0).getY().floatValue();
+                    maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getY().floatValue();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getY() < minValueY) {
+                            minValueY = SingletonConnection.getInstance().getMoviments().get(i).getY().floatValue();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getY() > maxValueY) {
+                            maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getY().floatValue();
                         }
                     }
                     bound[2] = minValueY;
@@ -497,25 +526,25 @@ public class GraphFragment extends Fragment{
 
                     break;
                 case 3:
-                    minValueX = moviments.get(0).getT();
-                    maxValueX = moviments.get(0).getT();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getT() < minValueX) {
-                            minValueX = moviments.get(i).getT();
-                        } else if (moviments.get(i).getT() > maxValueX) {
-                            maxValueX = moviments.get(i).getT();
+                    minValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    maxValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getT() < minValueX) {
+                            minValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getT() > maxValueX) {
+                            maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
                     bound[0] = minValueX;
                     bound[1] = maxValueX;
 
-                    minValueY = moviments.get(0).getTheta().floatValue();
-                    maxValueY = moviments.get(0).getTheta().floatValue();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getTheta() < minValueY) {
-                            minValueY = moviments.get(i).getTheta().floatValue();
-                        } else if (moviments.get(i).getTheta() > maxValueY) {
-                            maxValueY = moviments.get(i).getTheta().floatValue();
+                    minValueY = SingletonConnection.getInstance().getMoviments().get(0).getTheta().floatValue();
+                    maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getTheta().floatValue();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getTheta() < minValueY) {
+                            minValueY = SingletonConnection.getInstance().getMoviments().get(i).getTheta().floatValue();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getTheta() > maxValueY) {
+                            maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getTheta().floatValue();
                         }
                     }
                     bound[2] = minValueY;
@@ -523,25 +552,25 @@ public class GraphFragment extends Fragment{
 
                     break;
                 case 4:
-                    minValueX = moviments.get(0).getT();
-                    maxValueX = moviments.get(0).getT();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getT() < minValueX) {
-                            minValueX = moviments.get(i).getT();
-                        } else if (moviments.get(i).getT() > maxValueX) {
-                            maxValueX = moviments.get(i).getT();
+                    minValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    maxValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getT() < minValueX) {
+                            minValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getT() > maxValueX) {
+                            maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
                     bound[0] = minValueX;
                     bound[1] = maxValueX;
 
-                    minValueY = moviments.get(0).getV().floatValue();
-                    maxValueY = moviments.get(0).getV().floatValue();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getV() < minValueY) {
-                            minValueY = moviments.get(i).getV().floatValue();
-                        } else if (moviments.get(i).getV() > maxValueY) {
-                            maxValueY = moviments.get(i).getV().floatValue();
+                    minValueY = SingletonConnection.getInstance().getMoviments().get(0).getV().floatValue();
+                    maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getV().floatValue();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getV() < minValueY) {
+                            minValueY = SingletonConnection.getInstance().getMoviments().get(i).getV().floatValue();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getV() > maxValueY) {
+                            maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getV().floatValue();
                         }
                     }
                     bound[2] = minValueY;
@@ -549,25 +578,25 @@ public class GraphFragment extends Fragment{
 
                     break;
                 case 5:
-                    minValueX = moviments.get(0).getT();
-                    maxValueX = moviments.get(0).getT();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getT() < minValueX) {
-                            minValueX = moviments.get(i).getT();
-                        } else if (moviments.get(i).getT() > maxValueX) {
-                            maxValueX = moviments.get(i).getT();
+                    minValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    maxValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getT() < minValueX) {
+                            minValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getT() > maxValueX) {
+                            maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
                     bound[0] = minValueX;
                     bound[1] = maxValueX;
 
-                    minValueY = moviments.get(0).getW().floatValue();
-                    maxValueY = moviments.get(0).getW().floatValue();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getW() < minValueY) {
-                            minValueY = moviments.get(i).getW().floatValue();
-                        } else if (moviments.get(i).getW() > maxValueY) {
-                            maxValueY = moviments.get(i).getW().floatValue();
+                    minValueY = SingletonConnection.getInstance().getMoviments().get(0).getW().floatValue();
+                    maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getW().floatValue();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getW() < minValueY) {
+                            minValueY = SingletonConnection.getInstance().getMoviments().get(i).getW().floatValue();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getW() > maxValueY) {
+                            maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getW().floatValue();
                         }
                     }
                     bound[2] = minValueY;
@@ -575,25 +604,25 @@ public class GraphFragment extends Fragment{
 
                     break;
                 case 6:
-                    minValueX = moviments.get(0).getT();
-                    maxValueX = moviments.get(0).getT();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getT() < minValueX) {
-                            minValueX = moviments.get(i).getT();
-                        } else if (moviments.get(i).getT() > maxValueX) {
-                            maxValueX = moviments.get(i).getT();
+                    minValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    maxValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getT() < minValueX) {
+                            minValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getT() > maxValueX) {
+                            maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
                     bound[0] = minValueX;
                     bound[1] = maxValueX;
 
-                    minValueY = moviments.get(0).getE().floatValue();
-                    maxValueY = moviments.get(0).getE().floatValue();
-                    for (int i = 1; i < moviments.size(); i++) {
-                        if (moviments.get(i).getE() < minValueY) {
-                            minValueY = moviments.get(i).getE().floatValue();
-                        } else if (moviments.get(i).getE() > maxValueY) {
-                            maxValueY = moviments.get(i).getE().floatValue();
+                    minValueY = SingletonConnection.getInstance().getMoviments().get(0).getE().floatValue();
+                    maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getE().floatValue();
+                    for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                        if (SingletonConnection.getInstance().getMoviments().get(i).getE() < minValueY) {
+                            minValueY = SingletonConnection.getInstance().getMoviments().get(i).getE().floatValue();
+                        } else if (SingletonConnection.getInstance().getMoviments().get(i).getE() > maxValueY) {
+                            maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getE().floatValue();
                         }
                     }
                     bound[2] = minValueY;
@@ -612,74 +641,74 @@ public class GraphFragment extends Fragment{
     }
 
     private void fillFirsAndLastValue() {
-        Log.i(Constants.TAG, "Primeiro e ultimo");
-        Log.i(Constants.TAG, "x: "+moviments.get(0).getX());
-        Log.i(Constants.TAG, "lx: "+moviments.get(moviments.size() - 1).getX());
+        /*Log.i(Constants.TAG, "Primeiro e ultimo");
+        Log.i(Constants.TAG, "x: "+SingletonConnection.getInstance().getMoviments().get(0).getX());
+        Log.i(Constants.TAG, "lx: "+SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getX());
 
-        Log.i(Constants.TAG, "y: "+moviments.get(0).getY());
+        Log.i(Constants.TAG, "y: "+SingletonConnection.getInstance().getMoviments().get(0).getY());
         Log.i(Constants.TAG, "ly: "+moviments.get(moviments.size() - 1).getY());
 
         Log.i(Constants.TAG, "theta: "+moviments.get(0).getTheta());
         Log.i(Constants.TAG, "ltheta: "+moviments.get(moviments.size() - 1).getTheta());
 
         Log.i(Constants.TAG, "t: "+moviments.get(0).getT());
-        Log.i(Constants.TAG, "lt: "+moviments.get(moviments.size() - 1).getT());
+        Log.i(Constants.TAG, "lt: "+moviments.get(moviments.size() - 1).getT());*/
 
         switch (optionGraphic){
             case 0:
-                AdataX[0] = (moviments.get(0).getX().floatValue());
-                AdataY[0] = (moviments.get(0).getY().floatValue());
+                AdataX[0] = (SingletonConnection.getInstance().getMoviments().get(0).getX().floatValue());
+                AdataY[0] = (SingletonConnection.getInstance().getMoviments().get(0).getY().floatValue());
 
-                AdataX[19] = (moviments.get(moviments.size() - 1).getX().floatValue());
-                AdataY[19] = (moviments.get(moviments.size() - 1).getY().floatValue());
+                AdataX[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getX().floatValue());
+                AdataY[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getY().floatValue());
                 break;
 
             case 1:
-                AdataX[0] = (moviments.get(0).getT().floatValue());
-                AdataY[0] = (moviments.get(0).getX().floatValue());
+                AdataX[0] = (SingletonConnection.getInstance().getMoviments().get(0).getT().floatValue());
+                AdataY[0] = (SingletonConnection.getInstance().getMoviments().get(0).getX().floatValue());
 
-                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
-                AdataY[19] = (moviments.get(moviments.size() - 1).getX().floatValue());
+                AdataX[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT().floatValue());
+                AdataY[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getX().floatValue());
                 break;
 
             case 2:
-                AdataX[0] = (moviments.get(0).getT().floatValue());
-                AdataY[0] = (moviments.get(0).getY().floatValue());
+                AdataX[0] = (SingletonConnection.getInstance().getMoviments().get(0).getT().floatValue());
+                AdataY[0] = (SingletonConnection.getInstance().getMoviments().get(0).getY().floatValue());
 
-                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
-                AdataY[19] = (moviments.get(moviments.size() - 1).getY().floatValue());
+                AdataX[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT().floatValue());
+                AdataY[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getY().floatValue());
                 break;
 
             case 3:
-                AdataX[0] = (moviments.get(0).getT().floatValue());
-                AdataY[0] = (moviments.get(0).getTheta().floatValue());
+                AdataX[0] = (SingletonConnection.getInstance().getMoviments().get(0).getT().floatValue());
+                AdataY[0] = (SingletonConnection.getInstance().getMoviments().get(0).getTheta().floatValue());
 
-                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
-                AdataY[19] = (moviments.get(moviments.size() - 1).getTheta().floatValue());
+                AdataX[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT().floatValue());
+                AdataY[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getTheta().floatValue());
                 break;
 
             case 4:
-                AdataX[0] = (moviments.get(0).getT().floatValue());
-                AdataY[0] = (moviments.get(0).getV().floatValue());
+                AdataX[0] = (SingletonConnection.getInstance().getMoviments().get(0).getT().floatValue());
+                AdataY[0] = (SingletonConnection.getInstance().getMoviments().get(0).getV().floatValue());
 
-                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
-                AdataY[19] = (moviments.get(moviments.size() - 1).getV().floatValue());
+                AdataX[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT().floatValue());
+                AdataY[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getV().floatValue());
                 break;
 
             case 5:
-                AdataX[0] = (moviments.get(0).getT().floatValue());
-                AdataY[0] = (moviments.get(0).getW().floatValue());
+                AdataX[0] = (SingletonConnection.getInstance().getMoviments().get(0).getT().floatValue());
+                AdataY[0] = (SingletonConnection.getInstance().getMoviments().get(0).getW().floatValue());
 
-                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
-                AdataY[19] = (moviments.get(moviments.size() - 1).getW().floatValue());
+                AdataX[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT().floatValue());
+                AdataY[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getW().floatValue());
                 break;
 
             case 6:
-                AdataX[0] = (moviments.get(0).getT().floatValue());
-                AdataY[0] = (moviments.get(0).getE().floatValue());
+                AdataX[0] = (SingletonConnection.getInstance().getMoviments().get(0).getT().floatValue());
+                AdataY[0] = (SingletonConnection.getInstance().getMoviments().get(0).getE().floatValue());
 
-                AdataX[19] = (moviments.get(moviments.size() - 1).getT().floatValue());
-                AdataY[19] = (moviments.get(moviments.size() - 1).getE().floatValue());
+                AdataX[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT().floatValue());
+                AdataY[19] = (SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getE().floatValue());
                 break;
         }
     }
@@ -1172,10 +1201,10 @@ public class GraphFragment extends Fragment{
         public void run(){
             while(updateGraphicControl){
                 try {
-                    //Log.i(Constants.TAG, "Antes sleep 10s -> "+System.currentTimeMillis());
+                    Log.i(Constants.TAG, "Antes sleep 10s -> "+System.currentTimeMillis());
                     Thread.sleep(2500);
                     //scriptUpdatePlot();
-                    //Log.i(Constants.TAG, "Depois sleep 10s -> "+System.currentTimeMillis());
+                    Log.i(Constants.TAG, "Depois sleep 10s -> "+System.currentTimeMillis());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

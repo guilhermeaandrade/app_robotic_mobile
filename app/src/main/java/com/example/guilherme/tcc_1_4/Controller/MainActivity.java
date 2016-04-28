@@ -17,6 +17,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.transition.Explode;
 import android.transition.Fade;
 import android.util.Log;
@@ -116,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String address;
     private ConnectThread connectDeviceThread;
+    private boolean isConnected;
     private Double controlPValue;
     private Double controlIValue;
     private Double xValue, yValue;
@@ -171,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(Constants.TAG, "Entrei no onCreate() MainActivity");
 
         SingletonInformation.getInstance();
-
+        isConnected = false;
         device = null;
         it = new Intent(this, SelectDevice.class);
 
@@ -569,19 +571,23 @@ public class MainActivity extends AppCompatActivity {
                                 navigationDrawerLeft.getAdapter().notifyDataSetChanged();
 
                                 if (device != null) {
-                                    if (optionControl == 1 || optionControl == 2) {
+                                    if (isConnected) {
+                                        if (optionControl == 1 || optionControl == 2) {
 
-                                        Intent i = new Intent(MainActivity.this, ProcessActivity.class);
-                                        Bundle bundle = new Bundle();
+                                            Intent i = new Intent(MainActivity.this, ProcessActivity.class);
+                                            Bundle bundle = new Bundle();
 
-                                        bundle.putParcelable("device", device);
+                                            bundle.putParcelable("device", device);
+                                            SingletonConnection.getInstance().setMoviments(listOfPositions);
+                                            i.putExtras(bundle);
+                                            startActivity(i);
+                                            actionMenu.close(true);
 
-                                        i.putExtras(bundle);
-                                        startActivity(i);
-                                        actionMenu.close(true);
-
+                                        } else {
+                                            Toast.makeText(MainActivity.this, "Nenhuma ação realizada para iniciar essa atividade.", Toast.LENGTH_LONG).show();
+                                        }
                                     } else {
-                                        Toast.makeText(MainActivity.this, "Nenhuma ação realizada para iniciar essa atividade.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MainActivity.this, "Conexão não foi estabelecida com sucesso.", Toast.LENGTH_LONG).show();
                                     }
                                 } else {
                                     Toast.makeText(MainActivity.this, "Conecte-se a um dispositivo para iniciar essa atividade.", Toast.LENGTH_LONG).show();
@@ -723,10 +729,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         edtPosX = (EditText) dialogView.findViewById(R.id.coordX);
-        edtPosX.addTextChangedListener(Mask.insert("##.##", edtPosX));
+        edtPosX.addTextChangedListener(Mask.insert("###.##", edtPosX));
+        edtPosX.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
 
         edtPosY = (EditText) dialogView.findViewById(R.id.coordY);
-        edtPosY.addTextChangedListener(Mask.insert("##.##", edtPosY));
+        edtPosY.addTextChangedListener(Mask.insert("###.##", edtPosY));
+        edtPosY.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
 
         dialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
 
@@ -852,6 +860,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        isConnected = false;
                         finalizeConnection();
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -877,6 +886,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        isConnected = false;
                         finalizeConnection();
                         finish();
                     }
@@ -904,6 +914,22 @@ public class MainActivity extends AppCompatActivity {
         if (adaptador.isEnabled()) {
             adaptador.disable();
         }
+
+        SingletonInformation.getInstance().setxValueInitial(Constants.X);
+        SingletonInformation.getInstance().setyValueInitial(Constants.Y);
+        SingletonInformation.getInstance().setxValueAlvo(Constants.X);
+        SingletonInformation.getInstance().setyValueAlvo(Constants.Y);
+        SingletonInformation.getInstance().setControlIValue(Constants.KI_INITIAL);
+        SingletonInformation.getInstance().setControlPValue(Constants.KP_INITIAL);
+
+        edtXInicial.setText(String.valueOf(SingletonInformation.getInstance().getxValueInitial()));
+        edtYInicial.setText(String.valueOf(SingletonInformation.getInstance().getyValueInitial()));
+        edtXAlvo.setText(String.valueOf(SingletonInformation.getInstance().getxValueAlvo()));
+        edtYAlvo.setText(String.valueOf(SingletonInformation.getInstance().getyValueAlvo()));
+        edtControladorP.setText(String.valueOf(SingletonInformation.getInstance().getControlPValue()));
+        edtControladorI.setText(String.valueOf(SingletonInformation.getInstance().getControlIValue()));
+
+        SingletonConnection.getInstance().clearMovimentsList();
 
         try {
             if(socket != null) socket.close();
@@ -1028,6 +1054,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void enableChoiceControl(){
+        Log.i(Constants.TAG, "Entrei no enableChoiceControl()");
         tvControllerP.setTextColor(getResources().getColor(R.color.black));
         tvControllerI.setTextColor(getResources().getColor(R.color.black));
         tvPosicaoAlvo.setTextColor(getResources().getColor(R.color.black));
@@ -1094,6 +1121,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 socket.connect();
                 SingletonConnection.getInstance().setSocket(socket);
+                new ReceiveThread().start();
             }catch (IOException e){
                 e.printStackTrace();
             }
@@ -1131,8 +1159,15 @@ public class MainActivity extends AppCompatActivity {
                             }
                             Log.i("TAG", "-----> bytes: "+bytes);
                             String readMessage = new String(buffer, 0, bytes);
-                            if(readMessage.contains(Constants.FIM_TRANSFER)) break;
                             Log.i("TAG", "-----> readMessage: " + readMessage);
+                            if(readMessage.contains(Constants.FIM_TRANSFER)) break;
+                            /*if(readMessage.contains(Constants.CONNECTED)){
+                                Log.i(Constants.TAG, "Entrei no if de connected ---> antes: "+isConnected);
+                                isConnected = true;
+                                //enableChoiceControl();
+                                Log.i(Constants.TAG, "Entrei no if de connected ---> depois: "+isConnected);
+                                break;
+                            }*/
                             splitMessage(readMessage);
                             bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
                         }
@@ -1235,31 +1270,45 @@ public class MainActivity extends AppCompatActivity {
 
     private void splitMessage(String readMessage){
         String[] splits = readMessage.split(",");
-        Log.i("TAG", "splitMessage: "+splits.length);
+        Log.i("TAG", "splitMessage: " + splits.length);
         for(int i = 0; i < splits.length; i++){
             Log.i("TAG", "splitMessage: "+splits[i]);
         }
         Log.d(Constants.TAG, "Broadcasting message");
-        try {
-            Position position = new Position(
-                    Double.parseDouble(splits[0]),
-                    Double.parseDouble(splits[1]),
-                    Double.parseDouble(splits[2]),
-                    Double.parseDouble(splits[3]),
-                    Double.parseDouble(splits[4]),
-                    Double.parseDouble(splits[5]),
-                    Float.parseFloat(splits[6]),
-                    Integer.parseInt(splits[7]));
-            listOfPositions.add(position);
+        if(readMessage.contains(Constants.CONNECTED)) {
+            Log.i(Constants.TAG, "Entrei no if de connected ---> antes: "+isConnected);
+            isConnected = true;
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "Conexão estabelecida com sucesso!\nEsolha o controle desejado.", Toast.LENGTH_LONG).show();
+                    enableChoiceControl();
+                    actionMenu.showMenuButton(true);
+                }
+            });
+            Log.i(Constants.TAG, "Entrei no if de connected ---> depois: "+isConnected);
+        }else {
+            try {
+                Position position = new Position(
+                        Double.parseDouble(splits[0]),
+                        Double.parseDouble(splits[1]),
+                        Double.parseDouble(splits[2]),
+                        Double.parseDouble(splits[3]),
+                        Double.parseDouble(splits[4]),
+                        Double.parseDouble(splits[5]),
+                        Float.parseFloat(splits[6]),
+                        Integer.parseInt(splits[7]));
+                listOfPositions.add(position);
 
-            Intent intent = new Intent("data-event");
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList("moviments", (ArrayList<? extends Parcelable>) listOfPositions);
-            intent.putExtras(bundle);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+                Intent intent = new Intent("data-event");
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("moviments", (ArrayList<? extends Parcelable>) listOfPositions);
+                intent.putExtras(bundle);
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 
-        }catch (NumberFormatException ex){
-            Log.e(Constants.TAG, ex.getMessage().toString());
+            }catch (NumberFormatException ex){
+                Log.e(Constants.TAG, ex.getMessage().toString());
+            }
         }
     }
 
@@ -1284,7 +1333,6 @@ public class MainActivity extends AppCompatActivity {
         edtYAlvo.setText(String.valueOf(SingletonInformation.getInstance().getyValueAlvo()));
         edtControladorP.setText(String.valueOf(SingletonInformation.getInstance().getControlPValue()));
         edtControladorI.setText(String.valueOf(SingletonInformation.getInstance().getControlIValue()));
-
     }
 
     @Override
@@ -1315,10 +1363,10 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == TELA2){
             if(data == null) return;
 
-            Toast.makeText(this, "Esolha o controle desejado.", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Esolha o controle desejado.", Toast.LENGTH_LONG).show();
 
-            actionMenu.showMenuButton(true);
-            enableChoiceControl();
+            //actionMenu.showMenuButton(true);
+            //enableChoiceControl();
 
             address = data.getExtras().getString("msg");
 
@@ -1327,6 +1375,13 @@ public class MainActivity extends AppCompatActivity {
 
             connectDeviceThread = new ConnectThread(device);
             connectDeviceThread.start();
+            if(isConnected) {
+                Log.i(Constants.TAG, "DEPOIS DA THREAD CONNECTTHREAD -> connected");
+                enableChoiceControl();
+            }else{
+                Log.i(Constants.TAG, "DEPOIS DA THREAD CONNECTTHREAD -> not connected");
+            }
+
         }
 
         if(requestCode == REQUEST_ENABLE_BT){
