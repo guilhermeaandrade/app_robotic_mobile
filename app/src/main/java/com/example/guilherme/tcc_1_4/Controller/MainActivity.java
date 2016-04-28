@@ -2,6 +2,7 @@ package com.example.guilherme.tcc_1_4.Controller;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -11,7 +12,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -170,8 +170,6 @@ public class MainActivity extends AppCompatActivity {
 
         init(savedInstanceState);
 
-        Log.i(Constants.TAG, "Entrei no onCreate() MainActivity");
-
         SingletonInformation.getInstance();
         isConnected = false;
         device = null;
@@ -189,12 +187,6 @@ public class MainActivity extends AppCompatActivity {
     //##############################################################################################################################
 
     private void initVariables(){
-        Log.i(Constants.TAG, "Entrei no initVariables");
-        Log.i(Constants.TAG, "Controlador i: "+SingletonInformation.getInstance().getControlIValue());
-        Log.i(Constants.TAG, "Controlador p: "+SingletonInformation.getInstance().getControlPValue());
-        Log.i(Constants.TAG, "INICIAL: (" + SingletonInformation.getInstance().getxValueInitial() + "," + SingletonInformation.getInstance().getyValueInitial());
-        Log.i(Constants.TAG, "ALVO: ("+SingletonInformation.getInstance().getxValueAlvo()+","+SingletonInformation.getInstance().getyValueAlvo());
-
         tvTypeController = (TextView) findViewById(R.id.tvControle);
         tvPosicaoInicial = (TextView) findViewById(R.id.tvPosInicial);
         tvXPosInicial= (TextView) findViewById(R.id.tvXInicial);
@@ -313,7 +305,6 @@ public class MainActivity extends AppCompatActivity {
                             if (pressedUp == false) {
                                 pressedUp = true;
                                 new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_BWD, Double.valueOf(velocidade)).start();
-
                             }
                             break;
                         case MotionEvent.ACTION_UP:
@@ -510,7 +501,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public boolean onProfileChanged(View view, IProfile iProfile, boolean b) {
-                        Toast.makeText(MainActivity.this, "onProfileChanged", Toast.LENGTH_SHORT).show();
                         headerNavigationLeft.setBackgroundRes(R.drawable.robo);
                         navigationDrawerLeft.getAdapter().notifyDataSetChanged();
                         return true;
@@ -532,8 +522,6 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public boolean onNavigationClickListener(View view) {
-                        Toast.makeText(MainActivity.this, "onNavigationClickListener: " + mPositionClicked, Toast.LENGTH_SHORT).show();
-
                         return false;
                     }
                 })
@@ -561,11 +549,9 @@ public class MainActivity extends AppCompatActivity {
 
                         mPositionClicked = position;
                         navigationDrawerLeft.setStatusBarColor(getResources().getColor(R.color.colorBackgroundNavigation));
-                        navigationDrawerLeft.getAdapter().notifyDataSetChanged(); //Responsavel pela alteração
-
+                        navigationDrawerLeft.getAdapter().notifyDataSetChanged();
 
                         mItemDrawerSelected = position;
-                        Fragment frag = null;
 
                         switch (mItemDrawerSelected) {
                             case 0:
@@ -594,7 +580,6 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(MainActivity.this, "Conecte-se a um dispositivo para iniciar essa atividade.", Toast.LENGTH_LONG).show();
                                 }
-
                                 break;
                             case 2:
                                 headerNavigationLeft.setBackgroundRes(R.drawable.robo);
@@ -606,7 +591,6 @@ public class MainActivity extends AppCompatActivity {
                                 navigationDrawerLeft.getAdapter().notifyDataSetChanged();
 
                                 break;
-
                         }
                     }
                 }).withOnDrawerItemLongClickListener(new Drawer.OnDrawerItemLongClickListener() {
@@ -702,7 +686,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                //DO NOTHING
             }
         });
 
@@ -785,65 +769,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (option) {
-                    case 1:
-                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_INITIAL, (Constants.X/100), (Constants.Y/100)).start();
-                        break;
-                    case 2:
-                        new SendInformationsThread(Constants.C_SETTINGS, Constants.I_POS_FINAL, (Constants.X/100), (Constants.Y/100)).start();
-                        break;
-                }
-            }
-        });
-
-        final AlertDialog b = dialogBuilder.create();
-        b.setCancelable(false);
-        b.show();
-    }
-
-    private void showControlDialog(){
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setTitle("Escolha o tipo de controle: ")
-                .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                option = 1;
-                                break;
-                            case 1:
-                                option = 2;
-                                break;
-                        }
-                    }
-                }).setPositiveButton("OK", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (option != -1) {
-                    if (option == 1) {
-
-                        disableAllButtons();
-                        if (device != null) {
-                            sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
-                        }
-
-                        new SendThread(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
-                        new ReceiveThread().start();
-
-                    } else if (option == 2) {
-
-                        enableAllButtons();
-                        new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, 0d).start();
-                        new ReceiveThread().start();
-                    }
-                }
-            }
-        }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                disableAllButtons();
+                //DO NOTHING
             }
         });
 
@@ -941,30 +867,16 @@ public class MainActivity extends AppCompatActivity {
             output = null;
             socket = null;
 
+            SingletonConnection.getInstance().setDevice(null);
+            SingletonConnection.getInstance().setInput(null);
+            SingletonConnection.getInstance().setOutput(null);
+            SingletonConnection.getInstance().setSocket(null);
+
         } catch(IOException e) {
             Log.e(Constants.TAG, e.getMessage().toString());
         }
 
-        device = null;
         actionMenu.hideMenuButton(true);
-    }
-
-    private void enableAllButtons(){
-        btBackward.setEnabled(true);
-        btForward.setEnabled(true);
-        btLeft.setEnabled(true);
-        btRight.setEnabled(true);
-        sbVelocidade.setEnabled(true);
-        if(device != null) btSelectType.setEnabled(true);
-    }
-
-    private void disableAllButtons(){
-        btBackward.setEnabled(false);
-        btForward.setEnabled(false);
-        btLeft.setEnabled(false);
-        btRight.setEnabled(false);
-        sbVelocidade.setEnabled(false);
-        if(device == null) btSelectType.setEnabled(false);
     }
 
     private void enableAllComponents(){
@@ -1056,7 +968,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void enableChoiceControl(){
-        Log.i(Constants.TAG, "Entrei no enableChoiceControl()");
         tvControllerP.setTextColor(getResources().getColor(R.color.black));
         tvControllerI.setTextColor(getResources().getColor(R.color.black));
         tvPosicaoAlvo.setTextColor(getResources().getColor(R.color.black));
@@ -1123,7 +1034,9 @@ public class MainActivity extends AppCompatActivity {
             try {
                 socket.connect();
                 SingletonConnection.getInstance().setSocket(socket);
+
                 new ReceiveThread().start();
+
             }catch (IOException e){
                 e.printStackTrace();
             }
@@ -1159,17 +1072,8 @@ public class MainActivity extends AppCompatActivity {
                             }catch (IOException e){
                                 break;
                             }
-                            Log.i("TAG", "-----> bytes: "+bytes);
                             String readMessage = new String(buffer, 0, bytes);
-                            Log.i("TAG", "-----> readMessage: " + readMessage);
                             if(readMessage.contains(Constants.FIM_TRANSFER)) break;
-                            /*if(readMessage.contains(Constants.CONNECTED)){
-                                Log.i(Constants.TAG, "Entrei no if de connected ---> antes: "+isConnected);
-                                isConnected = true;
-                                //enableChoiceControl();
-                                Log.i(Constants.TAG, "Entrei no if de connected ---> depois: "+isConnected);
-                                break;
-                            }*/
                             splitMessage(readMessage);
                             bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
                         }
@@ -1245,8 +1149,6 @@ public class MainActivity extends AppCompatActivity {
                     SingletonConnection.getInstance().setOutput(output);
                     sendSemaphore.acquire();
 
-                    Log.i(Constants.TAG, "ENVIANDO OPTIONCONTROL = "+optionControl);
-
                     if(socket.isConnected()){
                         if(comando != null) output.writeChar(comando);
                         if(identificador != null && value != null) {
@@ -1258,9 +1160,7 @@ public class MainActivity extends AppCompatActivity {
 
                     sendSemaphore.release();
                 }
-            }catch (Exception erro){
-
-            }
+            }catch (Exception erro){}
         }
 
         public void cancel() {
@@ -1272,14 +1172,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void splitMessage(String readMessage){
         String[] splits = readMessage.split(",");
-        Log.i("TAG", "splitMessage: " + splits.length);
-        for(int i = 0; i < splits.length; i++){
-            Log.i("TAG", "splitMessage: "+splits[i]);
-        }
-        Log.d(Constants.TAG, "Broadcasting message");
+
         if(readMessage.contains(Constants.CONNECTED)) {
-            Log.i(Constants.TAG, "Entrei no if de connected ---> antes: "+isConnected);
             isConnected = true;
+
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -1288,7 +1184,6 @@ public class MainActivity extends AppCompatActivity {
                     actionMenu.showMenuButton(true);
                 }
             });
-            Log.i(Constants.TAG, "Entrei no if de connected ---> depois: "+isConnected);
         }else {
             try {
                 Position position = new Position(
@@ -1365,25 +1260,12 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == TELA2){
             if(data == null) return;
 
-            //Toast.makeText(this, "Esolha o controle desejado.", Toast.LENGTH_LONG).show();
-
-            //actionMenu.showMenuButton(true);
-            //enableChoiceControl();
-
             address = data.getExtras().getString("msg");
-
             device = adaptador.getRemoteDevice(address);
             SingletonConnection.getInstance().setDevice(device);
 
             connectDeviceThread = new ConnectThread(device);
             connectDeviceThread.start();
-            if(isConnected) {
-                Log.i(Constants.TAG, "DEPOIS DA THREAD CONNECTTHREAD -> connected");
-                enableChoiceControl();
-            }else{
-                Log.i(Constants.TAG, "DEPOIS DA THREAD CONNECTTHREAD -> not connected");
-            }
-
         }
 
         if(requestCode == REQUEST_ENABLE_BT){

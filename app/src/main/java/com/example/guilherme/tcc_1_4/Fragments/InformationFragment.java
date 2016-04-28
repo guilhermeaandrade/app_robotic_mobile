@@ -88,11 +88,6 @@ public class InformationFragment extends Fragment {
 
         mDevice = this.getArguments().getParcelable("device");
 
-        Log.i(Constants.TAG, "Device: "+ SingletonConnection.getInstance().getDevice().getName()+"-"+ SingletonConnection.getInstance().getDevice().getAddress());
-        Log.i(Constants.TAG, "Socket: "+ SingletonConnection.getInstance().getSocket().getRemoteDevice().getAddress());
-        Log.i(Constants.TAG, "DataOutputStream: "+ SingletonConnection.getInstance().getOutput().toString());
-        Log.i(Constants.TAG, "DataInputStream: "+ SingletonConnection.getInstance().getInput().toString());
-
         init(view);
 
         return view;
@@ -425,20 +420,6 @@ public class InformationFragment extends Fragment {
         value = value * factor;
         long tmp = Math.round(value);
         return (double) tmp / factor;
-    }
-
-    public void launchRingDialog() {
-        final ProgressDialog ringProgressDialog = ProgressDialog.show(getActivity(), "Please wait ...", "Gerando as informações necessárias", true);
-        ringProgressDialog.setCancelable(true);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(2000);
-                } catch (Exception e) {}
-                ringProgressDialog.dismiss();
-            }
-        }).start();
     }
 
     @Override

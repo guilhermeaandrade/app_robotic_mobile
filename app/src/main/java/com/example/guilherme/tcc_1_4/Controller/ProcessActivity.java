@@ -30,17 +30,14 @@ public class ProcessActivity extends AppCompatActivity{
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
     private static List<Position> moviments;
-    private static SharedPreference sharedP;
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d(Constants.TAG, "onReceiveMethod -> ProcessActivity");
             Bundle bundle = intent.getExtras();
             if(!bundle.isEmpty()){
                 moviments = bundle.getParcelableArrayList("moviments");
             }
-            Log.d(Constants.TAG, "TAMANHO DO VETOR DE POSIÇÕES: "+moviments.size());
         }
     };
 
@@ -50,7 +47,6 @@ public class ProcessActivity extends AppCompatActivity{
         setContentView(R.layout.process_activity_layout);
 
         moviments =  new ArrayList<Position>();
-
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, new IntentFilter("data-event"));
 
         Intent intentExtras = getIntent();

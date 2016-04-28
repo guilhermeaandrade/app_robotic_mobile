@@ -23,7 +23,6 @@ public class ImageHelper {
         final Rect rect = new Rect(0, 0, w, h);
         final RectF rectF = new RectF(rect);
 
-        //make sure that our rounded corner is scaled appropriately
         final float roundPx = pixels*densityMultiplier;
 
         paint.setAntiAlias(true);
@@ -31,8 +30,6 @@ public class ImageHelper {
         paint.setColor(color);
         canvas.drawRoundRect(rectF, roundPx, roundPx, paint);
 
-
-        //draw rectangles over the corners we want to be square
         if (squareTL ){
             canvas.drawRect(0, 0, w/2, h/2, paint);
         }
