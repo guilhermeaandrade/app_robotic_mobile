@@ -31,6 +31,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -70,10 +71,10 @@ public class MainActivity extends AppCompatActivity {
     private List<Position> listOfPositions;
     private final int handlerState = 0;
     private Handler bluetoothIn;
+    private ProgressDialog ringProgressDialog;
 
     //VARIAVEIS APLICACAO
     private Button btConectar;
-    private Button btSelectType;
     private RadioGroup radioControlGroup;
     private Button btForward;
     private Button btBackward;
@@ -242,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                switch(checkedId){
+                switch (checkedId) {
                     case R.id.radioButtonAutomatico:
                         optionControl = 1;
                         if (device != null) {
@@ -1170,6 +1171,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void launchRingDialog() {
+        ringProgressDialog = ProgressDialog.show(MainActivity.this,"","Conectando-se ao dispositivo...", true);
+        ringProgressDialog.setCancelable(true);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!isConnected){
+
+                }
+            }
+        }).start();
+    }
+
     private void splitMessage(String readMessage){
         String[] splits = readMessage.split(",");
 
@@ -1179,6 +1193,7 @@ public class MainActivity extends AppCompatActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    ringProgressDialog.dismiss();
                     Toast.makeText(getApplicationContext(), "Conexão estabelecida com sucesso!\nEsolha o controle desejado.", Toast.LENGTH_LONG).show();
                     enableChoiceControl();
                     actionMenu.showMenuButton(true);
@@ -1264,6 +1279,7 @@ public class MainActivity extends AppCompatActivity {
             device = adaptador.getRemoteDevice(address);
             SingletonConnection.getInstance().setDevice(device);
 
+            launchRingDialog();
             connectDeviceThread = new ConnectThread(device);
             connectDeviceThread.start();
         }
