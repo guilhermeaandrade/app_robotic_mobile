@@ -113,12 +113,13 @@ public class MainActivity extends AppCompatActivity {
     private DataInputStream input;
     private Intent it;
     private static final int TELA2 = 2;
-    private int option = -1;
     private int optionControl = -1;
 
     private String address;
     private ConnectThread connectDeviceThread;
     private boolean isConnected;
+    private boolean exit;
+    private long time;
     private Double controlPValue;
     private Double controlIValue;
     private Double xValue, yValue;
@@ -172,11 +173,15 @@ public class MainActivity extends AppCompatActivity {
         init(savedInstanceState);
 
         SingletonInformation.getInstance();
+
         isConnected = false;
+        exit = false;
+
         device = null;
         it = new Intent(this, SelectDevice.class);
 
         adaptador = BluetoothAdapter.getDefaultAdapter();
+        SingletonConnection.getInstance().setAdapter(adaptador);
         if(!adaptador.isEnabled()){
             Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBTIntent, 1);
@@ -246,21 +251,26 @@ public class MainActivity extends AppCompatActivity {
                 switch (checkedId) {
                     case R.id.radioButtonAutomatico:
                         optionControl = 1;
-                        if (device != null) {
-                            disableManualControlComponents();
-                            sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
-                            velocidade = (byte) sbVelocidade.getProgress();
+                        if(!exit){
+                            if (device != null) {
+                                disableManualControlComponents();
+                                sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
+                                velocidade = (byte) sbVelocidade.getProgress();
+
+                                new SendThread(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
+                                new ReceiveThread().start();
+                            }
                         }
-                        new SendThread(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
-                        new ReceiveThread().start();
                         break;
 
                     case R.id.radioButtonManul:
                         optionControl = 2;
-                        enableAllComponents();
-                        velocidade = (byte) sbVelocidade.getProgress();
-                        new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
-                        new ReceiveThread().start();
+                        if(!exit){
+                            enableAllComponents();
+                            velocidade = (byte) sbVelocidade.getProgress();
+                            new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
+                            new ReceiveThread().start();
+                        }
                         break;
                 }
             }
@@ -567,6 +577,7 @@ public class MainActivity extends AppCompatActivity {
                                             Bundle bundle = new Bundle();
 
                                             bundle.putParcelable("device", device);
+                                            bundle.putInt("optionControl", optionControl);
                                             SingletonConnection.getInstance().setMoviments(listOfPositions);
                                             i.putExtras(bundle);
                                             startActivity(i);
@@ -789,7 +800,10 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        optionControl = -1;
                         isConnected = false;
+                        exit = true;
+                        disableAllComponents();
                         finalizeConnection();
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -816,6 +830,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         isConnected = false;
+                        optionControl = -1;
+                        exit = true;
+                        disableAllComponents();
                         finalizeConnection();
                         finish();
                     }
@@ -837,7 +854,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(radioButtonCA.isChecked()){
             radioButtonCA.setChecked(false);
-            radioButtonM.setChecked(false);
+            radioButtonM.setChecked(true);
         }
 
         if (adaptador.isEnabled()) {
@@ -1178,7 +1195,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 while (!isConnected){
+                    if(System.currentTimeMillis() - time >= 7000){
 
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getApplicationContext(), "Não foi possível estabelecer uma conexão!\n" +
+                                        "Tente conectar-se com outro dispositivo", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                        ringProgressDialog.dismiss();
+                        break;
+                    }
                 }
             }
         }).start();
@@ -1279,6 +1307,7 @@ public class MainActivity extends AppCompatActivity {
             device = adaptador.getRemoteDevice(address);
             SingletonConnection.getInstance().setDevice(device);
 
+            time = System.currentTimeMillis();
             launchRingDialog();
             connectDeviceThread = new ConnectThread(device);
             connectDeviceThread.start();

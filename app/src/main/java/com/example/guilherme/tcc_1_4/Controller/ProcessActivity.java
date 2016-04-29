@@ -16,6 +16,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
 import com.example.guilherme.tcc_1_4.Adapter.TabsAdapter;
 import com.example.guilherme.tcc_1_4.Extra.SlidingTabLayout;
 import com.example.guilherme.tcc_1_4.Model.Position;
@@ -36,6 +38,7 @@ public class ProcessActivity extends AppCompatActivity{
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
     private static List<Position> moviments;
+    private int optionControl; //1-automatico, 2-manual
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -59,6 +62,7 @@ public class ProcessActivity extends AppCompatActivity{
         Bundle extrasBundle = intentExtras.getExtras();
         if(!extrasBundle.isEmpty()){
             device = extrasBundle.getParcelable("device");
+            optionControl = extrasBundle.getInt("optionControl");
         }
 
         mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
@@ -98,7 +102,13 @@ public class ProcessActivity extends AppCompatActivity{
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        
+                        if (optionControl == 1) {
+                            Toast.makeText(getApplicationContext(), "Ação não pode ser realizada!\n" +
+                                    "Controle Automático em execução!", Toast.LENGTH_LONG).show();
+                        } else {
+                            finalizeConnection();
+                            finish();
+                        }
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
@@ -123,19 +133,53 @@ public class ProcessActivity extends AppCompatActivity{
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        finish();
+                        if (optionControl == 1) {
+                            Toast.makeText(getApplicationContext(), "Ação não pode ser realizada!\n" +
+                                    "Controle Automático em execução!", Toast.LENGTH_LONG).show();
+                        } else {
+                            finalizeConnection();
+                            finish();
+                        }
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-            }
+                    }
         });
 
         final AlertDialog b = dialogBuilder.create();
         b.setCancelable(false);
         b.show();
+    }
+
+    private void finalizeConnection(){
+        if(SingletonConnection.getInstance().getAdapter().isEnabled())
+            SingletonConnection.getInstance().getAdapter().disable();
+
+        SingletonInformation.getInstance().setxValueInitial(Constants.X);
+        SingletonInformation.getInstance().setyValueInitial(Constants.Y);
+        SingletonInformation.getInstance().setxValueAlvo(Constants.X);
+        SingletonInformation.getInstance().setyValueAlvo(Constants.Y);
+        SingletonInformation.getInstance().setControlIValue(Constants.KI_INITIAL);
+        SingletonInformation.getInstance().setControlPValue(Constants.KP_INITIAL);
+
+        SingletonConnection.getInstance().clearMovimentsList();
+
+        try {
+            if(SingletonConnection.getInstance().getSocket() != null &&
+                    SingletonConnection.getInstance().getSocket().isConnected())
+                SingletonConnection.getInstance().getSocket().close();
+
+            SingletonConnection.getInstance().setDevice(null);
+            SingletonConnection.getInstance().setInput(null);
+            SingletonConnection.getInstance().setOutput(null);
+            SingletonConnection.getInstance().setSocket(null);
+
+        } catch(IOException e) {
+            Log.e(Constants.TAG, e.getMessage().toString());
+        }
     }
 
     @Override
@@ -155,6 +199,10 @@ public class ProcessActivity extends AppCompatActivity{
         int id = item.getItemId();
 
         switch (id){
+            case android.R.id.home:
+                finish();
+                break;
+
             case R.id.action_disabled_bluetooth:
                 showDisableBluetoothDialog();
                 break;

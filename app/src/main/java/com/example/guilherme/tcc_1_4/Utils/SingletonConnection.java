@@ -1,6 +1,7 @@
 package com.example.guilherme.tcc_1_4.Utils;
 
 
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
@@ -19,6 +20,7 @@ public class SingletonConnection {
     private BluetoothSocket socket;
     private DataOutputStream output;
     private DataInputStream input;
+    private BluetoothAdapter adapter;
 
     private SingletonConnection(){
         moviments = new ArrayList<Position>();
@@ -69,7 +71,9 @@ public class SingletonConnection {
         this.input = input;
     }
 
-    public void clearMovimentsList(){
-        this.moviments.clear();
-    }
+    public void clearMovimentsList(){ this.moviments.clear(); }
+
+    public BluetoothAdapter getAdapter() { return adapter; }
+
+    public void setAdapter(BluetoothAdapter adapter) { this.adapter = adapter; }
 }

@@ -72,6 +72,7 @@ public class GraphFragment extends Fragment{
                 moviments = bundle.getParcelableArrayList("moviments");
             }
             SingletonConnection.getInstance().setMoviments(moviments);
+            Log.i(Constants.TAG, "GRAPHFRAGMENT -> moviments size: "+moviments.size());
         }
     };
 
