@@ -102,12 +102,15 @@ public class ProcessActivity extends AppCompatActivity{
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (optionControl == 1) {
+                        if (optionControl == 1 && !SingletonInformation.getInstance().isFinishedTransfer()) {
                             Toast.makeText(getApplicationContext(), "Ação não pode ser realizada!\n" +
                                     "Controle Automático em execução!", Toast.LENGTH_LONG).show();
                         } else {
                             finalizeConnection();
-                            finish();
+                            Intent intent = new Intent(ProcessActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("disableBluetooth", true);
+                            startActivity(intent);
                         }
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -133,12 +136,15 @@ public class ProcessActivity extends AppCompatActivity{
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (optionControl == 1) {
+                        if (optionControl == 1 && !SingletonInformation.getInstance().isFinishedTransfer()) {
                             Toast.makeText(getApplicationContext(), "Ação não pode ser realizada!\n" +
                                     "Controle Automático em execução!", Toast.LENGTH_LONG).show();
                         } else {
                             finalizeConnection();
-                            finish();
+                            Intent intent = new Intent(ProcessActivity.this, MainActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("exit", true);
+                            startActivity(intent);
                         }
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {

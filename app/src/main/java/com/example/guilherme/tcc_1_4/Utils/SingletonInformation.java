@@ -6,6 +6,7 @@ public class SingletonInformation {
     private Double controlPValue;
     private Double controlIValue;
     private Double xValueInitial, yValueInitial, xValueAlvo, yValueAlvo;
+    private boolean finishedTransfer;
 
     private SingletonInformation(){
         xValueInitial = Constants.X;
@@ -14,6 +15,7 @@ public class SingletonInformation {
         yValueAlvo = Constants.Y;
         controlIValue = Constants.KI_INITIAL;
         controlPValue = Constants.KP_INITIAL;
+        finishedTransfer = false;
     }
 
     public static SingletonInformation getInstance () {
@@ -68,4 +70,8 @@ public class SingletonInformation {
     public void setControlIValue(Double controlIValue) {
         this.controlIValue = controlIValue;
     }
+
+    public boolean isFinishedTransfer() { return finishedTransfer; }
+
+    public void setFinishedTransfer(boolean finishedTransfer) { this.finishedTransfer = finishedTransfer; }
 }

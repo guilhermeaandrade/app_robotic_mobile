@@ -170,24 +170,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_optional);
 
-        init(savedInstanceState);
-
         SingletonInformation.getInstance();
+        SingletonConnection.getInstance();
+
+        init(savedInstanceState);
+        initVariables();
+
+        if (getIntent().getBooleanExtra("exit", false)) {
+            finish();
+        }else {
+            adaptador = BluetoothAdapter.getDefaultAdapter();
+            SingletonConnection.getInstance().setAdapter(adaptador);
+            if(!adaptador.isEnabled()){
+                Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBTIntent, 1);
+            }
+        }
+        if(getIntent().getBooleanExtra("disableBluetooth", false)) {
+            disableAllComponents();
+        }
 
         isConnected = false;
         exit = false;
 
         device = null;
         it = new Intent(this, SelectDevice.class);
-
-        adaptador = BluetoothAdapter.getDefaultAdapter();
-        SingletonConnection.getInstance().setAdapter(adaptador);
-        if(!adaptador.isEnabled()){
-            Intent enableBTIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBTIntent, 1);
-        }
-
-        initVariables();
     }
 
     //##############################################################################################################################
@@ -800,11 +807,16 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        optionControl = -1;
-                        isConnected = false;
-                        exit = true;
-                        disableAllComponents();
-                        finalizeConnection();
+                        if (optionControl == 1 && !SingletonInformation.getInstance().isFinishedTransfer()) {
+                            Toast.makeText(getApplicationContext(), "Ação não pode ser realizada!\n" +
+                                    "Controle Automático em execução!", Toast.LENGTH_LONG).show();
+                        } else {
+                            optionControl = -1;
+                            isConnected = false;
+                            exit = true;
+                            disableAllComponents();
+                            finalizeConnection();
+                        }
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
@@ -829,12 +841,17 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        isConnected = false;
-                        optionControl = -1;
-                        exit = true;
-                        disableAllComponents();
-                        finalizeConnection();
-                        finish();
+                        if (optionControl == 1 && !SingletonInformation.getInstance().isFinishedTransfer()) {
+                            Toast.makeText(getApplicationContext(), "Ação não pode ser realizada!\n" +
+                                    "Controle Automático em execução!", Toast.LENGTH_LONG).show();
+                        } else {
+                            isConnected = false;
+                            optionControl = -1;
+                            exit = true;
+                            disableAllComponents();
+                            finalizeConnection();
+                            finish();
+                        }
                     }
                 }).setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
 
@@ -1091,7 +1108,10 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                             }
                             String readMessage = new String(buffer, 0, bytes);
-                            if(readMessage.contains(Constants.FIM_TRANSFER)) break;
+                            if(readMessage.contains(Constants.FIM_TRANSFER)) {
+                                SingletonInformation.getInstance().setFinishedTransfer(true);
+                                break;
+                            }
                             splitMessage(readMessage);
                             bluetoothIn.obtainMessage(handlerState, bytes, -1, readMessage).sendToTarget();
                         }
