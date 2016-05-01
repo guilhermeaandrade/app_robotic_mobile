@@ -111,6 +111,12 @@ public class GraphFragment extends Fragment{
                 SingletonInformation.getInstance().setPrevOptionControl(
                         SingletonInformation.getInstance().getOptionControl());
             }
+            if(SingletonInformation.getInstance().getPrevOptionControl() == 2 &&
+                    SingletonInformation.getInstance().getOptionControl() == 1){
+                optionChanged = true;
+                SingletonInformation.getInstance().setPrevOptionControl(
+                        SingletonInformation.getInstance().getOptionControl());
+            }
         }
         spGraphType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -282,9 +288,9 @@ public class GraphFragment extends Fragment{
                 Arrays.fill(AdataY, 0);
                 break;
 
-            default: //AMBOS
-                AdataX = new float[Constants.COUNT_POINTS];
-                AdataY = new float[Constants.COUNT_POINTS];
+            case 3: //AMBOS
+                AdataX = new float[Constants.COUNT_POINTS_HYBRID];
+                AdataY = new float[Constants.COUNT_POINTS_HYBRID];
                 Arrays.fill(AdataX, 0);
                 Arrays.fill(AdataY, 0);
         }
@@ -360,6 +366,7 @@ public class GraphFragment extends Fragment{
                 }
             }
             break;
+
             case 2:{
                 switch (optionGraphic){
                     case 0:
@@ -407,6 +414,7 @@ public class GraphFragment extends Fragment{
                 }
             }
             break;
+
             case 3:{
                 float high = SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT();
                 float low = SingletonConnection.getInstance().getMoviments().get(0).getT();
@@ -451,8 +459,8 @@ public class GraphFragment extends Fragment{
                             maxValueX = (SingletonConnection.getInstance().getMoviments().get(i).getX()).floatValue();
                         }
                     }
-                    bound[0] = minValueX - 0.2f;
-                    bound[1] = maxValueX + 0.2f;;
+                    bound[0] = minValueX - Constants.INCREMENT_VALUE;
+                    bound[1] = maxValueX + Constants.INCREMENT_VALUE;;
 
                     xDomainStep = (bound[1] - bound[0])/Constants.NUMBER_SCALE;
 
@@ -465,8 +473,8 @@ public class GraphFragment extends Fragment{
                             maxValueY = (SingletonConnection.getInstance().getMoviments().get(i).getY()).floatValue();
                         }
                     }
-                    bound[2] = minValueY - 0.2f;
-                    bound[3] = maxValueY + 0.2f;
+                    bound[2] = minValueY - Constants.INCREMENT_VALUE;
+                    bound[3] = maxValueY + Constants.INCREMENT_VALUE;
 
                     yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
@@ -482,8 +490,8 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX - 0.2f;
-                    bound[1] = maxValueX + 0.2f;
+                    bound[0] = minValueX - Constants.INCREMENT_VALUE;
+                    bound[1] = maxValueX + Constants.INCREMENT_VALUE;
 
                     xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
@@ -496,8 +504,8 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getX().floatValue();
                         }
                     }
-                    bound[2] = minValueY - 0.2f;
-                    bound[3] = maxValueY + 0.2f;
+                    bound[2] = minValueY - Constants.INCREMENT_VALUE;
+                    bound[3] = maxValueY + Constants.INCREMENT_VALUE;
 
                     yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
@@ -512,8 +520,8 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX - 0.2f;
-                    bound[1] = maxValueX + 0.2f;
+                    bound[0] = minValueX - Constants.INCREMENT_VALUE;
+                    bound[1] = maxValueX + Constants.INCREMENT_VALUE;
 
                     xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
@@ -526,8 +534,8 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getY().floatValue();
                         }
                     }
-                    bound[2] = minValueY - 0.2f;
-                    bound[3] = maxValueY + 0.2f;
+                    bound[2] = minValueY - Constants.INCREMENT_VALUE;
+                    bound[3] = maxValueY + Constants.INCREMENT_VALUE;
 
                     yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
@@ -542,8 +550,8 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX - 0.2f;
-                    bound[1] = maxValueX + 0.2f;
+                    bound[0] = minValueX - Constants.INCREMENT_VALUE;
+                    bound[1] = maxValueX + Constants.INCREMENT_VALUE;
 
                     xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
@@ -556,8 +564,8 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getTheta().floatValue();
                         }
                     }
-                    bound[2] = minValueY - 0.2f;
-                    bound[3] = maxValueY + 0.2f;
+                    bound[2] = minValueY - Constants.INCREMENT_VALUE;
+                    bound[3] = maxValueY + Constants.INCREMENT_VALUE;
 
                     yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
@@ -572,8 +580,8 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX - 0.2f;
-                    bound[1] = maxValueX + 0.2f;
+                    bound[0] = minValueX - Constants.INCREMENT_VALUE;
+                    bound[1] = maxValueX + Constants.INCREMENT_VALUE;
 
                     xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
@@ -586,8 +594,8 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getV().floatValue();
                         }
                     }
-                    bound[2] = minValueY - 0.2f;
-                    bound[3] = maxValueY + 0.2f;
+                    bound[2] = minValueY - Constants.INCREMENT_VALUE;
+                    bound[3] = maxValueY + Constants.INCREMENT_VALUE;
 
                     yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
@@ -602,8 +610,8 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX - 0.2f;
-                    bound[1] = maxValueX + 0.2f;
+                    bound[0] = minValueX - Constants.INCREMENT_VALUE;
+                    bound[1] = maxValueX + Constants.INCREMENT_VALUE;
 
                     xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
@@ -616,8 +624,8 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getW().floatValue();
                         }
                     }
-                    bound[2] = minValueY - 0.2f;
-                    bound[3] = maxValueY + 0.2f;
+                    bound[2] = minValueY - Constants.INCREMENT_VALUE;
+                    bound[3] = maxValueY + Constants.INCREMENT_VALUE;
 
                     yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
@@ -632,8 +640,8 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX - 0.2f;
-                    bound[1] = maxValueX + 0.2f;
+                    bound[0] = minValueX - Constants.INCREMENT_VALUE;
+                    bound[1] = maxValueX + Constants.INCREMENT_VALUE;
 
                     xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
@@ -646,8 +654,8 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getE().floatValue();
                         }
                     }
-                    bound[2] = minValueY - 0.2f;
-                    bound[3] = maxValueY + 0.2f;
+                    bound[2] = minValueY - Constants.INCREMENT_VALUE;
+                    bound[3] = maxValueY + Constants.INCREMENT_VALUE;
 
                     yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
@@ -718,7 +726,7 @@ public class GraphFragment extends Fragment{
     }
 
     private void getValuesXY(ArrayList<Position> bucket) {
-        int interval = (int) (bucket.size() + 1)/Constants.COUNT_VALUES;
+        int interval = (bucket.size() + 1)/Constants.COUNT_VALUES;
 
         switch (optionGraphic) {
             case 0:{
@@ -1120,7 +1128,7 @@ public class GraphFragment extends Fragment{
 
                 while(updateGraphicControl){
                     try {
-                        Thread.sleep(1500);
+                        Thread.sleep(1000);
                         init = 1;
                         scriptUpdatePlot();
 
