@@ -258,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
                 switch (checkedId) {
                     case R.id.radioButtonAutomatico:
                         optionControl = 1;
+                        SingletonInformation.getInstance().setOptionControl(optionControl);
                         if(!exit){
                             if (device != null) {
                                 disableManualControlComponents();
@@ -272,6 +273,7 @@ public class MainActivity extends AppCompatActivity {
 
                     case R.id.radioButtonManul:
                         optionControl = 2;
+                        SingletonInformation.getInstance().setOptionControl(optionControl);
                         if(!exit){
                             enableAllComponents();
                             velocidade = (byte) sbVelocidade.getProgress();
@@ -584,7 +586,7 @@ public class MainActivity extends AppCompatActivity {
                                             Bundle bundle = new Bundle();
 
                                             bundle.putParcelable("device", device);
-                                            bundle.putInt("optionControl", optionControl);
+                                            //bundle.putInt("optionControl", optionControl);
                                             SingletonConnection.getInstance().setMoviments(listOfPositions);
                                             i.putExtras(bundle);
                                             startActivity(i);
@@ -812,6 +814,7 @@ public class MainActivity extends AppCompatActivity {
                                     "Controle Automático em execução!", Toast.LENGTH_LONG).show();
                         } else {
                             optionControl = -1;
+                            SingletonInformation.getInstance().setOptionControl(optionControl);
                             isConnected = false;
                             exit = true;
                             disableAllComponents();
@@ -847,6 +850,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             isConnected = false;
                             optionControl = -1;
+                            SingletonInformation.getInstance().setOptionControl(optionControl);
                             exit = true;
                             disableAllComponents();
                             finalizeConnection();

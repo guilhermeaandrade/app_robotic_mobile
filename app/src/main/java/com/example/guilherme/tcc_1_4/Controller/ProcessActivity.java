@@ -38,7 +38,7 @@ public class ProcessActivity extends AppCompatActivity{
     private SlidingTabLayout mSlidingTabLayout;
     private ViewPager mViewPager;
     private static List<Position> moviments;
-    private int optionControl; //1-automatico, 2-manual
+    //private int optionControl; //1-automatico, 2-manual
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -62,11 +62,11 @@ public class ProcessActivity extends AppCompatActivity{
         Bundle extrasBundle = intentExtras.getExtras();
         if(!extrasBundle.isEmpty()){
             device = extrasBundle.getParcelable("device");
-            optionControl = extrasBundle.getInt("optionControl");
+            //optionControl = extrasBundle.getInt("optionControl");
         }
 
         mViewPager = (ViewPager) findViewById(R.id.vp_tabs);
-        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), ProcessActivity.this, device, moviments));
+        mViewPager.setAdapter(new TabsAdapter(getSupportFragmentManager(), ProcessActivity.this, device));
 
         mSlidingTabLayout = (SlidingTabLayout) findViewById(R.id.stl_tabs);
         mSlidingTabLayout.setViewPager(mViewPager);
@@ -102,7 +102,7 @@ public class ProcessActivity extends AppCompatActivity{
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (optionControl == 1 && !SingletonInformation.getInstance().isFinishedTransfer()) {
+                        if (SingletonInformation.getInstance().getOptionControl() == 1 && !SingletonInformation.getInstance().isFinishedTransfer()) {
                             Toast.makeText(getApplicationContext(), "Ação não pode ser realizada!\n" +
                                     "Controle Automático em execução!", Toast.LENGTH_LONG).show();
                         } else {
@@ -136,7 +136,7 @@ public class ProcessActivity extends AppCompatActivity{
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (optionControl == 1 && !SingletonInformation.getInstance().isFinishedTransfer()) {
+                        if (SingletonInformation.getInstance().getOptionControl() == 1 && !SingletonInformation.getInstance().isFinishedTransfer()) {
                             Toast.makeText(getApplicationContext(), "Ação não pode ser realizada!\n" +
                                     "Controle Automático em execução!", Toast.LENGTH_LONG).show();
                         } else {

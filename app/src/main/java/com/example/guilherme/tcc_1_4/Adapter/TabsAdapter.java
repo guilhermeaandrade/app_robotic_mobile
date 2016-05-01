@@ -27,9 +27,9 @@ public class TabsAdapter extends FragmentPagerAdapter {
     private String[] titles = new String[]{"INFORMAÇÕES", "GRÁFICOS"};
     private Context mContext;
     private BluetoothDevice mDevice;
-    private static List<Position> moviments;
+    //private static List<Position> moviments;
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+    /*private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
@@ -37,11 +37,11 @@ public class TabsAdapter extends FragmentPagerAdapter {
                 moviments = bundle.getParcelableArrayList("moviments");
             }
         }
-    };
+    };*/
 
-    public TabsAdapter(FragmentManager fragmentManager, Context context, BluetoothDevice device, List<Position> pos){
+    public TabsAdapter(FragmentManager fragmentManager, Context context, BluetoothDevice device){
         super(fragmentManager);
-        moviments = pos;
+        //moviments = pos;
         mContext = context;
         mDevice = device;
     }
@@ -58,10 +58,9 @@ public class TabsAdapter extends FragmentPagerAdapter {
         //Passar dados para o fragment
         Bundle bundle = new Bundle();
         bundle.putParcelable("device", mDevice);
-        //bundle.putParcelableArrayList("moviments", (ArrayList<? extends Parcelable>) moviments);
 
         frag.setArguments(bundle);
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(mMessageReceiver, new IntentFilter("data-event"));
+        //LocalBroadcastManager.getInstance(mContext).registerReceiver(mMessageReceiver, new IntentFilter("data-event"));
 
         return frag;
     }

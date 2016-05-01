@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -15,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,12 +30,12 @@ import com.example.guilherme.tcc_1_4.Model.Position;
 import com.example.guilherme.tcc_1_4.R;
 import com.example.guilherme.tcc_1_4.Utils.Constants;
 import com.example.guilherme.tcc_1_4.Utils.SingletonConnection;
+import com.example.guilherme.tcc_1_4.Utils.SingletonInformation;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
 public class GraphFragment extends Fragment{
@@ -61,7 +59,8 @@ public class GraphFragment extends Fragment{
 
     private float xDomainStep;
     private float yRangeStep;
-
+    private boolean optionChanged = false;
+    private int choiceOptionControl = -1;
     public Semaphore drawSemaphore = new Semaphore(1);
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -72,15 +71,12 @@ public class GraphFragment extends Fragment{
                 moviments = bundle.getParcelableArrayList("moviments");
             }
             SingletonConnection.getInstance().setMoviments(moviments);
-            Log.i(Constants.TAG, "GRAPHFRAGMENT -> moviments size: "+moviments.size());
         }
     };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(Constants.TAG, "GRAPHFRAGMENT -> onCreate();");
-        Log.i(Constants.TAG, "CRIEI A THREAD");
         draw = new DrawGraphic();
     }
 
@@ -88,14 +84,10 @@ public class GraphFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.i(Constants.TAG, "GRAPHFRAGMENT -> onCreateView()");
-
         View view = inflater.inflate(R.layout.graph_fragment_layout, container, false);
 
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(mMessageReceiver,
                 new IntentFilter("data-event"));
-
-        Log.i(Constants.TAG, "GRAPHFRAGMENT -> onCreateView() -> size: " + SingletonConnection.getInstance().getMoviments().size());
 
         spGraphType = (Spinner) view.findViewById(R.id.spGraphs);
         spGraphType.setVisibility(View.VISIBLE);
@@ -106,6 +98,20 @@ public class GraphFragment extends Fragment{
             spGraphType.setBackground(spinnerDrawable);
         }
 
+        Log.i(Constants.TAG, "PREVOPTIONCONTROL: " + SingletonInformation.getInstance().getPrevOptionControl());
+        Log.i(Constants.TAG, "OPTIONCONTROL: " + SingletonInformation.getInstance().getOptionControl());
+        if(SingletonInformation.getInstance().getPrevOptionControl() == -1) {
+            optionChanged = false;
+            SingletonInformation.getInstance().setPrevOptionControl(
+                    SingletonInformation.getInstance().getOptionControl());
+        }else {
+            if(SingletonInformation.getInstance().getPrevOptionControl() == 1 &&
+                    SingletonInformation.getInstance().getOptionControl() == 2) {
+                optionChanged = true;
+                SingletonInformation.getInstance().setPrevOptionControl(
+                        SingletonInformation.getInstance().getOptionControl());
+            }
+        }
         spGraphType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -119,11 +125,11 @@ public class GraphFragment extends Fragment{
                         scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("x (m)");
-                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#.##"));
 
                         xyPlot.setRangeLabel("y (m)");
-                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
 
                         xyPlot.redraw();
@@ -133,11 +139,11 @@ public class GraphFragment extends Fragment{
                         scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
-                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
 
                         xyPlot.setRangeLabel("x (m)");
-                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
 
                         xyPlot.redraw();
@@ -147,11 +153,11 @@ public class GraphFragment extends Fragment{
                         scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
-                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
 
                         xyPlot.setRangeLabel("y (m)");
-                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
 
                         xyPlot.redraw();
@@ -161,11 +167,11 @@ public class GraphFragment extends Fragment{
                         scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
-                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
 
                         xyPlot.setRangeLabel("Angulo (graus)");
-                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
 
                         xyPlot.redraw();
@@ -175,11 +181,11 @@ public class GraphFragment extends Fragment{
                         scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
-                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
 
                         xyPlot.setRangeLabel("v (cm/s)");
-                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
 
                         xyPlot.redraw();
@@ -189,11 +195,11 @@ public class GraphFragment extends Fragment{
                         scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
-                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
 
                         xyPlot.setRangeLabel("w (cm/s)");
-                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
 
                         xyPlot.redraw();
@@ -203,11 +209,11 @@ public class GraphFragment extends Fragment{
                         scriptUpdatePlot();
 
                         xyPlot.setDomainLabel("tempo (s)");
-                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setDomainStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setDomainValueFormat(new DecimalFormat("#"));
 
                         xyPlot.setRangeLabel("erro");
-                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 20);
+                        xyPlot.setRangeStep(XYStepMode.SUBDIVIDE, 25);
                         xyPlot.setRangeValueFormat(new DecimalFormat("#.##"));
 
                         xyPlot.redraw();
@@ -232,7 +238,7 @@ public class GraphFragment extends Fragment{
         series1Format.configure(getActivity().getApplicationContext(),
                 R.xml.line_point_formatter_with_label);
         series1Format.setInterpolationParams(
-                new CatmullRomInterpolator.Params(20, CatmullRomInterpolator.Type.Centripetal));
+                new CatmullRomInterpolator.Params(50, CatmullRomInterpolator.Type.Uniform));
 
         xyPlot.setTicksPerRangeLabel(3);
         xyPlot.setTicksPerDomainLabel(3);
@@ -247,7 +253,7 @@ public class GraphFragment extends Fragment{
     private void scriptUpdatePlot(){
         if(SingletonConnection.getInstance().getMoviments().size() == 0 || SingletonConnection.getInstance().getMoviments() == null) return;
 
-        int tamVector;
+        int tamVector = SingletonConnection.getInstance().getMoviments().size();;
 
         xyPlot.removeSeries(series);
         xyPlot.clear();
@@ -255,21 +261,41 @@ public class GraphFragment extends Fragment{
         ALdataX.clear();
         ALdataY.clear();
 
-        tamVector = SingletonConnection.getInstance().getMoviments().size();
-
-        if(tamVector >= 1 && tamVector < 20) {
-            AdataX = new float[tamVector];
-            AdataY = new float[tamVector];
+        if(optionChanged) {
+            choiceOptionControl = 3;
         }else {
-            AdataX = new float[Constants.COUNT_POINTS];
-            AdataY = new float[Constants.COUNT_POINTS];
+            choiceOptionControl = SingletonInformation.getInstance().getOptionControl();
+        }
+
+        switch (choiceOptionControl) {
+            case 1: //AUTOMATICO
+                AdataX = new float[Constants.COUNT_POINTS];
+                AdataY = new float[Constants.COUNT_POINTS];
+                Arrays.fill(AdataX, 0);
+                Arrays.fill(AdataY, 0);
+                break;
+
+            case 2: //MANUAL
+                AdataX = new float[tamVector];
+                AdataY = new float[tamVector];
+                Arrays.fill(AdataX, 0);
+                Arrays.fill(AdataY, 0);
+                break;
+
+            default: //AMBOS
+                AdataX = new float[Constants.COUNT_POINTS];
+                AdataY = new float[Constants.COUNT_POINTS];
+                Arrays.fill(AdataX, 0);
+                Arrays.fill(AdataY, 0);
         }
 
         getDataSource();
 
         bounderies = getBoundaries();
-        xyPlot.setDomainBoundaries(bounderies[0], bounderies[1], BoundaryMode.AUTO);
-        xyPlot.setRangeBoundaries(bounderies[2], bounderies[3], BoundaryMode.AUTO);
+        Log.i(Constants.TAG, "BOUNDERIES: " + bounderies[0] + "-" + bounderies[1] + "-" + bounderies[2] + "-" + bounderies[3]);
+
+        xyPlot.setDomainBoundaries(bounderies[0], BoundaryMode.FIXED, bounderies[1], BoundaryMode.FIXED);
+        xyPlot.setRangeBoundaries(bounderies[2], BoundaryMode.FIXED, bounderies[3], BoundaryMode.FIXED);
 
         switch (optionGraphic){
             case 0:
@@ -297,7 +323,8 @@ public class GraphFragment extends Fragment{
 
         xyPlot.addSeries(series, series1Format);
 
-        for(int i=0; i< AdataX.length; i++){
+        for(int i=0; i < AdataX.length; i++){
+            Log.i(Constants.TAG, "Verificando valores: "+AdataX[i]+" - "+AdataY[i]);
             ALdataX.add(AdataX[i]);
             ALdataY.add(AdataY[i]);
 
@@ -310,70 +337,96 @@ public class GraphFragment extends Fragment{
     private void getDataSource(){
         if(SingletonConnection.getInstance().getMoviments().size() <= 0) return;
 
-        if(SingletonConnection.getInstance().getMoviments().size() >= 1 && SingletonConnection.getInstance().getMoviments().size() < 20){
-            switch (optionGraphic){
-                case 0:
-                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
-                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getX().floatValue();
-                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getY().floatValue();
-                    }
-                    break;
-                case 1:
-                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
-                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
-                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getX().floatValue();
-                    }
-                    break;
-                case 2:
-                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
-                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
-                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getY().floatValue();
-                    }
-                    break;
-                case 3:
-                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
-                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
-                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getTheta().floatValue();
-                    }
-                    break;
-                case 4:
-                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
-                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
-                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getV().floatValue();
-                    }
-                    break;
-                case 5:
-                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
-                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
-                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getW().floatValue();
-                    }
-                    break;
-                case 6:
-                    for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
-                        AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
-                        AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getE().floatValue();
-                    }
-                    break;
+        switch(choiceOptionControl){
+            case 1: {
+                float high = SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT();
+                float low = SingletonConnection.getInstance().getMoviments().get(0).getT();
+
+                double interval = (double) ((high - low + 1) / Constants.BUCKET_COUNT);
+                ArrayList<Position> buckets[] = new ArrayList[Constants.BUCKET_COUNT];
+
+                for (int i = 0; i < Constants.BUCKET_COUNT; i++) {
+                    buckets[i] = new ArrayList<>();
+                }
+
+                for (int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                    buckets[(int) ((SingletonConnection.getInstance().getMoviments().get(i).getT() - low) / interval)].add(SingletonConnection.getInstance().getMoviments().get(i));
+                }
+
+                fillFirsAndLastValue();
+
+                for (int i = 0; i < buckets.length; i++) {
+                    getValuesXY(buckets[i]);
+                }
             }
-        }else {
-            float high = SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT();
-            float low = SingletonConnection.getInstance().getMoviments().get(0).getT();
-
-            double interval = (double) ((high - low + 1)/Constants.BUCKET_COUNT);
-            ArrayList<Position> buckets[] = new ArrayList[Constants.BUCKET_COUNT];
-
-            for(int i = 0; i < Constants.BUCKET_COUNT; i++){
-                buckets[i] =  new ArrayList<>();
+            break;
+            case 2:{
+                switch (optionGraphic){
+                    case 0:
+                        for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                            AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getX().floatValue();
+                            AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getY().floatValue();
+                        }
+                        break;
+                    case 1:
+                        for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                            AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                            AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getX().floatValue();
+                        }
+                        break;
+                    case 2:
+                        for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                            AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                            AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getY().floatValue();
+                        }
+                        break;
+                    case 3:
+                        for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                            AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                            AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getTheta().floatValue();
+                        }
+                        break;
+                    case 4:
+                        for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                            AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                            AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getV().floatValue();
+                        }
+                        break;
+                    case 5:
+                        for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                            AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                            AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getW().floatValue();
+                        }
+                        break;
+                    case 6:
+                        for(int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++){
+                            AdataX[i] = SingletonConnection.getInstance().getMoviments().get(i).getT().floatValue();
+                            AdataY[i] = SingletonConnection.getInstance().getMoviments().get(i).getE().floatValue();
+                        }
+                        break;
+                }
             }
+            break;
+            case 3:{
+                float high = SingletonConnection.getInstance().getMoviments().get(SingletonConnection.getInstance().getMoviments().size() - 1).getT();
+                float low = SingletonConnection.getInstance().getMoviments().get(0).getT();
 
-            for (int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
-                buckets[(int)((SingletonConnection.getInstance().getMoviments().get(i).getT() - low)/interval)].add(SingletonConnection.getInstance().getMoviments().get(i));
-            }
+                double interval = (double) ((high - low + 1) / Constants.BUCKET_COUNT);
+                ArrayList<Position> buckets[] = new ArrayList[Constants.BUCKET_COUNT];
 
-            fillFirsAndLastValue();
+                for (int i = 0; i < Constants.BUCKET_COUNT; i++) {
+                    buckets[i] = new ArrayList<>();
+                }
 
-            for(int i = 0; i < buckets.length; i++){
-                getValuesXY(buckets[i]);
+                for (int i = 0; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
+                    buckets[(int) ((SingletonConnection.getInstance().getMoviments().get(i).getT() - low) / interval)].add(SingletonConnection.getInstance().getMoviments().get(i));
+                }
+
+                fillFirsAndLastValue();
+
+                for (int i = 0; i < buckets.length; i++) {
+                    getValuesXY(buckets[i]);
+                }
             }
         }
     }
@@ -398,10 +451,10 @@ public class GraphFragment extends Fragment{
                             maxValueX = (SingletonConnection.getInstance().getMoviments().get(i).getX()).floatValue();
                         }
                     }
-                    bound[0] = minValueX;
-                    bound[1] = maxValueX;
+                    bound[0] = minValueX - 0.2f;
+                    bound[1] = maxValueX + 0.2f;;
 
-                    xDomainStep = (float) ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
+                    xDomainStep = (bound[1] - bound[0])/Constants.NUMBER_SCALE;
 
                     minValueY = (SingletonConnection.getInstance().getMoviments().get(0).getY()).floatValue();
                     maxValueY = (SingletonConnection.getInstance().getMoviments().get(0).getY()).floatValue();
@@ -412,10 +465,10 @@ public class GraphFragment extends Fragment{
                             maxValueY = (SingletonConnection.getInstance().getMoviments().get(i).getY()).floatValue();
                         }
                     }
-                    bound[2] = minValueY;
-                    bound[3] = maxValueY;
+                    bound[2] = minValueY - 0.2f;
+                    bound[3] = maxValueY + 0.2f;
 
-                    yRangeStep = (float) ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
+                    yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
                     break;
 
@@ -429,10 +482,10 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX;
-                    bound[1] = maxValueX;
+                    bound[0] = minValueX - 0.2f;
+                    bound[1] = maxValueX + 0.2f;
 
-                    xDomainStep = (float) ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
+                    xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
                     minValueY = SingletonConnection.getInstance().getMoviments().get(0).getX().floatValue();
                     maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getX().floatValue();
@@ -443,10 +496,10 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getX().floatValue();
                         }
                     }
-                    bound[2] = minValueY;
-                    bound[3] = maxValueY;
+                    bound[2] = minValueY - 0.2f;
+                    bound[3] = maxValueY + 0.2f;
 
-                    yRangeStep = (float) ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
+                    yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
                     break;
                 case 2:
@@ -454,15 +507,15 @@ public class GraphFragment extends Fragment{
                     maxValueX = SingletonConnection.getInstance().getMoviments().get(0).getT();
                     for (int i = 1; i < SingletonConnection.getInstance().getMoviments().size(); i++) {
                         if (SingletonConnection.getInstance().getMoviments().get(i).getT() < minValueX) {
-                            minValueY = SingletonConnection.getInstance().getMoviments().get(i).getT();
+                            minValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         } else if (SingletonConnection.getInstance().getMoviments().get(i).getT() > maxValueX) {
-                            maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getT();
+                            maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX;
-                    bound[1] = maxValueX;
+                    bound[0] = minValueX - 0.2f;
+                    bound[1] = maxValueX + 0.2f;
 
-                    xDomainStep = (float) ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
+                    xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
                     minValueY = SingletonConnection.getInstance().getMoviments().get(0).getY().floatValue();
                     maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getY().floatValue();
@@ -473,10 +526,10 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getY().floatValue();
                         }
                     }
-                    bound[2] = minValueY;
-                    bound[3] = maxValueY;
+                    bound[2] = minValueY - 0.2f;
+                    bound[3] = maxValueY + 0.2f;
 
-                    yRangeStep = (float) ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
+                    yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
                     break;
                 case 3:
@@ -489,10 +542,10 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX;
-                    bound[1] = maxValueX;
+                    bound[0] = minValueX - 0.2f;
+                    bound[1] = maxValueX + 0.2f;
 
-                    xDomainStep = (float) ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
+                    xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
                     minValueY = SingletonConnection.getInstance().getMoviments().get(0).getTheta().floatValue();
                     maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getTheta().floatValue();
@@ -503,10 +556,10 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getTheta().floatValue();
                         }
                     }
-                    bound[2] = minValueY;
-                    bound[3] = maxValueY;
+                    bound[2] = minValueY - 0.2f;
+                    bound[3] = maxValueY + 0.2f;
 
-                    yRangeStep = (float) ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
+                    yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
                     break;
                 case 4:
@@ -519,10 +572,10 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX;
-                    bound[1] = maxValueX;
+                    bound[0] = minValueX - 0.2f;
+                    bound[1] = maxValueX + 0.2f;
 
-                    xDomainStep = (float) ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
+                    xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
                     minValueY = SingletonConnection.getInstance().getMoviments().get(0).getV().floatValue();
                     maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getV().floatValue();
@@ -533,10 +586,10 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getV().floatValue();
                         }
                     }
-                    bound[2] = minValueY;
-                    bound[3] = maxValueY;
+                    bound[2] = minValueY - 0.2f;
+                    bound[3] = maxValueY + 0.2f;
 
-                    yRangeStep = (float) ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
+                    yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
                     break;
                 case 5:
@@ -549,10 +602,10 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX;
-                    bound[1] = maxValueX;
+                    bound[0] = minValueX - 0.2f;
+                    bound[1] = maxValueX + 0.2f;
 
-                    xDomainStep = (float) ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
+                    xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
                     minValueY = SingletonConnection.getInstance().getMoviments().get(0).getW().floatValue();
                     maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getW().floatValue();
@@ -563,10 +616,10 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getW().floatValue();
                         }
                     }
-                    bound[2] = minValueY;
-                    bound[3] = maxValueY;
+                    bound[2] = minValueY - 0.2f;
+                    bound[3] = maxValueY + 0.2f;
 
-                    yRangeStep = (float) ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
+                    yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
                     break;
                 case 6:
@@ -579,10 +632,10 @@ public class GraphFragment extends Fragment{
                             maxValueX = SingletonConnection.getInstance().getMoviments().get(i).getT();
                         }
                     }
-                    bound[0] = minValueX;
-                    bound[1] = maxValueX;
+                    bound[0] = minValueX - 0.2f;
+                    bound[1] = maxValueX + 0.2f;
 
-                    xDomainStep = (float) ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
+                    xDomainStep = ((bound[1] - bound[0])/Constants.NUMBER_SCALE);
 
                     minValueY = SingletonConnection.getInstance().getMoviments().get(0).getE().floatValue();
                     maxValueY = SingletonConnection.getInstance().getMoviments().get(0).getE().floatValue();
@@ -593,10 +646,10 @@ public class GraphFragment extends Fragment{
                             maxValueY = SingletonConnection.getInstance().getMoviments().get(i).getE().floatValue();
                         }
                     }
-                    bound[2] = minValueY;
-                    bound[3] = maxValueY;
+                    bound[2] = minValueY - 0.2f;
+                    bound[3] = maxValueY + 0.2f;
 
-                    yRangeStep = (float) ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
+                    yRangeStep = ((bound[3] - bound[2])/Constants.NUMBER_SCALE);
 
                     break;
             }
@@ -665,11 +718,11 @@ public class GraphFragment extends Fragment{
     }
 
     private void getValuesXY(ArrayList<Position> bucket) {
-        int interval = (int) (bucket.size() - 0 + 1)/Constants.COUNT_VALUES;
+        int interval = (int) (bucket.size() + 1)/Constants.COUNT_VALUES;
 
-        switch (optionGraphic){
-            case 0:
-                switch(bucket.size()){
+        switch (optionGraphic) {
+            case 0:{
+                switch (bucket.size()) {
                     case 0:
                         AdataX[init] = AdataX[init - 1];
                         AdataY[init] = AdataY[init - 1];
@@ -709,14 +762,15 @@ public class GraphFragment extends Fragment{
                         AdataX[init] = (bucket.get(interval).getX()).floatValue();
                         AdataY[init] = (bucket.get(interval).getY()).floatValue();
                         init += 1;
-                        AdataX[init] = (bucket.get(interval*2).getX()).floatValue();
-                        AdataY[init] = (bucket.get(interval*2).getY()).floatValue();
+                        AdataX[init] = (bucket.get(interval * 2).getX()).floatValue();
+                        AdataY[init] = (bucket.get(interval * 2).getY()).floatValue();
                         init += 1;
                 }
-                break;
+            }
+            break;
 
-            case 1:
-                switch(bucket.size()){
+            case 1:{
+                switch (bucket.size()) {
                     case 0:
                         AdataX[init] = AdataX[init - 1];
                         AdataY[init] = AdataY[init - 1];
@@ -756,14 +810,15 @@ public class GraphFragment extends Fragment{
                         AdataX[init] = (bucket.get(interval).getT()).floatValue();
                         AdataY[init] = (bucket.get(interval).getX()).floatValue();
                         init += 1;
-                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                        AdataY[init] = (bucket.get(interval*2).getX()).floatValue();
+                        AdataX[init] = (bucket.get(interval * 2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval * 2).getX()).floatValue();
                         init += 1;
                 }
-                break;
+            }
+            break;
 
-            case 2:
-                switch(bucket.size()){
+            case 2:{
+                switch (bucket.size()) {
                     case 0:
                         AdataX[init] = AdataX[init - 1];
                         AdataY[init] = AdataY[init - 1];
@@ -803,14 +858,15 @@ public class GraphFragment extends Fragment{
                         AdataX[init] = (bucket.get(interval).getT()).floatValue();
                         AdataY[init] = (bucket.get(interval).getY()).floatValue();
                         init += 1;
-                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                        AdataY[init] = (bucket.get(interval*2).getY()).floatValue();
+                        AdataX[init] = (bucket.get(interval * 2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval * 2).getY()).floatValue();
                         init += 1;
                 }
-                break;
+            }
+            break;
 
-            case 3:
-                switch(bucket.size()){
+            case 3:{
+                switch (bucket.size()) {
                     case 0:
                         AdataX[init] = AdataX[init - 1];
                         AdataY[init] = AdataY[init - 1];
@@ -850,14 +906,15 @@ public class GraphFragment extends Fragment{
                         AdataX[init] = (bucket.get(interval).getT()).floatValue();
                         AdataY[init] = (bucket.get(interval).getTheta()).floatValue();
                         init += 1;
-                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                        AdataY[init] = (bucket.get(interval*2).getTheta()).floatValue();
+                        AdataX[init] = (bucket.get(interval * 2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval * 2).getTheta()).floatValue();
                         init += 1;
                 }
-                break;
+            }
+            break;
 
-            case 4:
-                switch(bucket.size()){
+            case 4:{
+                switch (bucket.size()) {
                     case 0:
                         AdataX[init] = AdataX[init - 1];
                         AdataY[init] = AdataY[init - 1];
@@ -897,14 +954,15 @@ public class GraphFragment extends Fragment{
                         AdataX[init] = (bucket.get(interval).getT()).floatValue();
                         AdataY[init] = (bucket.get(interval).getV()).floatValue();
                         init += 1;
-                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                        AdataY[init] = (bucket.get(interval*2).getV()).floatValue();
+                        AdataX[init] = (bucket.get(interval * 2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval * 2).getV()).floatValue();
                         init += 1;
                 }
-                break;
+            }
+            break;
 
-            case 5:
-                switch(bucket.size()){
+            case 5:{
+                switch (bucket.size()) {
                     case 0:
                         AdataX[init] = AdataX[init - 1];
                         AdataY[init] = AdataY[init - 1];
@@ -944,14 +1002,15 @@ public class GraphFragment extends Fragment{
                         AdataX[init] = (bucket.get(interval).getT()).floatValue();
                         AdataY[init] = (bucket.get(interval).getW()).floatValue();
                         init += 1;
-                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                        AdataY[init] = (bucket.get(interval*2).getW()).floatValue();
+                        AdataX[init] = (bucket.get(interval * 2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval * 2).getW()).floatValue();
                         init += 1;
                 }
-                break;
+            }
+            break;
 
-            case 6:
-                switch(bucket.size()){
+            case 6: {
+                switch (bucket.size()) {
                     case 0:
                         AdataX[init] = AdataX[init - 1];
                         AdataY[init] = AdataY[init - 1];
@@ -978,6 +1037,7 @@ public class GraphFragment extends Fragment{
                         AdataY[init] = bucket.get(1).getE().floatValue();
                         init += 1;
                         break;
+
                     case 3:
                         AdataX[init] = bucket.get(0).getT().floatValue();
                         AdataY[init] = bucket.get(0).getE().floatValue();
@@ -991,11 +1051,12 @@ public class GraphFragment extends Fragment{
                         AdataX[init] = (bucket.get(interval).getT()).floatValue();
                         AdataY[init] = (bucket.get(interval).getE()).floatValue();
                         init += 1;
-                        AdataX[init] = (bucket.get(interval*2).getT()).floatValue();
-                        AdataY[init] = (bucket.get(interval*2).getE()).floatValue();
+                        AdataX[init] = (bucket.get(interval * 2).getT()).floatValue();
+                        AdataY[init] = (bucket.get(interval * 2).getE()).floatValue();
                         init += 1;
                 }
-                break;
+            }
+            break;
         }
     }
 
@@ -1059,7 +1120,7 @@ public class GraphFragment extends Fragment{
 
                 while(updateGraphicControl){
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(1500);
                         init = 1;
                         scriptUpdatePlot();
 

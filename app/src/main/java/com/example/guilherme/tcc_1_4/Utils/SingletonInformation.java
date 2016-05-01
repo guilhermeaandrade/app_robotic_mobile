@@ -1,5 +1,7 @@
 package com.example.guilherme.tcc_1_4.Utils;
 
+import android.content.SharedPreferences;
+
 public class SingletonInformation {
 
     private static SingletonInformation mInstance = null;
@@ -7,6 +9,8 @@ public class SingletonInformation {
     private Double controlIValue;
     private Double xValueInitial, yValueInitial, xValueAlvo, yValueAlvo;
     private boolean finishedTransfer;
+    private int optionControl;
+    private int prevOptionControl;
 
     private SingletonInformation(){
         xValueInitial = Constants.X;
@@ -16,6 +20,8 @@ public class SingletonInformation {
         controlIValue = Constants.KI_INITIAL;
         controlPValue = Constants.KP_INITIAL;
         finishedTransfer = false;
+        optionControl = -1;
+        prevOptionControl = -1;
     }
 
     public static SingletonInformation getInstance () {
@@ -74,4 +80,20 @@ public class SingletonInformation {
     public boolean isFinishedTransfer() { return finishedTransfer; }
 
     public void setFinishedTransfer(boolean finishedTransfer) { this.finishedTransfer = finishedTransfer; }
+
+    public int getOptionControl() {
+        return optionControl;
+    }
+
+    public void setOptionControl(int optionControl) {
+        this.optionControl = optionControl;
+    }
+
+    public int getPrevOptionControl() {
+        return prevOptionControl;
+    }
+
+    public void setPrevOptionControl(int prevOptionControl) {
+        this.prevOptionControl = prevOptionControl;
+    }
 }
