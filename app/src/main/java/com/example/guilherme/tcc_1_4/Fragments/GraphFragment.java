@@ -40,7 +40,6 @@ import java.util.concurrent.Semaphore;
 
 public class GraphFragment extends Fragment{
 
-    private static final int NONE = 0;
     private int optionGraphic = 0;
     private boolean updateGraphicControl = true;
     private static DrawGraphic draw;
@@ -53,6 +52,7 @@ public class GraphFragment extends Fragment{
     private XYSeriesShimmer series;
     private LineAndPointFormatter series1Format;
     private ArrayList<Number> ALdataX, ALdataY;
+    private ArrayList<Number> ALdataXAlvo, ALdataYAlvo;
     private float AdataX[], AdataY[];
     private int init = 0;
     private float[] bounderies = new float[4];
@@ -98,8 +98,6 @@ public class GraphFragment extends Fragment{
             spGraphType.setBackground(spinnerDrawable);
         }
 
-        Log.i(Constants.TAG, "PREVOPTIONCONTROL: " + SingletonInformation.getInstance().getPrevOptionControl());
-        Log.i(Constants.TAG, "OPTIONCONTROL: " + SingletonInformation.getInstance().getOptionControl());
         if(SingletonInformation.getInstance().getPrevOptionControl() == -1) {
             optionChanged = false;
             SingletonInformation.getInstance().setPrevOptionControl(
@@ -118,6 +116,7 @@ public class GraphFragment extends Fragment{
                         SingletonInformation.getInstance().getOptionControl());
             }
         }
+
         spGraphType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -239,12 +238,15 @@ public class GraphFragment extends Fragment{
         ALdataX = new ArrayList<Number>();
         ALdataY = new ArrayList<Number>();
 
+        ALdataXAlvo = new ArrayList<Number>();
+        ALdataYAlvo = new ArrayList<Number>();
+
         series1Format = new LineAndPointFormatter();
         series1Format.setPointLabelFormatter(new PointLabelFormatter(Color.TRANSPARENT));
         series1Format.configure(getActivity().getApplicationContext(),
                 R.xml.line_point_formatter_with_label);
         series1Format.setInterpolationParams(
-                new CatmullRomInterpolator.Params(50, CatmullRomInterpolator.Type.Uniform));
+                new CatmullRomInterpolator.Params(50, CatmullRomInterpolator.Type.Centripetal));
 
         xyPlot.setTicksPerRangeLabel(3);
         xyPlot.setTicksPerDomainLabel(3);
@@ -262,10 +264,13 @@ public class GraphFragment extends Fragment{
         int tamVector = SingletonConnection.getInstance().getMoviments().size();;
 
         xyPlot.removeSeries(series);
+
         xyPlot.clear();
 
         ALdataX.clear();
         ALdataY.clear();
+        ALdataXAlvo.clear();
+        ALdataYAlvo.clear();
 
         if(optionChanged) {
             choiceOptionControl = 3;
@@ -329,8 +334,10 @@ public class GraphFragment extends Fragment{
 
         xyPlot.addSeries(series, series1Format);
 
-        for(int i=0; i < AdataX.length; i++){
-            Log.i(Constants.TAG, "Verificando valores: "+AdataX[i]+" - "+AdataY[i]);
+        ALdataXAlvo.add(Float.parseFloat(SingletonInformation.getInstance().getxValueAlvo().toString()));
+        ALdataYAlvo.add(Float.parseFloat(SingletonInformation.getInstance().getyValueAlvo().toString()));
+
+        for(int i = 0; i < AdataX.length; i++){
             ALdataX.add(AdataX[i]);
             ALdataY.add(AdataY[i]);
 

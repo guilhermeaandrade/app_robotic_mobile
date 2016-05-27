@@ -172,6 +172,7 @@ public class MainActivity extends AppCompatActivity {
 
         SingletonInformation.getInstance();
         SingletonConnection.getInstance();
+        SingletonConnection.getInstance().clearMovimentsList();
 
         init(savedInstanceState);
         initVariables();
@@ -265,7 +266,8 @@ public class MainActivity extends AppCompatActivity {
                                 sbVelocidade.setProgress(sbVelocidade.getMax() / 2);
                                 velocidade = (byte) sbVelocidade.getProgress();
 
-                                new SendThread(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, 0d).start();
+                                Log.i(Constants.TAG, "VALOR ENVIADO: "+Double.valueOf(velocidade));
+                                new SendThread(Constants.C_AUTOMATIC_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                                 new ReceiveThread().start();
                             }
                         }
@@ -277,6 +279,7 @@ public class MainActivity extends AppCompatActivity {
                         if(!exit){
                             enableAllComponents();
                             velocidade = (byte) sbVelocidade.getProgress();
+                            Log.i(Constants.TAG, "VALOR ENVIADO: "+Double.valueOf(velocidade));
                             new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             new ReceiveThread().start();
                         }
@@ -298,10 +301,12 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
+                                Log.i(Constants.TAG, "VALOR ENVIADO: "+Double.valueOf(velocidade));
                                 new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_FWD, Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
+                            Log.i(Constants.TAG, "VALOR ENVIADO: "+Double.valueOf(velocidade));
                             new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
@@ -324,10 +329,12 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
+                                Log.i(Constants.TAG, "VALOR ENVIADO: "+Double.valueOf(velocidade));
                                 new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_BWD, Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
+                            Log.i(Constants.TAG, "VALOR ENVIADO: "+Double.valueOf(velocidade));
                             new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
@@ -350,10 +357,12 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
+                                Log.i(Constants.TAG, "VALOR ENVIADO: "+Double.valueOf(velocidade));
                                 new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_LEFT, Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
+                            Log.i(Constants.TAG, "VALOR ENVIADO: "+Double.valueOf(velocidade));
                             new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
@@ -376,10 +385,12 @@ public class MainActivity extends AppCompatActivity {
                         case MotionEvent.ACTION_DOWN:
                             if (pressedUp == false) {
                                 pressedUp = true;
+                                Log.i(Constants.TAG, "VALOR ENVIADO: "+Double.valueOf(velocidade));
                                 new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_RIGTH, Double.valueOf(velocidade)).start();
                             }
                             break;
                         case MotionEvent.ACTION_UP:
+                            Log.i(Constants.TAG, "VALOR ENVIADO: "+Double.valueOf(velocidade));
                             new SendThread(Constants.C_MANUAL_CONTROL, Constants.I_STOP, Double.valueOf(velocidade)).start();
                             pressedUp = false;
                             break;
