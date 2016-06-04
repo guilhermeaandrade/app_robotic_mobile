@@ -597,7 +597,6 @@ public class MainActivity extends AppCompatActivity {
                                             Bundle bundle = new Bundle();
 
                                             bundle.putParcelable("device", device);
-                                            //bundle.putInt("optionControl", optionControl);
                                             SingletonConnection.getInstance().setMoviments(listOfPositions);
                                             i.putExtras(bundle);
                                             startActivity(i);
